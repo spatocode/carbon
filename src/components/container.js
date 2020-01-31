@@ -5,20 +5,20 @@ import _Menu from "./UI/Menu"
 import _View from "./UI/View"
 
 export const Control = connect(
-  null,
-  null
+    null,
+    null
 )(_Control)
 
 export const Menu = connect(
-  null,
-  dispatch => ({
-    openView: (e) => dispatch(selectMenu(e.currentTarget.innerHTML))
-  })
+    null,
+    dispatch => ({
+        openView: (e) => dispatch(selectMenu(e.currentTarget.innerHTML))
+    })
 )(_Menu)
 
 export const View = connect(
-  state => ({
-    view: state.selectMenu.category
-  }),
-  null
+    state => ({
+        view: state.selectMenu.category
+    }),
+    null
 )(_View)
