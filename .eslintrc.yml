@@ -25,3 +25,11 @@ rules:
   indent:
     - error
     - 4
+  space-infix-ops:
+    - 0
+  arrow-spacing:
+    - 0
+  react/jsx-uses-react:
+    - error
+  react/jsx-uses-vars:
+    - error
