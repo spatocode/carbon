@@ -5,26 +5,33 @@ export const selectMenu = (category) => ({
     category
 })
 
+export const playSong = (song) => ({
+    type: C.PLAY_SONG,
+    song
+})
+
 export const requestLyric = () => ({
-    type: C.REQUEST_REMOTE,
-    isFetching: true
+    type: C.REQUEST_LYRIC,
+    isFetchingLyric: true
 })
 
 export const receiveLyric = (json) => ({
-    type: C.REQUEST_DATA,
-    isFetching: false,
+    type: C.RECEIVE_LYRIC,
+    isFetchingLyric: false,
     error: false,
     data: json.data
 })
 
-export const searchLocalMusic = (name) => ({
-    type: C.SEARCH_LOCAL_MUSIC,
-    name
+export const requestSong = () => ({
+    type: C.SEARCH_LOCAL_SONG,
+    isFetchingSong: true
 })
 
-export const searchOnlineMusic = (name) => ({
-    type: C.SEARCH_ONLINE_MUSIC,
-    name
+export const receiveSong = (json) => ({
+    type: C.REQUEST_DATA,
+    isFetchingSong: false,
+    error: false,
+    data: json.data
 })
 
 export const errorReport = () => ({
@@ -32,31 +39,59 @@ export const errorReport = () => ({
     error: true
 })
 
-function fetchLyric (url) {
+function fetchLyric (lyric) {
     return dispatch => {
         dispatch(requestLyric())
-        return fetch(url)
+        return fetch(lyric)
             .then(response => response.json())
-            .then(json => dispatch(receiveLyric(json)))
+            .then(json => {
+                if (json.data === "") {
+                    json = scrapLyric()
+                }
+                dispatch(receiveLyric(json))
+            })
             .catch(error => dispatch(errorReport(error)))
     }
 }
 
-function shouldFetchLyric (state) {
-    const data = state.data.items
-    if (data.length === 0) {
-        return true
-    } else if (state.isFetching) {
+function scrapLyric () {
+}
+
+function shouldFetchLyric (state, lyric) {
+    const lyrics = state.data.lyrics
+    if (state.isFetchingLyric || lyrics.includes(lyric)) {
         return false
-    } else {
-        return false
+    }
+    return true
+}
+
+export function fetchLyricIfNeeded (lyric) {
+    return (dispatch, getState) => {
+        if (shouldFetchLyric(getState(), lyric)) {
+            dispatch(fetchLyric(lyric))
+        }
     }
 }
 
-export function fetchLyricIfNeeded (url) {
-    return (dispatch, getState) => {
-        if (shouldFetchLyric(getState())) {
-            dispatch(fetchLyric(url))
-        }
+export function searchSong (song) {
+    return (dispatch) => {
+        dispatch(fetchSong(song))
     }
+}
+
+function fetchSong (song) {
+    return dispatch => {
+        dispatch(requestSong())
+        return searchLocalSong(song)
+    }
+}
+
+function searchLocalSong (song) {
+    // TODO: Async code of searching the file system for song
+    // if the song is not found in disk, call searchOnlineSong to search online
+}
+
+function searchOnlineSong (song) {
+    // TODO: Async code of searching the network for song
+    // if song is found return it and prompt/request the user to download
 }
