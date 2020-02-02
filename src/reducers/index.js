@@ -7,7 +7,7 @@ const initialState = {
     items: []
 }
 
-export function selectMenu (state={ category: "NOW_PLAYING" }, action) {
+export function selectView (state={ category: "Now Playing" }, action) {
     switch (action.type) {
     case C.SELECT_MENU:
         return Object.assign({}, state, {

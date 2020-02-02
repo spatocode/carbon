@@ -1,7 +1,7 @@
 import C from "./constant"
 
-export const selectMenu = (category) => ({
-    type: C.SELECT_MENU,
+export const selectView = (category) => ({
+    type: C.SELECT_VIEW,
     category
 })
 
