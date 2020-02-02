@@ -5,6 +5,11 @@ export const selectView = (category) => ({
     category
 })
 
+export const nightMode = (night) => ({
+    type: C.SELECT_MODE,
+    night
+})
+
 export const playSong = (song) => ({
     type: C.PLAY_SONG,
     song
