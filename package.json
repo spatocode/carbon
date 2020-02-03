@@ -1,8 +1,8 @@
 {
-  "name": "carbon-media-player",
+  "name": "carbon",
   "productName": "Carbon Media Player",
   "version": "0.0.0",
-  "description": "Elegant media player",
+  "description": "A beautiful and elegant media player",
   "main": "main/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -75,7 +75,8 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-standard": "^4.0.1",
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "node-sass": "^4.13.1"
   },
   "browserslist": {
     "production": [
