@@ -1,32 +1,35 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
+import "./stylesheets/Control.scss"
 
-const Control = ({ song="", onPlay=f=>f, handleTimeUpdate=f=>f }) => {
+const Control = ({ song="Joyner Lucas - Devil's work", onPlay=f=>f, handleTimeUpdate=f=>f }) => {
     return (
         <div className="Control">
             <audio src={song} onTimeUpdate={handleTimeUpdate}></audio>
-            <div className="song-title">{song}</div>
-            <div className="rwd-play-stop-fwd">
-                <div className="rwd"></div>
-                <div className="play" onClick={onPlay}></div>
-                <div className="stop"></div>
-                <div className="fwd"></div>
+            <div className="sound-option">
+                <span className="shuffle">S</span>
+                <span className="repeat">R</span>
             </div>
-            <div className="timer">
-                <div className="timer-positive">00:00</div>
-                <div className="timer-bar-node">
-                    <div className="timer-bar"></div>
+            <div className="media-indicator">
+                <div className="song-title">{song}</div>
+                <div className="timer">
+                    <div className="timer-count">00:00</div>
+                    <div className="timer-bar">
+                        <div className="timer-length"></div>
+                    </div>
+                    <div className="timer-count">-04:32</div>
                 </div>
-                <div className="timer-negative">-04:32</div>
-            </div>
-            <div className="shuffle-repeat">
-                <div className="shuffle"></div>
-                <div className="repeat"></div>
+                <div className="rwd-play-stop-fwd">
+                    <span className="rwd">R</span>
+                    <span className="play" onClick={onPlay}>P</span>
+                    <span className="stop">S</span>
+                    <span className="fwd">F</span>
+                </div>
             </div>
             <div className="volume">
-                <div className="mute"></div>
-                <div className="volume-bar"></div>
+                <span className="mute">M</span>
+                <span className="volume-bar">V</span>
             </div>
         </div>
     )
