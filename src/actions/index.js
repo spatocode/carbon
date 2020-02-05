@@ -5,6 +5,11 @@ export const selectView = (category) => ({
     category
 })
 
+export const selectTab = (tabItem) => ({
+    type: C.SELECT_TAB,
+    tabItem
+})
+
 export const nightMode = (night) => ({
     type: C.SELECT_MODE,
     night

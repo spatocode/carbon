@@ -1,16 +1,20 @@
 import C from "../actions/constant"
 
-const initialState = {
+const lyricState = {
     isFetchingLyric: false,
     error: false,
     items: []
 }
 
-export function selectView (state={ category: "Now Playing" }, action) {
+export function view (state={ category: "Now Playing", tab: "All" }, action) {
     switch (action.type) {
-    case C.SELECT_MENU:
+    case C.SELECT_VIEW:
         return Object.assign({}, state, {
             category: action.category
+        })
+    case C.SELECT_TAB:
+        return Object.assign({}, state, {
+            tab: action.tabItem
         })
     default:
         return state
@@ -28,7 +32,7 @@ export function mode (state={ night: false }, action) {
     }
 }
 
-export function lyric (state=initialState, action) {
+export function lyric (state=lyricState, action) {
     switch (action.type) {
     case C.REQUEST_LYRIC:
         return Object.assign({}, state, {

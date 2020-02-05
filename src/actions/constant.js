@@ -1,5 +1,6 @@
 const constant = {
     SELECT_VIEW: "SELECT_VIEW",
+    SELECT_TAB: "SELECT_TAB",
     SELECT_MODE: "SELECT_MODE",
     PLAY_SONG: "PLAY_SONG",
     STOP_SONG: "STOP_SONG",
