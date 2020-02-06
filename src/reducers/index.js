@@ -21,6 +21,15 @@ export function view (state={ category: "Now Playing", tab: "All" }, action) {
     }
 }
 
+export function media (state={ isFetchingSong: false }, action) {
+    switch (action.type) {
+    case C.PLAY_MEDIA:
+        return Object.assign({}, state, {
+            current: action.media
+        })
+    }
+}
+
 export function mode (state={ night: false }, action) {
     switch (action.type) {
     case C.SELECT_MODE:
@@ -48,17 +57,6 @@ export function lyric (state=lyricState, action) {
         return Object.assign({}, state, {
             isFetching: action.isFetching,
             error: action.error
-        })
-    default:
-        return state
-    }
-}
-
-export const playState = (state={ isFetchingSong: false }, action) => {
-    switch (action.type) {
-    case C.PLAY_SONG:
-        return Object.assign({}, state, {
-            song: action.song
         })
     default:
         return state
