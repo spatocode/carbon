@@ -15,9 +15,9 @@ export const nightMode = (night) => ({
     night
 })
 
-export const playSong = (song) => ({
-    type: C.PLAY_SONG,
-    song
+export const playMedia = (media) => ({
+    type: C.PLAY_MEDIA,
+    media
 })
 
 export const requestLyric = () => ({
@@ -32,14 +32,14 @@ export const receiveLyric = (json) => ({
     data: json.data
 })
 
-export const requestSong = () => ({
-    type: C.SEARCH_LOCAL_SONG,
-    isFetchingSong: true
+export const requestMedia = () => ({
+    type: C.SEARCH_LOCAL_MEDIA,
+    isFetchingMedia: true
 })
 
-export const receiveSong = (json) => ({
+export const receiveMedia = (json) => ({
     type: C.REQUEST_DATA,
-    isFetchingSong: false,
+    isFetchingMedia: false,
     error: false,
     data: json.data
 })
@@ -83,25 +83,25 @@ export function fetchLyricIfNeeded (lyric) {
     }
 }
 
-export function searchSong (song) {
+export function searchSong (media) {
     return (dispatch) => {
-        dispatch(fetchSong(song))
+        dispatch(fetchMedia(media))
     }
 }
 
-function fetchSong (song) {
+function fetchMedia (media) {
     return dispatch => {
-        dispatch(requestSong())
-        return searchLocalSong(song)
+        dispatch(requestMedia())
+        return searchLocalMedia(media)
     }
 }
 
-function searchLocalSong (song) {
+function searchLocalMedia (media) {
     // TODO: Async code of searching the file system for song
     // if the song is not found in disk, call searchOnlineSong to search online
 }
 
-function searchOnlineSong (song) {
+function searchOnlineMedia (media) {
     // TODO: Async code of searching the network for song
     // if song is found return it and prompt/request the user to download
 }
