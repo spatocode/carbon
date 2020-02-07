@@ -21,12 +21,15 @@ export function view (state={ category: "Now Playing", tab: "All" }, action) {
     }
 }
 
-export function media (state={ isFetchingSong: false }, action) {
+export function media (state={ isFetchingSong: false, recent: [] }, action) {
     switch (action.type) {
     case C.PLAY_MEDIA:
         return Object.assign({}, state, {
-            current: action.media
+            current: action.media,
+            recent: state.recent.concat(action.media)
         })
+    default:
+        return state
     }
 }
 
