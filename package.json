@@ -5,7 +5,8 @@
   "description": "A beautiful and elegant media player",
   "main": "main/index.js",
   "scripts": {
-    "start": "electron-forge start",
+    "electron-dev": "set ELECTRON_ENV=development && electron-forge start",
+    "electron-prod": "set ELECTRON_ENV=production && electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
