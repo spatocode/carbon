@@ -1,6 +1,10 @@
-const { app, Menu } = require("electron")
+const os = require("os")
+const { app, dialog, Menu } = require("electron")
 
-function buildMenu () {
+let window
+
+function buildMenu (win) {
+    window = win
     const template = [
         {
             label: "Media",
@@ -14,7 +18,9 @@ function buildMenu () {
                 click: handleOpenURL
             }, {
                 label: "Open recent",
-                subMenu: [{}]
+                submenu: [{
+                    label: "Joyner Lucas - Devil's work"
+                }]
             }, {
                 label: "Create playist",
                 accelerator: "Ctrl+N",
@@ -29,13 +35,21 @@ function buildMenu () {
         },
         {
             label: "View",
-            subMenu: [{
-                label: ""
+            submenu: [{
+                label: "Open devtools",
+                click: function () {
+                    window.webContents.openDevTools()
+                }
+            }, {
+                label: "Reload",
+                click: function () {
+                    window.webContents.reload()
+                }
             }]
         },
         {
             label: "Playback",
-            subMenu: [{
+            submenu: [{
                 label: "Play/Pause",
                 click: handlePlayPause
             }, {
@@ -67,15 +81,19 @@ function buildMenu () {
         },
         {
             label: "Audio",
-            subMenu: [{}]
+            submenu: [{
+                label: "Speed"
+            }]
         },
         {
             label: "Video",
-            subMenu: [{}]
+            submenu: [{
+                label: "Stream"
+            }]
         },
         {
             label: "Help",
-            subMenu: [{
+            submenu: [{
                 label: "Check for updates",
                 click: handleUpdates
             }, {
@@ -88,7 +106,7 @@ function buildMenu () {
         const name = app.getName()
         template.unshift({
             label: name,
-            subMenu: [{
+            submenu: [{
                 label: "Quit",
                 accelerator: "Command+Q",
                 click: function () {
@@ -102,6 +120,21 @@ function buildMenu () {
 }
 
 function handleOpenFile () {
+    const home = os.homedir()
+    dialog.showOpenDialog(window, { // TODO: may choose to add window for the sake of macOS
+        title: "Select a media file to open",
+        properties: ["openFile"],
+        defaultPath: home,
+        filters: [
+            { name: "All media files", extensions: [] },
+            { name: "Audio files", extensions: ["mp3", "wma", "midi", "mka", "m4a"] },
+            { name: "Video files", extensions: ["mp4", "mpeg", "mpg", "3gp", "mkv", "wmv", "avi"] }
+        ]
+    }, (file) => {
+        if (file && window) {
+            window.webContents.send("open-file", file)
+        }
+    })
 }
 
 function handleOpenURL () {
@@ -135,6 +168,20 @@ function handleRepeat () {
 }
 
 function handleAbout () {
+    dialog.showMessageBox({ // TODO: Add an icon
+        type: "info",
+        buttons: ["Ok"],
+        defaultId: 0,
+        title: "About",
+        message: "Carbon Media Player",
+        detail: `
+            Carbon media player is a free and open source media player created by 
+            Ekene Izukanne. Carbon is cross-platform which means that it works 
+            on essentially all popular platforms.
+
+            Copyright (c) 2020 Ekene Izukanne
+            `
+    })
 }
 
 function handleUpdates () {
