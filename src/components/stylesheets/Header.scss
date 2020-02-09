@@ -1,0 +1,21 @@
+.Header{
+    text-align: center;
+    background-color: rgb(221, 221, 221);
+    padding: 10px;
+    form input {
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+        width: 30%;
+        font-size: 17px;
+        border: none;
+        color: grey;
+    }
+    form button {
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        width: 3%;
+        font-size: 17px;
+        border: none;
+        background-color: white;
+    }
+}
