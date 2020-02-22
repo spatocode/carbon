@@ -1,0 +1,11 @@
+.tab{
+    display: flex;
+    .tab-item{
+        padding: 5px;
+        width: 100px;
+        background-color: rgb(248, 232, 235);
+    }
+    .all, .artist, .genre, .album {
+        border-bottom: 1px solid grey;
+    }
+}

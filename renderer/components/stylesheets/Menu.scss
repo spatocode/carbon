@@ -1,0 +1,31 @@
+.Menu{
+    font-size: 15px;
+    width: 150px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: rgb(240, 240, 240);
+    border-right: 1px solid rgb(232, 232, 232);
+    color: rgb(112, 112, 112);
+    .mode-toggle-bar{
+        cursor: pointer;
+        background-color: rgb(223, 196, 196);
+        height: 15px;
+        width: 50px;
+        border-radius: 15px;
+        margin-left: 15px;
+    }
+    .mode-toggle{
+        background-color: rgb(139, 139, 139);
+        border-radius: 15px;
+        height: 15px;
+        width: 25px;
+    }
+    .menu-list{
+        padding: 8px;
+        padding-left: 20px;
+        cursor: pointer;
+    }
+    .menu-list:hover{ /* TODO: Add exception for nightmode*/
+        background-color: rgb(221, 221, 221);
+    }
+}
