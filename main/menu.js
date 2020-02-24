@@ -130,10 +130,12 @@ function handleOpenFile () {
             { name: "Audio files", extensions: ["mp3", "wma", "midi", "mka", "m4a"] },
             { name: "Video files", extensions: ["mp4", "mpeg", "mpg", "3gp", "mkv", "wmv", "avi"] }
         ]
-    }, (file) => {
-        if (file && window) {
-            window.webContents.send("open-file", file)
+    }).then(result => {
+        if (result.filePaths.length > 0 && window) {
+            window.webContents.send("open-file", result.filePaths)
         }
+    }).catch(err => {
+        console.log(err)
     })
 }
 
