@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { updateLibrary } from "./actions"
+import { updateLibrary, requestUpdateLibrary } from "./actions"
 import Header from "./components/Header"
 import Main from "./components/Main"
 import Control from "./components/Control"
@@ -11,6 +11,7 @@ class App extends Component {
     componentWillMount () {
         const { dispatch } = this.props
         ipcRenderer.send("should-update", true)
+        dispatch(requestUpdateLibrary())
         ipcRenderer.on("update-library", (event, files) => {
             dispatch(updateLibrary(files))
         })
