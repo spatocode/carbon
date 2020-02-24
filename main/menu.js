@@ -110,7 +110,7 @@ function buildMenu (win) {
                 label: "Quit",
                 accelerator: "Command+Q",
                 click: function () {
-                    app.quick()
+                    app.quit()
                 }
             }]
         })
