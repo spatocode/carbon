@@ -1,17 +1,14 @@
+const os = require("os")
 const path = require("path")
-const { app, BrowserWindow } = require("electron")
+const { app, BrowserWindow, ipcMain } = require("electron")
+const klaw = require("klaw")
+const through2 = require("through2")
 const buildMenu = require("./menu")
-
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require("electron-squirrel-startup")) { // eslint-disable-line global-require
-    app.quit()
-}
 
 let window
 
 const createWindow = () => {
-    const url = process.env.ELECTRON_ENV === "development"
-        ? path.join(__dirname, "/../build/index.html") : "http://localhost:3000"
+    fetchMedia()
 
     window = new BrowserWindow({
         title: "Carbon Media Player",
@@ -27,7 +24,7 @@ const createWindow = () => {
         }
     })
 
-    window.loadURL(url)
+    window.loadURL("http://localhost:3000")
 
     buildMenu(window)
 
@@ -37,6 +34,42 @@ const createWindow = () => {
 
     window.webContents.on("dom-ready", () => {
         window.show()
+    })
+}
+
+function fetchMedia () {
+    const homeDir = os.homedir()
+    const musicDir = path.join(homeDir, "Music")
+    const downloadsDir = path.join(homeDir, "Downloads")
+    const videosDir = path.join(homeDir, "Videos")
+    const dirs = [musicDir, videosDir, downloadsDir]
+    const excludeDirFilter = through2.obj(function (item, enc, next) {
+        if (!item.stats.isDirectory()) {
+            this.push(item)
+        }
+        next()
+    })
+    const filterFunc = item => {
+        const basename = path.basename(item)
+        return basename === "." || basename[0] !== "."
+    }
+
+    ipcMain.on("should-update", (event, arg) => {
+        if (arg) {
+            const files = []
+            klaw(musicDir, { filter: filterFunc })
+                .pipe(excludeDirFilter)
+                .on("data", file => {
+                    var ext= path.extname(file.path)
+                    if (ext === ".mp3" || ext === ".mp4" || ext === ".mpeg" || ext === ".3gp") {
+                        files.push(file)
+                    }
+                })
+                .on("end", () => {
+                    window.webContents.send("update-library", files)
+                })
+                .on("error", err => console.error(err))
+        }
     })
 }
 
