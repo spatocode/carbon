@@ -1,12 +1,14 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
+import "./stylesheets/All.scss"
+const path = window.require("path")
 
 const All = ({ tab="All", songs=[] }) => {
     if (tab === "All") {
         return (
             <div className="tab-view" id="All">
-                <table className="table table-bordered">
+                <table className="">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -18,9 +20,12 @@ const All = ({ tab="All", songs=[] }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                        </tr>
+                        {songs.map((song, i) =>
+                            <tr key={i}>
+                                <td>{i}</td>
+                                <td>{path.basename(song.path, path.extname(song.path))}</td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
@@ -30,11 +35,13 @@ const All = ({ tab="All", songs=[] }) => {
 }
 
 All.propTypes = {
-    tab: PropTypes.string
+    tab: PropTypes.string,
+    songs: PropTypes.array
 }
 
 const mapStateToProps = (state) => ({
-    tab: state.view.tab
+    tab: state.view.tab,
+    songs: state.media.library
 })
 
 export default connect(mapStateToProps, null)(All)

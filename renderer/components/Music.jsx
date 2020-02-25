@@ -9,15 +9,12 @@ import Genre from "./Genre"
 import "./stylesheets/Music.scss"
 
 const Music = ({ tab="All", selectTab=f=>f }) => {
+    var tabStyle = { borderBottom: "2.5px solid rgb(223, 196, 196)" }
+    var titles = ["All", "Artist", "Album", "Genre"]
     return (
         <div className="View">
             <div className="music">
-                <div className="tab">
-                    <div className="tab-item" onClick={selectTab}>All</div>
-                    <div className="tab-item" onClick={selectTab}>Artist</div>
-                    <div className="tab-item" onClick={selectTab}>Album</div>
-                    <div className="tab-item" onClick={selectTab}>Genre</div>
-                </div>
+                <Tab tabStyle={tabStyle} titles={titles} />
                 <div className="tab-content">
                     <All />
                     <Artist />
