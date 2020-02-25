@@ -29,7 +29,7 @@ const Menu = ({ nightMode=false, handleView=f=>f }) => {
             </div>
             <div className="menu-list" onClick={handleView}>
                 <span></span>
-                <span>Playist</span>
+                <span>Playists</span>
             </div>
             <div className="menu-list" onClick={handleView}>
                 <span></span>

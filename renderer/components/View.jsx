@@ -5,8 +5,8 @@ import Music from "./Music"
 import Favourite from "./Favourite"
 import Video from "./Video"
 import Downloads from "./Downloads"
-import Setting from "./Setting"
-import Playist from "./Playist"
+import Settings from "./Settings"
+import Playists from "./Playists"
 import NowPlaying from "./NowPlaying"
 import "./stylesheets/View.scss"
 
@@ -18,10 +18,10 @@ const View = ({ view="Now Playing" }) => {
         return <Video />
     case "Downloads":
         return <Downloads />
-    case "Setting":
-        return <Setting />
-    case "Playist":
-        return <Playist />
+    case "Settings":
+        return <Settings />
+    case "Playists":
+        return <Playists />
     case "Favourite":
         return <Favourite />
     default:
