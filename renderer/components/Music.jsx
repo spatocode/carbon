@@ -6,6 +6,7 @@ import All from "./All"
 import Artist from "./Artist"
 import Album from "./Album"
 import Genre from "./Genre"
+import Tab from "./Tab"
 import "./stylesheets/Music.scss"
 
 const Music = ({ tab="All", selectTab=f=>f }) => {
