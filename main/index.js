@@ -1,15 +1,12 @@
 const os = require("os")
 const path = require("path")
 const { app, BrowserWindow, ipcMain } = require("electron")
-const klaw = require("klaw")
-const through2 = require("through2")
+const mi = require("mediainfo-wrapper")
 const buildMenu = require("./menu")
 
 let window
 
 const createWindow = () => {
-    fetchMedia()
-
     window = new BrowserWindow({
         title: "Carbon Media Player",
         show: false,
@@ -35,6 +32,8 @@ const createWindow = () => {
     window.webContents.on("dom-ready", () => {
         window.show()
     })
+
+    fetchMedia()
 }
 
 function fetchMedia () {
@@ -43,34 +42,39 @@ function fetchMedia () {
     const downloadsDir = path.join(homeDir, "Downloads")
     const videosDir = path.join(homeDir, "Videos")
     const dirs = [musicDir, videosDir, downloadsDir]
-    const excludeDirFilter = through2.obj(function (item, enc, next) {
-        if (!item.stats.isDirectory()) {
-            this.push(item)
-        }
-        next()
-    })
-    const filterFunc = item => {
-        const basename = path.basename(item)
-        return basename === "." || basename[0] !== "."
-    }
 
     ipcMain.on("should-update", (event, arg) => {
         if (arg) {
-            const files = []
-            klaw(musicDir, { filter: filterFunc })
-                .pipe(excludeDirFilter)
-                .on("data", file => {
-                    var ext= path.extname(file.path)
-                    if (ext === ".mp3" || ext === ".mp4" || ext === ".mpeg" || ext === ".3gp") {
-                        files.push(file)
-                    }
-                })
-                .on("end", () => {
-                    window.webContents.send("update-library", files)
-                })
-                .on("error", err => console.error(err))
+            extractMediaInfo(musicDir)
         }
     })
+}
+
+function extractMediaInfo (musicDir) {
+    var files = []
+    mi({ maxBuffer: Infinity }, musicDir+"/*.mp3")
+        .then((data) => {
+            for (const i in data) {
+                files.push({
+                    file: data[i].file,
+                    file_name: data[i].general.file_name,
+                    file_size: data[i].general.file_size,
+                    duration: data[i].general.duration,
+                    title: data[i].general.title,
+                    album: data[i].general.album,
+                    artist: data[i].general.performer,
+                    genre: data[i].general.genre,
+                    date: data[i].general.recorded_date,
+                    cover_mime: data[i].general.cover_mime
+                    // cover_data: data[i].general.cover_data
+                })
+            }
+        })
+        .finally(() => {
+            window.webContents.send("update-library", files)
+            console.log("DONE")
+        })
+        .catch((err) => console.log(err))
 }
 
 app.on("ready", createWindow)
