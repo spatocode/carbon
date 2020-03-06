@@ -1,7 +1,10 @@
 .Control{
+    width: 100%;
     background-color: rgb(59, 59, 59);
     display: flex;
     padding: 10px;
+    position: absolute;
+    bottom: 0px;
 }
 .media-indicator{
     flex: 1;
@@ -39,11 +42,261 @@
 }
 .rwd-play-stop-fwd{
     text-align: center;
+    margin-top: 10px;
 }
+
 .volume, .sound-option{
     width: 100px;
-    margin-top: 20px;
+    margin-top: 25px;
 }
-.volume{
-    text-align: right;
+
+.pause {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    transform: scale(var(--ggs,1));
+    width: 15px;
+    height: 15px;
+    border-left: 5px solid whitesmoke;
+    border-right: 5px solid whitesmoke;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.pause:hover {
+    border-left: 5px solid rgba(245, 245, 245, 0.5);
+    border-right: 5px solid rgba(245, 245, 245, 0.5);
+}
+
+.play {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    transform: scale(var(--ggs,1));
+    height: 15px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.play::before {
+    content: "";
+    display: inline-block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 0;
+    height: 15px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 10px solid whitesmoke;
+    left: -5px
+}
+
+.play:hover::before {
+    border-left: 10px solid rgba(245, 245, 245, 0.5);
+}
+
+.fwd {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    transform: scale(var(--ggs,1));
+    width: 3px;
+    height: 15px;
+    background-color: whitesmoke;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.fwd:hover {
+    background-color: rgba(245, 245, 245, 0.5);
+}
+ 
+.fwd::after,
+.fwd::before {
+    content: "";
+    display: inline-block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 0;
+    height: 15px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 7px solid whitesmoke;
+    left: -7px
+}
+
+.fwd::before {
+    left: -14px
+}
+
+.fwd:hover::after,
+.fwd:hover::before {
+    border-left: 7px solid rgba(245, 245, 245, 0.5);
+}
+
+.rwd {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    transform: scale(var(--ggs,1));
+    width: 3px;
+    height: 15px;
+    background-color: whitesmoke;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.rwd:hover {
+    background-color: rgba(245, 245, 245, 0.5);
+}
+
+.rwd::after,
+.rwd::before {
+    content: "";
+    display: inline-block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 0;
+    height: 10px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 7px solid whitesmoke;
+    right: -7px
+}
+
+.rwd::before {
+    right: -14px
+}
+
+.rwd:hover::after,
+.rwd:hover::before {
+    border-right: 7px solid rgba(245, 245, 245, 0.5);
+}
+
+.stopp {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    transform: scale(var(--ggs,1));
+    width: 10px;
+    height: 10px;
+    background: whitesmoke;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.stopp:hover {
+    background-color: rgba(245, 245, 245, 0.5);
+}
+
+.repeat {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    transform: scale(var(--ggs,1));
+    box-shadow: whitesmoke -2px -2px 0 0, whitesmoke 2px 2px 0 0;
+    width: 14px;
+    height: 6px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.repeat:hover {
+    box-shadow: rgba(245, 245, 245, 0.5) -2px -2px 0 0, rgba(245, 245, 245, 0.5) 2px 2px 0 0;
+}
+
+.repeat::after,
+.repeat::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent
+}
+
+.repeat::before {
+    border-left: 5px solid whitesmoke;
+    top: -4px;
+    right: 0
+}
+
+.repeat:hover::before {
+    border-left: 5px solid rgba(245, 245, 245, 0.5);
+}
+
+.repeat::after {
+    border-right: 5px solid whitesmoke;
+    bottom: -4px;
+    left: 0
+}
+
+.repeat:hover::after {
+    border-right: 5px solid rgba(245, 245, 245, 0.5);
+}
+
+.mute {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    transform: scale(var(--ggs,1));
+    width: 8px;
+    height: 8px;
+    border: 2px solid whitesmoke;
+    border-right: 0;
+    -webkit-perspective: 12px;
+    perspective: 12px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.mute:hover {
+    border: 2px solid rgba(245, 245, 245, 0.5);
+    border-right: 0;
+}
+
+.mute::after,
+.mute::before {
+    content: "";
+    display: inline-block;
+    box-sizing: border-box;
+    position: absolute
+}
+
+.mute::before {
+    left: 2px;
+    transform: rotateY(-90deg);
+    width: 10px;
+    height: 10px;
+    border: 2px solid whitesmoke;
+    border-left: 0;
+    top: -3px
+}
+
+.mute:hover::before {
+    border: 2px solid rgba(245, 245, 245, 0.5);
+    border-left: 0;
+}
+
+.mute::after {
+    width: 8px;
+    height: 16px;
+    border: 6px double whitesmoke;
+    border-left: 0;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-bottom-color: whitesmoke;
+    border-top-color: whitesmoke;
+    right: -14px;
+    top: -6px
+}
+
+.mute:hover::after {
+    border: 6px double rgba(245, 245, 245, 0.5);
+    border-left: 0;
+    border-bottom-color: rgba(245, 245, 245, 0.5);
+    border-top-color: rgba(245, 245, 245, 0.5);
 }
