@@ -1,12 +1,38 @@
 import C from "./constant"
 
+export const requestUpdateLibrary = () => ({
+    type: C.REQUEST_UPDATE,
+    isUpdating: true
+})
+
+export const shouldUpdateLibrary = (shouldUpdate) => ({
+    type: C.SHOULD_UPDATE,
+    shouldUpdate
+})
+
+export const updatePlayist = playist => ({
+    type: C.UPDATE_PLAYIST,
+    playist: playist
+})
+
+export const updateFavourite = (favourite) => ({
+    type: C.UPDATE_FAVOURITE,
+    favourite: favourite
+})
+
+export const updateLibrary = (data) => ({
+    type: C.UPDATE_LIBRARY,
+    isUpdating: false,
+    data: data
+})
+
 export const selectView = (category) => ({
     type: C.SELECT_VIEW,
     category
 })
 
-export const selectTab = (tabItem) => ({
-    type: C.SELECT_TAB,
+export const selectSettingsTab = (tabItem) => ({
+    type: C.SELECT_SETTINGS_TAB,
     tabItem
 })
 
@@ -96,7 +122,7 @@ function fetchMedia (media) {
     }
 }
 
-function searchLocalMedia (media) {
+function searchLocalMedia (media, library) {
     // TODO: Async code of searching the file system for song
     // if the song is not found in disk, call searchOnlineSong to search online
 }
