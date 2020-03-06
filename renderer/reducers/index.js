@@ -6,27 +6,77 @@ const lyricState = {
     items: []
 }
 
-export function view (state={ category: "Now Playing", tab: "All" }, action) {
+const mediaState = {
+    isFetchingSong: false,
+    recent: [],
+    playists: [],
+    favourite: [],
+    library: [],
+    isUpdating: false
+}
+
+const viewState = {
+    category: "Now Playing",
+    settingsTab: "General"
+}
+
+export function view (state=viewState, action) {
     switch (action.type) {
     case C.SELECT_VIEW:
         return Object.assign({}, state, {
             category: action.category
         })
-    case C.SELECT_TAB:
+    case C.SELECT_SETTINGS_TAB:
         return Object.assign({}, state, {
-            tab: action.tabItem
+            settingsTab: action.tabItem
         })
     default:
         return state
     }
 }
 
-export function media (state={ isFetchingSong: false, recent: [] }, action) {
+/* export function settings (state=settingsState, action) {
+    switch (action.type) {
+    case C.SELECT_SETTINGS_TAB:
+        return Object.assign({}, state, {
+            tab: action.tabItem
+        })
+    default:
+        return state
+    }
+} */
+
+export function media (state=mediaState, action) {
     switch (action.type) {
     case C.PLAY_MEDIA:
         return Object.assign({}, state, {
             current: action.media,
             recent: state.recent.concat(action.media)
+        })
+    case C.UPDATE_PLAYIST:
+        return Object.assign({}, state, {
+            playist: updatePlayists(action.data, state.playists)
+        })
+    case C.UPDATE_FAVOURITE:
+        return (state.favourite.includes(action.favourite))
+            ? Object.assign({}, state, {
+                favourite: state.favourite.filter(fav => fav !== action.favourite)
+            })
+            : Object.assign({}, state, {
+                favourite: state.favourite.concat(action.favourite)
+            })
+    case C.REQUEST_UPDATE:
+        return Object.assign({}, state, {
+            isUpdating: action.isUpdating
+        })
+    case C.UPDATE_LIBRARY:
+        return Object.assign({}, state, {
+            library: action.data,
+            isUpdating: action.isUpdating
+        })
+    case C.SHOULD_UPDATE:
+        return Object.assign({}, state, {
+            shouldUpdate: action.shouldUpdate
         })
     default:
         return state
@@ -63,5 +113,13 @@ export function lyric (state=lyricState, action) {
         })
     default:
         return state
+    }
+}
+
+function updatePlayists (newData, playists) {
+    for (var i=0; i < playists.length; i++) {
+        if (playists[i].name === newData.name && !playists[i].data.includes(newData.data)) {
+            playists[i].data.concat(newData.data)
+        }
     }
 }
