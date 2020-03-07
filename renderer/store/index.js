@@ -1,4 +1,5 @@
 import { createStore, combineReducers, applyMiddleware } from "redux"
+import thunkMiddleware from "redux-thunk"
 import * as reducers from "../reducers"
 
 /**
@@ -31,6 +32,7 @@ const storeFactory = (preloadedState) =>
         combineReducers(reducers),
         preloadedState,
         applyMiddleware(
+            thunkMiddleware,
             saver,
             logger
         )
