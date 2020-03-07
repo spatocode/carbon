@@ -142,7 +142,7 @@ class Control extends React.Component {
         for (var i=0; i < songs.length; i++) {
             if ((songs[i].file) === media) {
                 prev = (i === 0) ? songs[songs.length - 1] : songs[--i].file
-                dispatch(playMedia(prev, this.mediaPlayer))
+                dispatch(playMedia(prev, this.mediaPlayer.current))
                 break
             }
         }
@@ -154,7 +154,7 @@ class Control extends React.Component {
         for (var i=0; i < songs.length; i++) {
             if ((songs[i].file) === media) {
                 next = (i === songs.length - 1) ? next = songs[0] : songs[++i].file
-                dispatch(playMedia(next, this.mediaPlayer))
+                dispatch(playMedia(next, this.mediaPlayer.current))
                 break
             }
         }
