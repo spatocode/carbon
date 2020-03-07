@@ -10,70 +10,99 @@ class Control extends React.Component {
     constructor (props) {
         super(props)
         this.mediaPlayer = React.createRef()
+        this.currentTime = React.createRef()
+        this.timerBar = React.createRef()
+        this.timerLength = React.createRef()
+        this.duration = React.createRef()
         this.handlePlay = this.handlePlay.bind(this)
-        this.setupMediaSrc = this.setupMediaSrc.bind(this)
-    }
-
-    setupMediaSrc (filepath, mediaPlayer) {
-        if (!MediaSource.isTypeSupported("audio/mpeg")) {
-            console.log("Codec not supported")
-            return
-        }
-        mediaPlayer = mediaPlayer.current
-        var mediaSrc = new MediaSource()
-
-        mediaSrc.addEventListener("sourceopen", function () {
-            console.log(mediaSrc.readyState)
-            var sourceBuffer = mediaSrc.addSourceBuffer("audio/mpeg")
-            fetchMedia(filepath, function (buffer) {
-                sourceBuffer.addEventListener("updateend", function () {
-                    console.log("updateend")
-                    mediaSrc.endOfStream()
-                    console.log("endofstream")
-                    mediaPlayer.play()
-                        .then(function () {
-                            console.log("Fufilled")
-                        }).catch(function (err) {
-                            console.log("Rejected with error: ", err)
-                        })
-                    console.log("play")
-                    console.log(mediaPlayer)
-                })
-                console.log("append")
-                sourceBuffer.appendBuffer(buffer)
-            })
-        })
-
-        mediaPlayer.src = window.URL.createObjectURL(mediaSrc)
-        mediaPlayer.setAttribute("crossorigin", "anonymous")
-        console.log(mediaPlayer)
-        console.log(mediaSrc.readyState)
+        this.handleTimeUpdate = this.handleTimeUpdate.bind(this)
     }
 
     handlePlay () {
+        const { media, dispatch } = this.props
+        dispatch(playMedia(media, this.mediaPlayer))
         console.log(this.mediaPlayer.current)
-        this.mediaPlayer.current.play()
     }
 
     handleTimeUpdate () {
+        var hourValue, minuteValue, secondValue, durHourValue,
+            durMinValue, durSecValue
+        var mediaPlayer = this.mediaPlayer.current
+        var currentTime = this.currentTime.current
+        var duration = this.duration.current
+        var timerBar = this.timerBar.current
+        var timerLength = this.timerLength.current
 
+        var hours = Math.floor(mediaPlayer.currentTime / 3600)
+        var minutes = Math.floor(mediaPlayer.currentTime / 60)
+        var seconds = Math.floor(mediaPlayer.currentTime - minutes * 60)
+
+        var currentDuration = mediaPlayer.duration - mediaPlayer.currentTime
+        // mediaplayer.duration is not swift in getting duration at initially.
+        // Using the OR operator prevents NAN value from showing on screen
+        var durHours = Math.floor(currentDuration / 3600) || 0
+        var durMinutes = Math.floor(currentDuration / 60) || 0
+        var durSeconds = Math.floor(currentDuration - durMinutes * 60) || 0
+
+        // format the time values properly
+        if (hours <= 0) {
+            hourValue = ""
+        } else if (hours < 10) {
+            hourValue = `0${hours}:`
+        } else {
+            hourValue = hours
+        }
+
+        if (minutes < 10) {
+            minuteValue = `0${minutes}:`
+        } else {
+            minuteValue = `${minutes}:`
+        }
+
+        if (seconds < 10) {
+            secondValue = `0${seconds}`
+        } else {
+            secondValue = seconds
+        }
+
+        if (durHours <= 0) {
+            durHourValue = ""
+        } else if (durHours < 10) {
+            durHourValue = `0${durHours}:`
+        } else {
+            durHourValue = durHours
+        }
+
+        if (durMinutes < 10) {
+            durMinValue = `0${durMinutes}:`
+        } else {
+            durMinValue = durMinutes
+        }
+
+        if (durSeconds < 10) {
+            durSecValue = `0${durSeconds}`
+        } else {
+            durSecValue = durSeconds
+        }
+
+        var durationTime = `${durHourValue}${durMinValue}${durSecValue}`
+        var mediaTime = `${hourValue}${minuteValue}${secondValue}`
+        var length = timerBar.clientWidth * (mediaPlayer.currentTime/mediaPlayer.duration)
+        currentTime.innerText = mediaTime
+        duration.innerText = durationTime
+        timerLength.style.width = `${length}px`
     }
 
     render () {
-        const { media, loadFile } = this.props
+        const { media, dispatch } = this.props
         const mediaName = path.basename(media, path.extname(media))
-
-        if (media) {
-            this.setupMediaSrc(media, this.mediaPlayer)
-        }
-
         ipcRenderer.on("open-file", (event, file) => {
-            loadFile(file[0])
+            dispatch(playMedia(file[0], this.mediaPlayer))
         })
 
         return (
             <div className="Control">
-                <audio ref={ this.mediaPlayer } onTimeUpdate={this.handleTimeUpdate}></audio>
+                <audio ref={this.mediaPlayer} onTimeUpdate={this.handleTimeUpdate}></audio>
                 <div className="sound-option">
                     <span className="shuffle"></span>
                     <span className="repeat"></span>
@@ -81,11 +110,11 @@ class Control extends React.Component {
                 <div className="media-indicator">
                     <div className="song-title">{mediaName}</div>
                     <div className="timer">
-                        <div className="timer-count">00:00</div>
-                        <div className="timer-bar">
-                            <div className="timer-length"></div>
+                        <div className="timer-count" ref={this.currentTime}>00:00</div>
+                        <div className="timer-bar" ref={this.timerBar}>
+                            <div className="timer-length" ref={this.timerLength}></div>
                         </div>
-                        <div className="timer-count">-04:32</div>
+                        <div className="timer-count" ref={this.duration}>00:00</div>
                     </div>
                     <div className="rwd-play-stop-fwd">
                         <span className="rwd"></span>
@@ -103,39 +132,18 @@ class Control extends React.Component {
     }
 }
 
-function fetchMedia (url, loadMedia) {
-    console.log(url)
-    var xhr = new XMLHttpRequest()
-    xhr.open("get", url)
-    xhr.onerror = function () {
-        console.log("Error fetching media")
-    }
-    xhr.responseType = "arraybuffer"
-    xhr.setRequestHeader("Access-Control-Allow-Origin", "*")
-    xhr.onload = function () {
-        console.log("Loading...")
-        loadMedia(xhr.response)
-    }
-    xhr.send()
-}
-
 Control.propTypes = {
     media: PropTypes.string,
-    loadFile: PropTypes.func
+    loadMedia: PropTypes.func
 }
 
 Control.defaultProps = {
     media: "",
-    loadFile: f=>f
+    loadMedia: f=>f
 }
 
 const mapStateToProps = (state) => ({
     media: state.media.current
 })
 
-const mapDispatchToProps = (dispatch) => ({
-    loadFile: (file) => dispatch(playMedia(file)),
-    onPlay: () => {}
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Control)
+export default connect(mapStateToProps)(Control)
