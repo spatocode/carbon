@@ -46,13 +46,23 @@ const setCurrentMedia = (media) => ({
     media
 })
 
-const setCurrentMediaMode = (mode) => ({
+export const setCurrentMediaMode = (mode) => ({
     type: C.MEDIA_MODE,
     mode
 })
 
 export function playMedia (media, mediaPlayer) {
-    return dispatch => dispatch(setupMediaSrc(media, mediaPlayer))
+    return dispatch => {
+        // resume play if already in progress and paused
+        if (mediaPlayer.current.currentTime > 0) {
+            mediaPlayer.play()
+                .then(() => dispatch(setCurrentMediaMode("Playing")))
+                .catch((err) => console.log(err))
+        } else {
+            // start a fresh play
+            dispatch(setupMediaSrc(media, mediaPlayer))
+        }
+    }
 }
 
 function fetchMediaBuffer (url, loadMedia) {

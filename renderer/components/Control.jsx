@@ -2,7 +2,7 @@ import path from "path"
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { playMedia } from "../actions"
+import { playMedia, setCurrentMediaMode } from "../actions"
 import "./stylesheets/Control.scss"
 const { ipcRenderer } = window.require("electron")
 
@@ -23,11 +23,13 @@ class Control extends React.Component {
     }
 
     handlePlay () {
-        const { mode, media, dispatch } = this.props
-        if (mode === "Paused") {
+        var mediaPlayer = this.mediaPlayer.current
+        const { media, dispatch } = this.props
+        if (mediaPlayer.paused) {
             dispatch(playMedia(media, this.mediaPlayer))
         } else {
-            this.mediaPlayer.current.pause()
+            mediaPlayer.pause()
+            dispatch(setCurrentMediaMode("Paused"))
         }
     }
 
@@ -101,8 +103,10 @@ class Control extends React.Component {
     }
 
     stopMedia () {
+        const { dispatch } = this.props
         var mediaPlayer = this.mediaPlayer.current
         mediaPlayer.pause()
+        dispatch(setCurrentMediaMode("Paused"))
         mediaPlayer.currentTime = 0
         clearInterval(this.rewindInterval)
         clearInterval(this.fastFowardInterval)
@@ -132,12 +136,12 @@ class Control extends React.Component {
         }, 200)
     }
 
-    handlePrev () {
+    handlePrevious () {
         var prev
         const { songs, media, dispatch } = this.props
         for (var i=0; i < songs.length; i++) {
             if ((songs[i].file) === media) {
-                prev = songs[--i].file
+                prev = (i === 0) ? songs[songs.length - 1] : songs[--i].file
                 dispatch(playMedia(prev, this.mediaPlayer))
                 break
             }
@@ -149,7 +153,7 @@ class Control extends React.Component {
         const { songs, media, dispatch } = this.props
         for (var i=0; i < songs.length; i++) {
             if ((songs[i].file) === media) {
-                next = songs[--i].file
+                next = (i === songs.length - 1) ? next = songs[0] : songs[++i].file
                 dispatch(playMedia(next, this.mediaPlayer))
                 break
             }
@@ -180,7 +184,7 @@ class Control extends React.Component {
                         <div className="timer-count" ref={this.duration}>00:00</div>
                     </div>
                     <div className="rwd-play-stop-fwd">
-                        <span className="rwd" onClick={this.handlePrev} onDoubleClick={this.handleRewind}></span>
+                        <span className="rwd" onClick={this.handlePrevious} onDoubleClick={this.handleRewind}></span>
                         <span className={mode === "Paused" ? "play" : "pause"} onClick={this.handlePlay}></span>
                         <span className="fwd" onClick={this.handleNext} onDoubleClick={this.handleFastFoward}></span>
                     </div>
