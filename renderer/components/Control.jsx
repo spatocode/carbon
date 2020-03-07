@@ -16,6 +16,10 @@ class Control extends React.Component {
         this.duration = React.createRef()
         this.handlePlay = this.handlePlay.bind(this)
         this.handleTimeUpdate = this.handleTimeUpdate.bind(this)
+        this.handleNext = this.handleNext.bind(this)
+        this.handlePrevious = this.handlePrevious.bind(this)
+        this.handleFastFoward = this.handleFastFoward.bind(this)
+        this.handleRewind = this.handleRewind.bind(this)
     }
 
     handlePlay () {
@@ -96,6 +100,62 @@ class Control extends React.Component {
         timerLength.style.width = `${length}px`
     }
 
+    stopMedia () {
+        var mediaPlayer = this.mediaPlayer.current
+        mediaPlayer.pause()
+        mediaPlayer.currentTime = 0
+        clearInterval(this.rewindInterval)
+        clearInterval(this.fastFowardInterval)
+    }
+
+    handleFastFoward () {
+        var mediaPlayer = this.mediaPlayer.current
+        clearInterval(this.rewindInterval)
+        this.fastFowardInterval = setInterval(() => {
+            if (mediaPlayer.currentTime >= mediaPlayer.duration - 3) {
+                this.stopMedia()
+            } else {
+                mediaPlayer.currentTime += 3
+            }
+        }, 200)
+    }
+
+    handleRewind () {
+        var mediaPlayer = this.mediaPlayer.current
+        clearInterval(this.fastFowardInterval)
+        this.rewindInterval = setInterval(() => {
+            if (mediaPlayer.currentTime <= 3) {
+                this.stopMedia()
+            } else {
+                mediaPlayer.currentTime -= 3
+            }
+        }, 200)
+    }
+
+    handlePrev () {
+        var prev
+        const { songs, media, dispatch } = this.props
+        for (var i=0; i < songs.length; i++) {
+            if ((songs[i].file) === media) {
+                prev = songs[--i].file
+                dispatch(playMedia(prev, this.mediaPlayer))
+                break
+            }
+        }
+    }
+
+    handleNext () {
+        var next
+        const { songs, media, dispatch } = this.props
+        for (var i=0; i < songs.length; i++) {
+            if ((songs[i].file) === media) {
+                next = songs[--i].file
+                dispatch(playMedia(next, this.mediaPlayer))
+                break
+            }
+        }
+    }
+
     render () {
         const { mode, media, dispatch } = this.props
         const mediaName = path.basename(media, path.extname(media))
@@ -120,10 +180,9 @@ class Control extends React.Component {
                         <div className="timer-count" ref={this.duration}>00:00</div>
                     </div>
                     <div className="rwd-play-stop-fwd">
-                        <span className="rwd"></span>
+                        <span className="rwd" onClick={this.handlePrev} onDoubleClick={this.handleRewind}></span>
                         <span className={mode === "Paused" ? "play" : "pause"} onClick={this.handlePlay}></span>
-                        <span className="stop"></span>
-                        <span className="fwd"></span>
+                        <span className="fwd" onClick={this.handleNext} onDoubleClick={this.handleFastFoward}></span>
                     </div>
                 </div>
                 <div className="volume">
@@ -136,18 +195,21 @@ class Control extends React.Component {
 }
 
 Control.propTypes = {
+    songs: PropTypes.string,
     media: PropTypes.string,
     mode: PropTypes.string,
     loadMedia: PropTypes.func
 }
 
 Control.defaultProps = {
+    songs: [],
     media: "",
     mode: "",
     loadMedia: f=>f
 }
 
 const mapStateToProps = (state) => ({
+    songs: state.media.library,
     media: state.media.current,
     mode: state.media.mode
 })
