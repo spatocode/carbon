@@ -41,10 +41,50 @@ export const nightMode = (night) => ({
     night
 })
 
-export const playMedia = (media) => ({
+const setCurrentMedia = (media, mediaState) => ({
     type: C.PLAY_MEDIA,
     media
 })
+
+export function playMedia (media, mediaPlayer) {
+    return dispatch => dispatch(setupMediaSrc(media, mediaPlayer))
+}
+
+function fetchMediaBuffer (url, loadMedia) {
+    return fetch(url)
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => loadMedia(arrayBuffer))
+        .catch(err => console.log(err))
+}
+
+function setupMediaSrc (filepath, mediaPlayer) {
+    return dispatch => {
+        if (!MediaSource.isTypeSupported("audio/mpeg")) {
+            console.log("Codec not supported")
+            return dispatch(setCurrentMedia())
+        }
+        mediaPlayer = mediaPlayer.current
+        var mediaSrc = new MediaSource()
+
+        mediaSrc.addEventListener("sourceopen", function () {
+            console.log(mediaSrc.readyState)
+            var sourceBuffer = mediaSrc.addSourceBuffer("audio/mpeg")
+            return fetchMediaBuffer(filepath, function (buffer) {
+                sourceBuffer.addEventListener("updateend", function () {
+                    mediaSrc.endOfStream()
+                    mediaPlayer.play()
+                        .then(() => console.log("PLAY!!!"))
+                        .catch(() => {})
+                })
+                sourceBuffer.appendBuffer(buffer)
+                return dispatch(setCurrentMedia(filepath))
+            })
+        })
+
+        mediaPlayer.src = window.URL.createObjectURL(mediaSrc)
+        mediaPlayer.setAttribute("crossorigin", "anonymous")
+    }
+}
 
 export const requestLyric = () => ({
     type: C.REQUEST_LYRIC,
