@@ -12,6 +12,7 @@ const mediaState = {
     playists: [],
     favourite: [],
     library: [],
+    mode: "Paused",
     isUpdating: false
 }
 
@@ -52,6 +53,10 @@ export function media (state=mediaState, action) {
         return Object.assign({}, state, {
             current: action.media,
             recent: state.recent.concat(action.media)
+        })
+    case C.MEDIA_MODE:
+        return Object.assign({}, state, {
+            mode: action.mode
         })
     case C.UPDATE_PLAYIST:
         return Object.assign({}, state, {
