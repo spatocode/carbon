@@ -19,9 +19,12 @@ class Control extends React.Component {
     }
 
     handlePlay () {
-        const { media, dispatch } = this.props
-        dispatch(playMedia(media, this.mediaPlayer))
-        console.log(this.mediaPlayer.current)
+        const { mode, media, dispatch } = this.props
+        if (mode === "Paused") {
+            dispatch(playMedia(media, this.mediaPlayer))
+        } else {
+            this.mediaPlayer.current.pause()
+        }
     }
 
     handleTimeUpdate () {
@@ -94,7 +97,7 @@ class Control extends React.Component {
     }
 
     render () {
-        const { media, dispatch } = this.props
+        const { mode, media, dispatch } = this.props
         const mediaName = path.basename(media, path.extname(media))
         ipcRenderer.on("open-file", (event, file) => {
             dispatch(playMedia(file[0], this.mediaPlayer))
@@ -118,7 +121,7 @@ class Control extends React.Component {
                     </div>
                     <div className="rwd-play-stop-fwd">
                         <span className="rwd"></span>
-                        <span className="play" onClick={this.handlePlay}></span>
+                        <span className={mode === "Paused" ? "play" : "pause"} onClick={this.handlePlay}></span>
                         <span className="stop"></span>
                         <span className="fwd"></span>
                     </div>
@@ -134,16 +137,19 @@ class Control extends React.Component {
 
 Control.propTypes = {
     media: PropTypes.string,
+    mode: PropTypes.string,
     loadMedia: PropTypes.func
 }
 
 Control.defaultProps = {
     media: "",
+    mode: "",
     loadMedia: f=>f
 }
 
 const mapStateToProps = (state) => ({
-    media: state.media.current
+    media: state.media.current,
+    mode: state.media.mode
 })
 
 export default connect(mapStateToProps)(Control)

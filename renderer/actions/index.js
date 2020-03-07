@@ -41,9 +41,14 @@ export const nightMode = (night) => ({
     night
 })
 
-const setCurrentMedia = (media, mediaState) => ({
+const setCurrentMedia = (media) => ({
     type: C.PLAY_MEDIA,
     media
+})
+
+const setCurrentMediaMode = (mode) => ({
+    type: C.MEDIA_MODE,
+    mode
 })
 
 export function playMedia (media, mediaPlayer) {
@@ -73,7 +78,7 @@ function setupMediaSrc (filepath, mediaPlayer) {
                 sourceBuffer.addEventListener("updateend", function () {
                     mediaSrc.endOfStream()
                     mediaPlayer.play()
-                        .then(() => console.log("PLAY!!!"))
+                        .then(() => dispatch(setCurrentMediaMode("Playing")))
                         .catch(() => {})
                 })
                 sourceBuffer.appendBuffer(buffer)
