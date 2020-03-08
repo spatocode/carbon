@@ -14,7 +14,8 @@
         color: white;
         margin-bottom: 6px;
         font-size: 14px;
-        width: 350px;
+        width: 300px;
+        padding-left: 30px;
         white-space: nowrap;
         overflow: hidden;
         box-sizing: border-box;
@@ -59,14 +60,36 @@
         }
     }
 }
+
+.volume {
+    display: flex;
+    margin-top: 55px !important;
+    width: 150px;
+}
+
+.volume-bar {
+    width: 80px;
+    height: 4px;
+    margin-left: 5px;
+    background-color: rgb(102, 102, 102);
+}
+
+.volume-bar .volume-handle {
+    margin-top: -3px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: white;
+}
+
 .rwd-play-stop-fwd{
     text-align: center;
     margin-top: 10px;
 }
 
-.volume, .sound-option{
+.sound-option{
     width: 100px;
-    margin-top: 25px;
+    margin-top: 45px;
 }
 
 .pause {

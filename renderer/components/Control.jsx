@@ -9,11 +9,19 @@ const { ipcRenderer } = window.require("electron")
 class Control extends React.Component {
     constructor (props) {
         super(props)
+        this.state = {
+            clickTime: null,
+            repeat: false,
+            muted: false,
+            mousedown: false,
+            volume: 70
+        }
         this.mediaPlayer = React.createRef()
         this.currentTime = React.createRef()
         this.timerBar = React.createRef()
         this.timerLength = React.createRef()
         this.duration = React.createRef()
+        this.volumeHandle = React.createRef()
         this.handlePlay = this.handlePlay.bind(this)
         this.handleTimeUpdate = this.handleTimeUpdate.bind(this)
         this.handleNext = this.handleNext.bind(this)
@@ -21,6 +29,11 @@ class Control extends React.Component {
         this.handleFastFoward = this.handleFastFoward.bind(this)
         this.handleRewind = this.handleRewind.bind(this)
         this.handleClearInterval = this.handleClearInterval.bind(this)
+        this.handleRepeat = this.handleRepeat.bind(this)
+        this.handleMute = this.handleMute.bind(this)
+        this.handleVolume = this.handleVolume.bind(this)
+        this.handleMouseDown = this.handleMouseDown.bind(this)
+        this.handleMouseUp = this.handleMouseUp.bind(this)
     }
 
     handlePlay () {
@@ -108,45 +121,83 @@ class Control extends React.Component {
         timerLength.style.width = `${length}px`
     }
 
+    handleRepeat () {
+        const { repeat } = this.state
+        this.mediaPlayer.current.loop = !repeat
+        this.setState({ repeat: !repeat })
+    }
+
+    handleMute () {
+        const { mute } = this.state
+        this.mediaPlayer.current.muted = !mute
+        this.setState({ mute: !mute })
+    }
+
+    handleVolume (e) {
+        var mediaPlayer = this.mediaPlayer.current
+        if (this.state.mousedown) {
+            console.log(e.pageX)
+            if (mediaPlayer.volume < 1) {
+                mediaPlayer.volume += 0.1
+                this.setState({ volume: mediaPlayer.volume * 70 })
+                console.log(mediaPlayer.volume)
+                console.log(this.state.volume)
+            }
+        }
+    }
+
+    handleMouseDown () {
+        this.setState({ mousedown: true })
+    }
+
+    handleMouseUp () {
+        this.setState({ mousedown: false })
+    }
+
     stopMedia () {
         const { dispatch } = this.props
         var mediaPlayer = this.mediaPlayer.current
         mediaPlayer.pause()
         dispatch(setCurrentMediaMode("Paused"))
         mediaPlayer.currentTime = 0
-        clearInterval(this.rewindInterval)
-        clearInterval(this.fastFowardInterval)
+        clearInterval(this.controlInterval)
+    }
+
+    handleClearInterval () {
+        clearTimeout(this.controlTimeout)
+        clearInterval(this.controlInterval)
     }
 
     handleFastFoward () {
+        this.setState({ clickTime: Math.floor(Date.now()/1000) })
         var mediaPlayer = this.mediaPlayer.current
-        clearInterval(this.rewindInterval)
-        this.fastFowardInterval = setInterval(() => {
-            if (mediaPlayer.currentTime >= mediaPlayer.duration - 3) {
-                this.stopMedia()
-            } else {
-                mediaPlayer.currentTime += 3
-                console.log(mediaPlayer.currentTime)
-            }
-        }, 200)
+        this.controlTimeout = setTimeout(() => {
+            this.controlInterval = setInterval(() => {
+                if (mediaPlayer.currentTime >= mediaPlayer.duration - 3) {
+                    this.stopMedia()
+                } else {
+                    mediaPlayer.currentTime += 3
+                }
+            }, 200)
+        }, 800)
     }
 
     handleRewind () {
+        this.setState({ clickTime: Math.floor(Date.now()/1000) })
         var mediaPlayer = this.mediaPlayer.current
-        clearInterval(this.fastFowardInterval)
-        this.rewindInterval = setInterval(() => {
-            if (mediaPlayer.currentTime <= 3) {
-                this.stopMedia()
-            } else {
-                mediaPlayer.currentTime -= 3
-            }
-        }, 200)
+        this.controlTimeout = setTimeout(() => {
+            this.controlInterval = setInterval(() => {
+                if (mediaPlayer.currentTime <= 3) {
+                    this.stopMedia()
+                } else {
+                    mediaPlayer.currentTime -= 3
+                }
+            }, 200)
+        }, 800)
     }
 
     handlePrevious () {
-        if (this.fastFowardInterval || this.rewindInterval) {
-            clearInterval(this.fastFowardInterval)
-            clearInterval(this.rewindInterval)
+        if (this.state.clickTime < Math.floor(Date.now()/1000)) {
             return
         }
         var prev
@@ -161,9 +212,7 @@ class Control extends React.Component {
     }
 
     handleNext () {
-        if (this.fastFowardInterval || this.rewindInterval) {
-            clearInterval(this.fastFowardInterval)
-            clearInterval(this.rewindInterval)
+        if (this.state.clickTime < Math.floor(Date.now()/1000)) {
             return
         }
         var next
@@ -179,6 +228,7 @@ class Control extends React.Component {
 
     render () {
         const { mode, media, dispatch } = this.props
+        const { volume } = this.state
         const mediaName = path.basename(media, path.extname(media))
         ipcRenderer.on("open-file", (event, file) => {
             dispatch(playMedia(file[0], this.mediaPlayer.current))
@@ -189,7 +239,7 @@ class Control extends React.Component {
                 <audio ref={this.mediaPlayer} onTimeUpdate={this.handleTimeUpdate}></audio>
                 <div className="sound-option">
                     <span className="shuffle"></span>
-                    <span className="repeat"></span>
+                    <span className="repeat" onClick={this.handleRepeat}></span>
                 </div>
                 <div className="media-indicator">
                     <div className="media-title">
@@ -205,16 +255,24 @@ class Control extends React.Component {
                     </div>
                     <div className="rwd-play-stop-fwd">
                         <span className="rwd" onClick={this.handlePrevious}
+                            onMouseUp={this.handleClearInterval}
                             onMouseDown={this.handleRewind}></span>
                         <span className={mode === "Paused" ? "play" : "pause"}
                             onClick={this.handlePlay}></span>
                         <span className="fwd" onClick={this.handleNext}
+                            onMouseUp={this.handleClearInterval}
                             onMouseDown={this.handleFastFoward}></span>
                     </div>
                 </div>
                 <div className="volume">
-                    <span className="mute"></span>
-                    <span className="volume-bar">V</span>
+                    <span className="mute" onClick={this.handleMute}></span>
+                    <div className="volume-bar">
+                        <div className="volume-handle" ref={this.volumeHandle}
+                            style={{ marginLeft: `${volume}px` }}
+                            onMouseMove={this.handleVolume}
+                            onMouseDown={this.handleMouseDown}
+                            onMouseUp={this.handleMouseUp}></div>
+                    </div>
                 </div>
             </div>
         )
