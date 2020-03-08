@@ -87,7 +87,7 @@ function setupMediaSrc (filepath, mediaPlayer) {
                     mediaSrc.endOfStream()
                     mediaPlayer.play()
                         .then(() => dispatch(setCurrentMediaMode("Playing")))
-                        .catch((err) => console.log(err))
+                        .catch(() => dispatch(setCurrentMediaMode("Paused")))
                 })
                 sourceBuffer.appendBuffer(buffer)
                 return dispatch(setCurrentMedia(filepath))
