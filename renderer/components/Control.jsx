@@ -20,6 +20,7 @@ class Control extends React.Component {
         this.handlePrevious = this.handlePrevious.bind(this)
         this.handleFastFoward = this.handleFastFoward.bind(this)
         this.handleRewind = this.handleRewind.bind(this)
+        this.handleClearInterval = this.handleClearInterval.bind(this)
     }
 
     handlePlay () {
@@ -122,7 +123,6 @@ class Control extends React.Component {
         clearInterval(this.rewindInterval)
         this.fastFowardInterval = setInterval(() => {
             if (mediaPlayer.currentTime >= mediaPlayer.duration - 3) {
-                console.log("STOP")
                 this.stopMedia()
             } else {
                 mediaPlayer.currentTime += 3
@@ -144,6 +144,11 @@ class Control extends React.Component {
     }
 
     handlePrevious () {
+        if (this.fastFowardInterval || this.rewindInterval) {
+            clearInterval(this.fastFowardInterval)
+            clearInterval(this.rewindInterval)
+            return
+        }
         var prev
         const { songs, media, dispatch } = this.props
         for (var i=0; i < songs.length; i++) {
@@ -156,6 +161,11 @@ class Control extends React.Component {
     }
 
     handleNext () {
+        if (this.fastFowardInterval || this.rewindInterval) {
+            clearInterval(this.fastFowardInterval)
+            clearInterval(this.rewindInterval)
+            return
+        }
         var next
         const { songs, media, dispatch } = this.props
         for (var i=0; i < songs.length; i++) {
@@ -182,7 +192,10 @@ class Control extends React.Component {
                     <span className="repeat"></span>
                 </div>
                 <div className="media-indicator">
-                    <div className="song-title">{mediaName}</div>
+                    <div className="media-title">
+                        <span className={(mode === "Paused")
+                            ? "" : "marquee"}>{mediaName}</span>
+                    </div>
                     <div className="timer">
                         <div className="timer-count" ref={this.currentTime}>00:00</div>
                         <div className="timer-bar" ref={this.timerBar}>
@@ -191,9 +204,12 @@ class Control extends React.Component {
                         <div className="timer-count" ref={this.duration}>00:00</div>
                     </div>
                     <div className="rwd-play-stop-fwd">
-                        <span className="rwd" onClick={this.handlePrevious} onDoubleClick={this.handleRewind}></span>
-                        <span className={mode === "Paused" ? "play" : "pause"} onClick={this.handlePlay}></span>
-                        <span className="fwd" onClick={this.handleNext} onDoubleClick={this.handleFastFoward}></span>
+                        <span className="rwd" onClick={this.handlePrevious}
+                            onMouseDown={this.handleRewind}></span>
+                        <span className={mode === "Paused" ? "play" : "pause"}
+                            onClick={this.handlePlay}></span>
+                        <span className="fwd" onClick={this.handleNext}
+                            onMouseDown={this.handleFastFoward}></span>
                     </div>
                 </div>
                 <div className="volume">

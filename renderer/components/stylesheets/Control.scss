@@ -9,11 +9,30 @@
 .media-indicator{
     flex: 1;
     width: 400px;
-    .song-title{
-        text-align: center;
+    .media-title{
+        margin: 0 auto;
         color: white;
         margin-bottom: 6px;
         font-size: 14px;
+        width: 350px;
+        white-space: nowrap;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+    .media-title span {
+        text-align: center;
+        display: inline-block;
+    }
+    .marquee {
+        animation: marquee 15s linear infinite;
+    }
+    @keyframes marquee {
+        0% {
+            transform: translate(0, 0);
+        }
+        100% {
+            transform: translate(-100%, 0);
+        }
     }
     .timer{
         display: flex;
