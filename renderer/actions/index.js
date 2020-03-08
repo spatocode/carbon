@@ -54,7 +54,7 @@ export const setCurrentMediaMode = (mode) => ({
 export function playMedia (media, mediaPlayer) {
     return dispatch => {
         // resume play if already in progress and paused
-        if (mediaPlayer.current.currentTime > 0) {
+        if (mediaPlayer.currentTime > 0 && mediaPlayer.paused) {
             mediaPlayer.play()
                 .then(() => dispatch(setCurrentMediaMode("Playing")))
                 .catch((err) => console.log(err))
@@ -78,18 +78,16 @@ function setupMediaSrc (filepath, mediaPlayer) {
             console.log("Codec not supported")
             return dispatch(setCurrentMedia())
         }
-        mediaPlayer = mediaPlayer.current
         var mediaSrc = new MediaSource()
 
         mediaSrc.addEventListener("sourceopen", function () {
-            console.log(mediaSrc.readyState)
             var sourceBuffer = mediaSrc.addSourceBuffer("audio/mpeg")
             return fetchMediaBuffer(filepath, function (buffer) {
                 sourceBuffer.addEventListener("updateend", function () {
                     mediaSrc.endOfStream()
                     mediaPlayer.play()
                         .then(() => dispatch(setCurrentMediaMode("Playing")))
-                        .catch(() => {})
+                        .catch((err) => console.log(err))
                 })
                 sourceBuffer.appendBuffer(buffer)
                 return dispatch(setCurrentMedia(filepath))

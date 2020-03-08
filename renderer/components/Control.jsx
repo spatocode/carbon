@@ -25,8 +25,13 @@ class Control extends React.Component {
     handlePlay () {
         var mediaPlayer = this.mediaPlayer.current
         const { media, dispatch } = this.props
+        if (this.fastFowardInterval || this.rewindInterval) {
+            clearInterval(this.fastFowardInterval)
+            clearInterval(this.rewindInterval)
+        }
+
         if (mediaPlayer.paused) {
-            dispatch(playMedia(media, this.mediaPlayer))
+            dispatch(playMedia(media, this.mediaPlayer.current))
         } else {
             mediaPlayer.pause()
             dispatch(setCurrentMediaMode("Paused"))
@@ -117,9 +122,11 @@ class Control extends React.Component {
         clearInterval(this.rewindInterval)
         this.fastFowardInterval = setInterval(() => {
             if (mediaPlayer.currentTime >= mediaPlayer.duration - 3) {
+                console.log("STOP")
                 this.stopMedia()
             } else {
                 mediaPlayer.currentTime += 3
+                console.log(mediaPlayer.currentTime)
             }
         }, 200)
     }
@@ -164,7 +171,7 @@ class Control extends React.Component {
         const { mode, media, dispatch } = this.props
         const mediaName = path.basename(media, path.extname(media))
         ipcRenderer.on("open-file", (event, file) => {
-            dispatch(playMedia(file[0], this.mediaPlayer))
+            dispatch(playMedia(file[0], this.mediaPlayer.current))
         })
 
         return (
@@ -199,7 +206,7 @@ class Control extends React.Component {
 }
 
 Control.propTypes = {
-    songs: PropTypes.string,
+    songs: PropTypes.array,
     media: PropTypes.string,
     mode: PropTypes.string,
     loadMedia: PropTypes.func
