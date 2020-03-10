@@ -2,7 +2,6 @@ import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import Music from "./Music"
-import Favourite from "./Favourite"
 import Video from "./Video"
 import Downloads from "./Downloads"
 import Settings from "./Settings"
@@ -10,10 +9,10 @@ import Playists from "./Playists"
 import NowPlaying from "./NowPlaying"
 import "./stylesheets/View.scss"
 
-const View = ({ view="Now Playing" }) => {
+const View = ({ view="Now Playing", songs=[] }) => {
     switch (view) {
     case "Music":
-        return <Music />
+        return <Music songs={songs}/>
     case "Video":
         return <Video />
     case "Downloads":
@@ -23,22 +22,20 @@ const View = ({ view="Now Playing" }) => {
     case "Playists":
         return <Playists />
     case "Favourite":
-        return <Favourite />
+        return <Music />
     default:
         return <NowPlaying />
     }
 }
 
 View.propTypes = {
-    view: PropTypes.string
+    view: PropTypes.string,
+    songs: PropTypes.array
 }
 
 const mapStateToProps = (state) => ({
-    view: state.view.category
+    view: state.view.category,
+    songs: state.media.library
 })
 
-const mapDispatchToProps = (dispatch) => ({
-
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(View)
+export default connect(mapStateToProps, null)(View)
