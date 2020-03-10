@@ -47,7 +47,7 @@ class Menu extends React.Component {
 
     render () {
         const { show, newPlayist } = this.state
-        const { itemToNewPlayist, playists } = this.props
+        const { itemToNewPlayist, playists, night } = this.props
         return (
             <div className="Menu">
                 <div className="title">
@@ -97,7 +97,7 @@ class Menu extends React.Component {
                 <div className="menu-list" onClick={this.handleNightmode}>
                     <span>Night mode</span>
                     <div className="mode-toggle-bar">
-                        <div className="mode-toggle" style={nightMode ? { float: "right" } : { float: "left" }}></div>
+                        <div className="mode-toggle" style={night ? { float: "right" } : { float: "left" }}></div>
                     </div>
                 </div>
             </div>
