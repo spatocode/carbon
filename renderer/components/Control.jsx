@@ -36,6 +36,11 @@ class Control extends React.Component {
         this.handleMouseUp = this.handleMouseUp.bind(this)
     }
 
+    componentDidMount () {
+        const { dispatch } = this.props
+        dispatch(playMedia("", this.mediaPlayer.current))
+    }
+
     handlePlay () {
         var mediaPlayer = this.mediaPlayer.current
         const { media, dispatch } = this.props
