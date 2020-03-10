@@ -52,7 +52,10 @@ export function media (state=mediaState, action) {
     case C.PLAY_MEDIA:
         return Object.assign({}, state, {
             current: action.media,
-            recent: state.recent.concat(action.media)
+            player: action.player,
+            recent: (state.recent.length < 11)
+                ? state.recent.concat(action.media)
+                : state.recent
         })
     case C.MEDIA_MODE:
         return Object.assign({}, state, {
@@ -60,7 +63,8 @@ export function media (state=mediaState, action) {
         })
     case C.UPDATE_PLAYIST:
         return Object.assign({}, state, {
-            playist: updatePlayists(action.data, state.playists)
+            playists: updatePlayists(action.playist, action.item, state.playists),
+            itemToNewPlayist: action.itemToNewPlayist
         })
     case C.UPDATE_FAVOURITE:
         return (state.favourite.includes(action.favourite))
@@ -121,10 +125,15 @@ export function lyric (state=lyricState, action) {
     }
 }
 
-function updatePlayists (newData, playists) {
+function updatePlayists (playist, item, playists) {
+    if (!playist && !item) {
+        return playists
+    }
     for (var i=0; i < playists.length; i++) {
-        if (playists[i].name === newData.name && !playists[i].data.includes(newData.data)) {
-            playists[i].data.concat(newData.data)
+        if (playists[i].includes(playist)) {
+            return playists[i].concat(item)
         }
     }
+    playists.push([playist, item])
+    return playists
 }

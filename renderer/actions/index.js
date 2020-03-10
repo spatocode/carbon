@@ -10,9 +10,16 @@ export const shouldUpdateLibrary = (shouldUpdate) => ({
     shouldUpdate
 })
 
-export const updatePlayist = playist => ({
+export const updatePlayist = (playist, item) => ({
     type: C.UPDATE_PLAYIST,
-    playist: playist
+    playist: playist,
+    item: item,
+    itemToNewPlayist: null
+})
+
+export const registerNewPlayist = (item) => ({
+    type: C.UPDATE_PLAYIST,
+    itemToNewPlayist: item
 })
 
 export const updateFavourite = (favourite) => ({
@@ -41,9 +48,11 @@ export const nightMode = (night) => ({
     night
 })
 
-const setCurrentMedia = (media) => ({
+// Make HTMLMediaElement available in state
+const setCurrentMedia = (media, mediaPlayer) => ({
     type: C.PLAY_MEDIA,
-    media
+    media: media,
+    player: mediaPlayer
 })
 
 export const setCurrentMediaMode = (mode) => ({
@@ -53,6 +62,10 @@ export const setCurrentMediaMode = (mode) => ({
 
 export function playMedia (media, mediaPlayer) {
     return dispatch => {
+        if (media === "") {
+            // This happens when Control element initially mounts
+            return dispatch(setCurrentMedia(media, mediaPlayer))
+        }
         // resume play if already in progress and paused
         if (mediaPlayer.currentTime > 0 && mediaPlayer.paused) {
             mediaPlayer.play()
@@ -87,10 +100,13 @@ function setupMediaSrc (filepath, mediaPlayer) {
                     mediaSrc.endOfStream()
                     mediaPlayer.play()
                         .then(() => dispatch(setCurrentMediaMode("Playing")))
-                        .catch(() => dispatch(setCurrentMediaMode("Paused")))
+                        .catch((err) => {
+                            console.log(err)
+                            dispatch(setCurrentMediaMode("Paused"))
+                        })
                 })
                 sourceBuffer.appendBuffer(buffer)
-                return dispatch(setCurrentMedia(filepath))
+                return dispatch(setCurrentMedia(filepath, mediaPlayer))
             })
         })
 

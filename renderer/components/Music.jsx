@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { updateFavourite } from "../actions"
+import { updateFavourite, playMedia, registerNewPlayist, updatePlayist } from "../actions"
 import "./stylesheets/Music.scss"
 const { remote } = window.require("electron")
 const { Menu } = remote
@@ -49,7 +49,7 @@ class Music extends React.Component {
                 submenu: [{
                     label: "Add new playist",
                     click: this.handleNewPlayist
-                }].concat(playists)
+                }]// .concat(playists)
             },
             { label: favMenuLabel, click: this.handleNewFavourite },
             { type: "separator" },
@@ -65,7 +65,8 @@ class Music extends React.Component {
     }
 
     handlePlay () {
-
+        const { dispatch, player } = this.props
+        dispatch(playMedia(this.state.highlight, player))
     }
 
     handleRemove () {
@@ -77,11 +78,15 @@ class Music extends React.Component {
     }
 
     handleAddToPlayist () {
-
+        const { highlight } = this.state
+        const { dispatch } = this.props
+        dispatch(updatePlayist("playist name", highlight))
     }
 
     handleNewPlayist () {
-
+        const { highlight } = this.state
+        const { dispatch } = this.props
+        dispatch(registerNewPlayist(highlight))
     }
 
     handleNewFavourite () {
@@ -91,7 +96,6 @@ class Music extends React.Component {
     }
 
     handleProperties () {
-
     }
 
     render () {
@@ -155,17 +159,20 @@ class Music extends React.Component {
 
 Music.propTypes = {
     favourite: PropTypes.array,
-    playists: PropTypes.array
+    playists: PropTypes.array,
+    player: PropTypes.object
 }
 
 Music.defaultProps = {
     favourite: [],
-    playists: []
+    playists: [],
+    player: null
 }
 
 const mapStateToProps = (state) => ({
     favourite: state.media.library.filter(song => state.media.favourite.includes(song.file)),
-    playists: state.media.playists
+    playists: Object.keys(state.media.playists),
+    player: state.media.player
 })
 
 export default connect(mapStateToProps, null)(Music)
