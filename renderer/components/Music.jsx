@@ -17,15 +17,14 @@ class Music extends React.Component {
         this.handlePlay = this.handlePlay.bind(this)
         this.handleProperties = this.handleProperties.bind(this)
         this.handleRemove = this.handleRemove.bind(this)
-        this.handleAddToPlayist = this.handleAddToPlayist.bind(this)
         this.handleNewPlayist = this.handleNewPlayist.bind(this)
         this.handleNewFavourite = this.handleNewFavourite.bind(this)
     }
 
     handleContextMenu (e) {
-        var playists = []
+        var playist = []
         var favMenuLabel = "Add to Favourite"
-        var { favourite } = this.props
+        var { favourite, playists } = this.props
 
         favourite.forEach((fav) => {
             if (fav.file === e.currentTarget.className) {
@@ -33,10 +32,10 @@ class Music extends React.Component {
             }
         })
 
-        this.props.playists.forEach((playist) => {
-            playists.push({
-                label: playist.name,
-                click: this.handleAddToPlayist
+        playists.forEach((pl) => {
+            playist.push({
+                label: pl[0],
+                click: this.handleNewPlayist
             })
         })
 
@@ -49,7 +48,7 @@ class Music extends React.Component {
                 submenu: [{
                     label: "Add new playist",
                     click: this.handleNewPlayist
-                }]// .concat(playists)
+                }].concat(playist)
             },
             { label: favMenuLabel, click: this.handleNewFavourite },
             { type: "separator" },
@@ -77,16 +76,13 @@ class Music extends React.Component {
         // TODO: delete media
     }
 
-    handleAddToPlayist () {
+    handleNewPlayist (e) {
         const { highlight } = this.state
         const { dispatch } = this.props
-        dispatch(updatePlayist("playist name", highlight))
-    }
-
-    handleNewPlayist () {
-        const { highlight } = this.state
-        const { dispatch } = this.props
-        dispatch(registerNewPlayist(highlight))
+        if (e.label === "Add new playist") {
+            return dispatch(registerNewPlayist(highlight))
+        }
+        dispatch(updatePlayist(e.label, highlight))
     }
 
     handleNewFavourite () {
@@ -171,7 +167,7 @@ Music.defaultProps = {
 
 const mapStateToProps = (state) => ({
     favourite: state.media.library.filter(song => state.media.favourite.includes(song.file)),
-    playists: Object.keys(state.media.playists),
+    playists: state.media.playists,
     player: state.media.player
 })
 
