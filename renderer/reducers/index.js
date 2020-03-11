@@ -131,7 +131,8 @@ function updatePlayists (playist, item, playists) {
     }
     for (var i=0; i < playists.length; i++) {
         if (playists[i].includes(playist)) {
-            return playists[i].concat(item)
+            playists[i].push(item)
+            return playists
         }
     }
     playists.push([playist, item])
