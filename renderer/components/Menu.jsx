@@ -70,12 +70,11 @@ class Menu extends React.Component {
                     <span></span>
                     <span onClick={this.showDropdown}>Playists</span>
                     <div className="menu-dropdown"
-                        style={show ? { display: "block" } : { display: "none" }}>
+                        style={show || itemToNewPlayist ? { display: "block" } : { display: "none" }}>
                         <form onSubmit={this.registerNewPlayist}
                             style={itemToNewPlayist ? { display: "block" } : { display: "none" }}>
                             <input placeholder="New Playist" type="input" autoFocus
-                                onChange={this.handleChange} value={newPlayist}
-                                style={itemToNewPlayist ? { display: "block" } : { display: "none" }} />
+                                onChange={this.handleChange} value={newPlayist} />
                         </form>
                         {playists.map((playist, i) =>
                             <div key={i} className="menu-sublist">{playist[0]}</div>
