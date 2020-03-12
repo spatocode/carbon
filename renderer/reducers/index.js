@@ -3,7 +3,7 @@ import C from "../actions/constant"
 const lyricState = {
     isFetchingLyric: false,
     error: false,
-    items: []
+    data: []
 }
 
 const mediaState = {
@@ -113,7 +113,7 @@ export function lyric (state=lyricState, action) {
         return Object.assign({}, state, {
             isFetching: action.isFetching,
             error: action.error,
-            items: action.data
+            data: state.data.concat(action.data)
         })
     case C.ERROR_REPORT:
         return Object.assign({}, state, {
