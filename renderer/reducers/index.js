@@ -112,7 +112,6 @@ export function lyric (state=lyricState, action) {
     case C.RECEIVE_LYRIC:
         return Object.assign({}, state, {
             isFetching: action.isFetching,
-            error: action.error,
             data: state.data.concat(action.data)
         })
     case C.ERROR_REPORT:

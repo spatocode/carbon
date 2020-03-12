@@ -123,7 +123,6 @@ export const requestLyric = () => ({
 export const receiveLyric = (json) => ({
     type: C.RECEIVE_LYRIC,
     isFetchingLyric: false,
-    error: false,
     data: json.data
 })
 
