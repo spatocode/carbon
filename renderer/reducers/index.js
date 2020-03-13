@@ -54,7 +54,7 @@ export function media (state=mediaState, action) {
             current: action.media,
             player: action.player,
             recent: (state.recent.length < 11)
-                ? state.recent.concat(action.media)
+                ? [...state.recent, action.media]
                 : state.recent
         })
     case C.MEDIA_MODE:
@@ -72,7 +72,7 @@ export function media (state=mediaState, action) {
                 favourite: state.favourite.filter(fav => fav !== action.favourite)
             })
             : Object.assign({}, state, {
-                favourite: state.favourite.concat(action.favourite)
+                favourite: [...state.favourite, action.favourite]
             })
     case C.REQUEST_UPDATE:
         return Object.assign({}, state, {
@@ -112,7 +112,7 @@ export function lyric (state=lyricState, action) {
     case C.RECEIVE_LYRIC:
         return Object.assign({}, state, {
             isFetching: action.isFetching,
-            data: state.data.concat(action.data)
+            data: [...state.data, action.data]
         })
     case C.ERROR_REPORT:
         return Object.assign({}, state, {
