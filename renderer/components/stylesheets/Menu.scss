@@ -1,6 +1,8 @@
 .Menu{
-    font-size: 15px;
-    width: 150px;
+    font-size: 16px;
+    font-weight: bold;
+    width: 180px;
+    min-width: 180px;
     padding-top: 20px;
     padding-bottom: 20px;
     background-color: rgb(240, 240, 240);
@@ -23,9 +25,32 @@
     .menu-list{
         padding: 8px;
         padding-left: 20px;
-        cursor: pointer;
     }
-    .menu-list:hover{ /* TODO: Add exception for nightmode*/
+    .menu-list:last-child{
+        margin-top: 60px;
+    }
+    .menu-list:hover{
         background-color: rgb(221, 221, 221);
     }
+    .menu-sublist:hover{
+        background-color: rgb(221, 221, 221);
+    }
+    .menu-list:last-child:hover{
+        background-color: transparent;
+    }
+    .no-hover:hover{
+        background-color: transparent !important;
+    }
+}
+
+.menu-dropdown {
+    display: none;
+    margin-left: 20px;
+    font-size: 14px;
+    font-weight: 100;
+}
+
+.menu-dropdown input { 
+    width: 100px;
+    height: 20px;
 }
