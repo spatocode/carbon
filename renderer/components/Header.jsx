@@ -8,13 +8,21 @@ class Header extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
-            value: ""
+            value: "",
+            isFetchingMedia: false,
+            searchResult: []
         }
+        this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
-    handleSubmit () {
-        const { dispatch } = this.props
-        dispatch(searchSong(this.state.value))
+    handleSubmit (e) {
+        e.preventDefault()
+        this.setState({ isFetchingMedia: true })
+        searchSong(this.state.value, function (result) {
+            this.setState({ isFetchingMedia: false })
+            this.setState({ searchResult: result })
+        })
     }
 
     handleChange (e) {
@@ -23,6 +31,7 @@ class Header extends React.Component {
 
     render () {
         const { isUpdating } = this.props
+        const { isFetchingMedia, searchResult } = this.state
         return (
             <div className="Header">
                 <div className="update-library"
@@ -36,6 +45,14 @@ class Header extends React.Component {
                         <span><button type="submit"></button></span>
                         <input type="search" placeholder="Search media" onChange={this.handleChange} />
                     </form>
+                </div>
+                <div className="search-result">
+                    <div style={isFetchingMedia ? { display: "block" }
+                        : { display: "none" }}>
+                    </div>
+                    {searchResult.map((item, i) =>
+                        <div key={i}>{item}</div>
+                    )}
                 </div>
             </div>
         )
