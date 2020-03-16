@@ -126,20 +126,8 @@ export const receiveLyric = (json) => ({
     data: json.data
 })
 
-export const requestMedia = () => ({
-    type: C.SEARCH_LOCAL_MEDIA,
-    isFetchingMedia: true
-})
-
-export const receiveMedia = (json) => ({
-    type: C.REQUEST_DATA,
-    isFetchingMedia: false,
-    error: false,
-    data: json.data
-})
-
 export const errorReport = () => ({
-    type: C.REQUEST_REMOTE,
+    type: C.ERROR_REPORT,
     error: true
 })
 
@@ -177,25 +165,16 @@ export function fetchLyricIfNeeded (lyric) {
     }
 }
 
-export function searchSong (media) {
-    return (dispatch) => {
-        dispatch(fetchMedia(media))
-    }
+export function searchSong (media, library, callback) {
+    searchLocalMedia(media, library)
 }
 
-function fetchMedia (media) {
-    return dispatch => {
-        dispatch(requestMedia())
-        return searchLocalMedia(media)
-    }
-}
-
-function searchLocalMedia (media, library) {
+async function searchLocalMedia (media, library) {
     // TODO: Async code of searching the file system for song
     // if the song is not found in disk, call searchOnlineSong to search online
 }
 
-function searchOnlineMedia (media) {
+async function searchOnlineMedia (media) {
     // TODO: Async code of searching the network for song
     // if song is found return it and prompt/request the user to download
 }
