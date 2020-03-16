@@ -62,10 +62,6 @@ class Menu extends React.Component {
                     <span><img src=""/></span>
                     <span>Music</span>
                 </div>
-                <div className="menu-list" onClick={this.handleView}>
-                    <span></span>
-                    <span>Video</span>
-                </div>
                 <div className={(show && playists.length > 0) ? "menu-list no-hover" : "menu-list"}>
                     <span></span>
                     <span onClick={this.showDropdown}>Playists</span>
@@ -77,7 +73,9 @@ class Menu extends React.Component {
                                 onChange={this.handleChange} value={newPlayist} />
                         </form>
                         {playists.map((playist, i) =>
-                            <div key={i} className="menu-sublist">{playist[0]}</div>
+                            <div key={i} className="menu-sublist" onClick={this.handleView}>
+                                {playist[0]}
+                            </div>
                         )}
                     </div>
                 </div>
@@ -88,10 +86,6 @@ class Menu extends React.Component {
                 <div className="menu-list" onClick={this.handleView}>
                     <span></span>
                     <span>Downloads</span>
-                </div>
-                <div className="menu-list" onClick={this.handleView}>
-                    <span></span>
-                    <span>Settings</span>
                 </div>
                 <div className="menu-list" onClick={this.handleNightmode}>
                     <span>Night mode</span>
