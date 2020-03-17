@@ -10,13 +10,23 @@ class Menu extends React.Component {
         super(props)
         this.state = {
             show: false,
-            newPlayist: ""
+            newPlayist: "",
+            height: window.innerHeight - 142
         }
         this.showDropdown = this.showDropdown.bind(this)
         this.handleNightmode = this.handleNightmode.bind(this)
         this.handleView = this.handleView.bind(this)
         this.registerNewPlayist = this.registerNewPlayist.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.handleResize = this.handleResize.bind(this)
+    }
+
+    componentDidMount () {
+        window.onresize = this.handleResize
+    }
+
+    handleResize () {
+        this.setState({ height: window.innerHeight - 142 })
     }
 
     handleChange (e) {
@@ -46,10 +56,10 @@ class Menu extends React.Component {
     }
 
     render () {
-        const { show, newPlayist } = this.state
+        const { show, newPlayist, height } = this.state
         const { itemToNewPlayist, playists, night } = this.props
         return (
-            <div className="Menu">
+            <div className="Menu" style={{ height: height }}>
                 <div className="title">
                     <img src=""/>
                     {version}

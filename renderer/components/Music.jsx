@@ -10,7 +10,8 @@ class Music extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
-            highlight: null
+            highlight: null,
+            height: window.innerHeight-143
         }
         this.handleContextMenu = this.handleContextMenu.bind(this)
         this.handleClick = this.handleClick.bind(this)
@@ -19,6 +20,17 @@ class Music extends React.Component {
         this.handleRemove = this.handleRemove.bind(this)
         this.handleNewPlayist = this.handleNewPlayist.bind(this)
         this.handleNewFavourite = this.handleNewFavourite.bind(this)
+        this.handleResize = this.handleResize.bind(this)
+        this.formatMediaProp = this.formatMediaProp.bind(this)
+    }
+
+    componentDidMount () {
+        window.onresize = this.handleResize
+    }
+
+    handleResize () {
+        this.setState({ height: window.innerHeight-143 })
+        console.log(window.innerHeight-143)
     }
 
     handleContextMenu (e) {
@@ -94,12 +106,20 @@ class Music extends React.Component {
     handleProperties () {
     }
 
+    formatMediaProp (mediaProp, lastIndex) {
+        var fmt = mediaProp.toString().slice(0, lastIndex)
+        if (mediaProp === fmt) {
+            return fmt
+        }
+        return fmt+"..."
+    }
+
     render () {
-        const { highlight } = this.state
+        const { highlight, height } = this.state
         var { songs, favourite } = this.props
         songs = songs || favourite
         return (
-            <div className="tab-view" id="Music">
+            <div className="tab-view" id="Music" style={{ height: height }}>
                 <table className="">
                     <thead>
                         <tr>
@@ -121,27 +141,32 @@ class Music extends React.Component {
                                     ? { backgroundColor: "teal", color: "whitesmoke" } : null}>
                                 <td>{i}</td>
                                 {song.title
-                                    ? <td>{song.title.toString().slice(0, 29)}</td>
-                                    : <td>{song.file_name.toString().slice(0, 29)}</td>
+                                    ? <td>{this.formatMediaProp(song.title.toString(), 29)}
+                                    </td>
+                                    : <td>{this.formatMediaProp(song.file_name.toString(), 29)}</td>
                                 }
 
                                 {song.duration
-                                    ? <td>{song.duration[1].replace("mn ", ":").replace("s", "")}</td>
+                                    ? <td>{
+                                        song.duration[4].slice(0, 2) === "00"
+                                            ? song.duration[4].slice(3, 8)
+                                            : song.duration[4].slice(0, 8)
+                                    }</td>
                                     : <td>Unknown</td>
                                 }
 
                                 {song.artist
-                                    ? <td>{song.artist.toString().slice(0, 20)}</td>
+                                    ? <td>{this.formatMediaProp(song.artist.toString(), 20)}</td>
                                     : <td>Unknown</td>
                                 }
 
                                 {song.album
-                                    ? <td>{song.album.toString().slice(0, 20)}</td>
+                                    ? <td>{this.formatMediaProp(song.album.toString(), 20)}</td>
                                     : <td>Unknown</td>
                                 }
 
                                 {song.genre
-                                    ? <td>{song.genre.toString().slice(0, 20)}</td>
+                                    ? <td>{this.formatMediaProp(song.genre.toString(), 20)}</td>
                                     : <td>Unknown</td>
                                 }
                             </tr>

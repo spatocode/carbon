@@ -1,12 +1,12 @@
 #Music{
     display: block;
-    height: 500px;
     width: 100%;
-    overflow-x: auto;
+    overflow-y: auto;
     white-space: nowrap;
 }
 
 th{
+    width: 300px;
     background-color: rgb(243, 243, 243);
     position: sticky;
     top: 0;
@@ -18,12 +18,16 @@ th{
     padding: 3px;
 }
 
+th:first-child {
+    width: 50px;
+}
+
 th:last-child {
     border-right: 0px solid rgb(179, 179, 179);
 }
 
 td:nth-child(2) {
-
+    
 }
 
 td{
