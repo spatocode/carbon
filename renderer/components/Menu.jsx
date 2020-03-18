@@ -61,8 +61,8 @@ class Menu extends React.Component {
         return (
             <div className="Menu" style={{ height: height }}>
                 <div className="title">
-                    <img src=""/>
-                    {version}
+                    <h1>carbon</h1>
+                    <div>{version}</div>
                 </div>
                 <div className="menu-list" onClick={this.handleView}>
                     <span></span>
