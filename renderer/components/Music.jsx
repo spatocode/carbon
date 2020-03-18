@@ -30,7 +30,6 @@ class Music extends React.Component {
 
     handleResize () {
         this.setState({ height: window.innerHeight-143 })
-        console.log(window.innerHeight-143)
     }
 
     handleContextMenu (e) {
