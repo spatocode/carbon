@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-import C from "../renderer/actions/constant"
-import { lyric } from "../renderer/reducers/index"
+import C from "../../renderer/actions/constant"
+import { lyric } from "../../renderer/reducers/index"
 
 describe("lyric", () => {
     it("request lyric", () => {

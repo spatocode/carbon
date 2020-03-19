@@ -2,8 +2,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
-import storeFactory from "../renderer/store"
-import App from "../renderer/App"
+import storeFactory from "../../renderer/store"
+import App from "../../renderer/App"
 
 const store = storeFactory()
 

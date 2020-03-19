@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-import C from "../renderer/actions/constant"
-import { view } from "../renderer/reducers/index"
+import C from "../../renderer/actions/constant"
+import { view } from "../../renderer/reducers/index"
 
 describe("view", () => {
     it("select view", () => {
@@ -18,8 +18,8 @@ describe("view", () => {
     it("select settings tab", () => {
         const state = { settingsTab: "General" }
         const action = {
-            type: C.PLAY_view,
-            settingsTab: "Playback"
+            type: C.SELECT_SETTINGS_TAB,
+            tabItem: "Playback"
         }
         const results = view(state, action)
         expect(results).toEqual({
