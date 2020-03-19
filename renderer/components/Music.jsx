@@ -6,8 +6,9 @@ import {
     updatePlayist, removeMedia
 } from "../actions"
 import "./stylesheets/Music.scss"
+const fs = window.require("fs")
 const { remote } = window.require("electron")
-const { Menu } = remote
+const { Menu, dialog } = remote
 
 class Music extends React.Component {
     constructor (props) {
@@ -89,7 +90,17 @@ class Music extends React.Component {
     }
 
     handleDelete () {
-        // TODO: delete media
+        var { highlight } = this.state
+        fs.unlink(highlight, (err) => {
+            if (err) {
+                const title = "Cannot delete file"
+                const content = `
+                    An error was encountered while attemting to delete 
+                    the file <${highlight}>. Please try again later.
+                `
+                dialog.showErrorBox(title, content)
+            }
+        })
     }
 
     handleNewPlayist (e) {
