@@ -1,7 +1,10 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { updateFavourite, playMedia, registerNewPlayist, updatePlayist } from "../actions"
+import {
+    updateFavourite, playMedia, registerNewPlayist,
+    updatePlayist, removeMedia
+} from "../actions"
 import "./stylesheets/Music.scss"
 const { remote } = window.require("electron")
 const { Menu } = remote
@@ -80,7 +83,9 @@ class Music extends React.Component {
     }
 
     handleRemove () {
-
+        var { highlight } = this.state
+        var { dispatch } = this.props
+        dispatch(removeMedia(highlight))
     }
 
     handleDelete () {

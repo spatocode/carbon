@@ -73,6 +73,10 @@ export function media (state=mediaState, action) {
             : Object.assign({}, state, {
                 favourite: [...state.favourite, action.favourite]
             })
+    case C.REMOVE_MEDIA:
+        return Object.assign({}, state, {
+            library: state.library.filter(song => song.file !== action.media)
+        })
     case C.REQUEST_UPDATE:
         return Object.assign({}, state, {
             isUpdating: action.isUpdating

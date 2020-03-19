@@ -27,6 +27,11 @@ export const updateFavourite = (favourite) => ({
     favourite: favourite
 })
 
+export const removeMedia = (media) => ({
+    type: C.REMOVE_MEDIA,
+    media
+})
+
 export const updateLibrary = (data) => ({
     type: C.UPDATE_LIBRARY,
     isUpdating: false,

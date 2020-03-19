@@ -121,4 +121,38 @@ describe("media", () => {
             itemToNewPlayist: null
         })
     })
+
+    it("remove media", () => {
+        const state = {
+            library: [
+                {
+                    file: "home/ekene/Music/Eminem - Farewell.mp3",
+                    file_name: "Eminem - Farewell",
+                    title: "Farewell",
+                    artist: "Eminem"
+                },
+                {
+                    file: "home/ekene/Music/Joyner Lucas - Devil's work.mp3",
+                    file_name: "Joyner Lucas - Devil's work",
+                    title: "Devil's work",
+                    artist: "Joyner Lucas"
+                }
+            ]
+        }
+        const action = {
+            type: C.REMOVE_MEDIA,
+            media: "home/ekene/Music/Joyner Lucas - Devil's work.mp3"
+        }
+        const results = media(state, action)
+        expect(results).toEqual({
+            library: [
+                {
+                    file: "home/ekene/Music/Eminem - Farewell.mp3",
+                    file_name: "Eminem - Farewell",
+                    title: "Farewell",
+                    artist: "Eminem"
+                }
+            ]
+        })
+    })
 })
