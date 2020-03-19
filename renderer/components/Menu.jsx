@@ -93,10 +93,6 @@ class Menu extends React.Component {
                     <span></span>
                     <span>Favourite</span>
                 </div>
-                <div className="menu-list" onClick={this.handleView}>
-                    <span></span>
-                    <span>Downloads</span>
-                </div>
                 <div className="menu-list" onClick={this.handleNightmode}>
                     <span>Night mode</span>
                     <div className="mode-toggle-bar">

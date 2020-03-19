@@ -2,7 +2,6 @@ import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import Music from "./Music"
-import Downloads from "./Downloads"
 import NowPlaying from "./NowPlaying"
 import "./stylesheets/View.scss"
 
@@ -10,8 +9,6 @@ const View = ({ view="Now Playing", songs=[], playists=[] }) => {
     switch (view) {
     case "Music":
         return <Music songs={songs}/>
-    case "Downloads":
-        return <Downloads />
     case "Favourite":
         return <Music />
     case "Now Playing":
