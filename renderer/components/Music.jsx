@@ -7,6 +7,7 @@ import {
 } from "../actions"
 import "./stylesheets/Music.scss"
 const fs = window.require("fs")
+const path = window.require("path")
 const { remote } = window.require("electron")
 const { Menu, dialog } = remote
 
@@ -91,12 +92,13 @@ class Music extends React.Component {
 
     handleDelete () {
         var { highlight } = this.state
+        var filename = path.basename(highlight)
         fs.unlink(highlight, (err) => {
             if (err) {
                 const title = "Cannot delete file"
                 const content = `
                     An error was encountered while attemting to delete 
-                    the file <${highlight}>. Please try again later.
+                    the file <${filename}>. Please try again later.
                 `
                 dialog.showErrorBox(title, content)
             }
