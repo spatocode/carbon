@@ -23,6 +23,7 @@ class Music extends React.Component {
         this.handlePlay = this.handlePlay.bind(this)
         this.handleProperties = this.handleProperties.bind(this)
         this.handleRemove = this.handleRemove.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
         this.handleNewPlayist = this.handleNewPlayist.bind(this)
         this.handleNewFavourite = this.handleNewFavourite.bind(this)
         this.handleResize = this.handleResize.bind(this)
@@ -92,6 +93,7 @@ class Music extends React.Component {
 
     handleDelete () {
         var { highlight } = this.state
+        var { dispatch } = this.props
         var filename = path.basename(highlight)
         fs.unlink(highlight, (err) => {
             if (err) {
@@ -102,6 +104,7 @@ class Music extends React.Component {
                 `
                 dialog.showErrorBox(title, content)
             }
+            dispatch(removeMedia(highlight))
         })
     }
 
