@@ -21,7 +21,6 @@ class Music extends React.Component {
         this.handleContextMenu = this.handleContextMenu.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.handlePlay = this.handlePlay.bind(this)
-        this.handleProperties = this.handleProperties.bind(this)
         this.handleRemove = this.handleRemove.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
         this.handleNewPlayist = this.handleNewPlayist.bind(this)
@@ -70,9 +69,7 @@ class Music extends React.Component {
             { label: favMenuLabel, click: this.handleNewFavourite },
             { type: "separator" },
             { label: "Remove", click: this.handleRemove },
-            { label: "Delete", click: this.handleDelete },
-            { type: "separator" },
-            { label: "Properties", click: this.handleProperties }
+            { label: "Delete", click: this.handleDelete }
         ]).popup()
     }
 
@@ -121,9 +118,6 @@ class Music extends React.Component {
         const { dispatch } = this.props
         const newFav = this.state.highlight
         dispatch(updateFavourite(newFav))
-    }
-
-    handleProperties () {
     }
 
     formatMediaProp (mediaProp, lastIndex) {
