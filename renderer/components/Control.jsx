@@ -230,6 +230,18 @@ class Control extends React.Component {
             dispatch(playMedia(file[0], this.mediaPlayer.current))
         })
 
+        ipcRenderer.on("play-media", (event, play) => {
+            if (media) {
+                this.handlePlay()
+            }
+        })
+
+        ipcRenderer.on("stop-media", (event, play) => {
+            if (media) {
+                this.stopMedia()
+            }
+        })
+
         return (
             <div className="Control">
                 <audio ref={this.mediaPlayer} onTimeUpdate={this.handleTimeUpdate}></audio>
