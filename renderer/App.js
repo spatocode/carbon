@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import PropTypes from "prop-types"
 import { updateLibrary, requestUpdateLibrary } from "./actions"
 import Header from "./components/Header"
 import Main from "./components/Main"
@@ -28,19 +27,4 @@ class App extends Component {
     }
 }
 
-App.propTypes = {
-    shouldUpdate: PropTypes.bool,
-    library: PropTypes.array
-}
-
-App.defaultProps = {
-    shouldUpdate: false,
-    library: []
-}
-
-const mapStateToProps = state => ({
-    shouldUpdate: state.media.shouldUpdate,
-    library: state.media.library
-})
-
-export default connect(mapStateToProps)(App)
+export default connect()(App)
