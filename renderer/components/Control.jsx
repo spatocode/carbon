@@ -4,6 +4,15 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { playMedia, setCurrentMediaMode } from "../actions"
 import "./stylesheets/Control.scss"
+import rewindIcon from "../assets/backward.png"
+import fastFwdIcon from "../assets/forward.png"
+import pauseIcon from "../assets/pause.png"
+import playIcon from "../assets/play.png"
+// import activeShuffleIcon from "../assets/shuffle-active.png"
+import shuffleIcon from "../assets/shuffle.png"
+// import activeRepeatIcon from "../assets/repeat-active.png"
+import repeatIcon from "../assets/repeat.png"
+import soundIcon from "../assets/volume.png"
 const { ipcRenderer } = window.require("electron")
 
 class Control extends React.Component {
@@ -13,8 +22,7 @@ class Control extends React.Component {
             clickTime: null,
             repeat: false,
             muted: false,
-            mousedown: false,
-            volume: 70
+            volume: 100
         }
         this.mediaPlayer = React.createRef()
         this.currentTime = React.createRef()
@@ -32,8 +40,6 @@ class Control extends React.Component {
         this.handleRepeat = this.handleRepeat.bind(this)
         this.handleMute = this.handleMute.bind(this)
         this.handleVolume = this.handleVolume.bind(this)
-        this.handleMouseDown = this.handleMouseDown.bind(this)
-        this.handleMouseUp = this.handleMouseUp.bind(this)
     }
 
     componentDidMount () {
@@ -140,23 +146,8 @@ class Control extends React.Component {
 
     handleVolume (e) {
         var mediaPlayer = this.mediaPlayer.current
-        if (this.state.mousedown) {
-            console.log(e.pageX)
-            if (mediaPlayer.volume < 1) {
-                mediaPlayer.volume += 0.1
-                this.setState({ volume: mediaPlayer.volume * 70 })
-                console.log(mediaPlayer.volume)
-                console.log(this.state.volume)
-            }
-        }
-    }
-
-    handleMouseDown () {
-        this.setState({ mousedown: true })
-    }
-
-    handleMouseUp () {
-        this.setState({ mousedown: false })
+        this.setState({ volume: e.currentTarget.value })
+        mediaPlayer.volume = e.currentTarget.value / 100
     }
 
     stopMedia () {
@@ -232,8 +223,8 @@ class Control extends React.Component {
     }
 
     render () {
-        const { mode, media, dispatch } = this.props
         const { volume } = this.state
+        const { mode, media, dispatch } = this.props
         const mediaName = path.basename(media, path.extname(media))
         ipcRenderer.on("open-file", (event, file) => {
             dispatch(playMedia(file[0], this.mediaPlayer.current))
@@ -243,8 +234,8 @@ class Control extends React.Component {
             <div className="Control">
                 <audio ref={this.mediaPlayer} onTimeUpdate={this.handleTimeUpdate}></audio>
                 <div className="sound-option">
-                    <span className="shuffle"></span>
-                    <span className="repeat" onClick={this.handleRepeat}></span>
+                    <img src={shuffleIcon} className="shuffle" />
+                    <img src={repeatIcon} className="repeat" onClick={this.handleRepeat} />
                 </div>
                 <div className="media-indicator">
                     <div className="media-title">
@@ -259,25 +250,20 @@ class Control extends React.Component {
                         <div className="timer-count" ref={this.duration}>00:00</div>
                     </div>
                     <div className="rwd-play-stop-fwd">
-                        <span className="rwd" onClick={this.handlePrevious}
+                        <img src={rewindIcon} className="rwd" onClick={this.handlePrevious}
                             onMouseUp={this.handleClearInterval}
-                            onMouseDown={this.handleRewind}></span>
-                        <span className={mode === "Paused" ? "play" : "pause"}
-                            onClick={this.handlePlay}></span>
-                        <span className="fwd" onClick={this.handleNext}
+                            onMouseDown={this.handleRewind} />
+                        <img src={mode === "Paused" ? playIcon : pauseIcon } className="playpause"
+                            onClick={this.handlePlay} />
+                        <img src={fastFwdIcon} className="fwd" onClick={this.handleNext}
                             onMouseUp={this.handleClearInterval}
-                            onMouseDown={this.handleFastFoward}></span>
+                            onMouseDown={this.handleFastFoward} />
                     </div>
                 </div>
                 <div className="volume">
-                    <span className="mute" onClick={this.handleMute}></span>
-                    <div className="volume-bar">
-                        <div className="volume-handle" ref={this.volumeHandle}
-                            style={{ marginLeft: `${volume}px` }}
-                            onMouseMove={this.handleVolume}
-                            onMouseDown={this.handleMouseDown}
-                            onMouseUp={this.handleMouseUp}></div>
-                    </div>
+                    <img src={soundIcon} className="mute" onClick={this.handleMute} />
+                    <input type="range" min="0" max="100" value={volume}
+                        className="volume-range" onChange={this.handleVolume} />
                 </div>
             </div>
         )
