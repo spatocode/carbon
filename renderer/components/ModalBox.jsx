@@ -3,31 +3,44 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { updatePlayist, registerNewPlayist } from "../actions"
 import "./stylesheets/ModalBox.scss"
+const { ipcRenderer } = window.require("electron")
 
 class ModalBox extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
-            newPlayist: ""
+            newPlayist: "",
+            registerPlayist: false
         }
         this.closeModal = this.closeModal.bind(this)
         this.registerNewPlayist = this.registerNewPlayist.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
 
+    componentDidMount () {
+        ipcRenderer.on("register-playist", (event, arg) => {
+            this.setState({ registerPlayist: true })
+        })
+    }
+
     closeModal () {
         const { itemToNewPlayist, dispatch } = this.props
         if (itemToNewPlayist) {
-            dispatch(registerNewPlayist(""))
+            return dispatch(registerNewPlayist(""))
         }
+        this.setState({ registerPlayist: false })
     }
 
     registerNewPlayist (e) {
-        const { newPlayist } = this.state
-        const { dispatch, itemToNewPlayist } = this.props
+        const { newPlayist, registerPlayist } = this.state
+        let { dispatch, itemToNewPlayist } = this.props
         e.preventDefault()
+        itemToNewPlayist = registerPlayist ? "" : itemToNewPlayist
         dispatch(updatePlayist(newPlayist, itemToNewPlayist))
         this.setState({ newPlayist: "" })
+        if (registerPlayist) {
+            this.setState({ registerPlayist: false })
+        }
     }
 
     handleChange (e) {
@@ -35,10 +48,10 @@ class ModalBox extends React.Component {
     }
 
     render () {
-        const { newPlayist } = this.state
+        const { newPlayist, registerPlayist } = this.state
         const { itemToNewPlayist } = this.props
         return (
-            <div className="modalbox" style={itemToNewPlayist
+            <div className="modalbox" style={itemToNewPlayist || registerPlayist
                 ? { display: "block" } : { display: "none" } }>
                 <div className="modal-content">
                     <div className="header">
