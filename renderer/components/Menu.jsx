@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { selectView, nightMode, updatePlayist } from "../actions"
+import { selectView, nightMode } from "../actions"
 import { version } from "../../package.json"
 import "./stylesheets/Menu.scss"
 
@@ -10,14 +10,11 @@ class Menu extends React.Component {
         super(props)
         this.state = {
             show: false,
-            newPlayist: "",
             height: window.innerHeight - 142
         }
         this.showDropdown = this.showDropdown.bind(this)
         this.handleNightmode = this.handleNightmode.bind(this)
         this.handleView = this.handleView.bind(this)
-        this.registerNewPlayist = this.registerNewPlayist.bind(this)
-        this.handleChange = this.handleChange.bind(this)
         this.handleResize = this.handleResize.bind(this)
     }
 
@@ -27,17 +24,6 @@ class Menu extends React.Component {
 
     handleResize () {
         this.setState({ height: window.innerHeight - 142 })
-    }
-
-    handleChange (e) {
-        this.setState({ newPlayist: e.currentTarget.value })
-    }
-
-    registerNewPlayist (e) {
-        const { dispatch, itemToNewPlayist } = this.props
-        e.preventDefault()
-        this.setState({ newPlayist: "" })
-        dispatch(updatePlayist(this.state.newPlayist, itemToNewPlayist))
     }
 
     handleNightmode () {
@@ -56,8 +42,8 @@ class Menu extends React.Component {
     }
 
     render () {
-        const { show, newPlayist, height } = this.state
-        const { itemToNewPlayist, playists, night } = this.props
+        const { show, height } = this.state
+        const { playists, night } = this.props
         return (
             <div className="Menu" style={{ height: height }}>
                 <div className="title">
@@ -76,12 +62,7 @@ class Menu extends React.Component {
                     <span></span>
                     <span onClick={this.showDropdown}>Playists</span>
                     <div className="menu-dropdown"
-                        style={show || itemToNewPlayist ? { display: "block" } : { display: "none" }}>
-                        <form onSubmit={this.registerNewPlayist}
-                            style={itemToNewPlayist ? { display: "block" } : { display: "none" }}>
-                            <input placeholder="New Playist" type="input" autoFocus
-                                onChange={this.handleChange} value={newPlayist} />
-                        </form>
+                        style={show ? { display: "block" } : { display: "none" }}>
                         {playists.map((playist, i) =>
                             <div key={i} className="menu-sublist" onClick={this.handleView}>
                                 {playist[0]}
@@ -116,4 +97,4 @@ const mapStateToProps = (state) => ({
     playists: state.media.playists
 })
 
-export default connect(mapStateToProps, null)(Menu)
+export default connect(mapStateToProps)(Menu)
