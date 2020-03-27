@@ -3,13 +3,14 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { searchSong } from "../actions"
 import "./stylesheets/Header.scss"
+const path = require("path")
 
 class Header extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
             value: "",
-            isFetchingMedia: false,
+            isSearchingMedia: false,
             searchResult: []
         }
         this.handleChange = this.handleChange.bind(this)
@@ -17,21 +18,36 @@ class Header extends React.Component {
     }
 
     handleSubmit (e) {
+        const { library } = this.props
         e.preventDefault()
-        this.setState({ isFetchingMedia: true })
-        searchSong(this.state.value, function (result) {
-            this.setState({ isFetchingMedia: false })
-            this.setState({ searchResult: result })
-        })
+        this.requestSearching()
+
+        var results = searchSong(this.state.value, library)
+        this.setState({ searchResult: results })
+        this.searchingCompleted()
     }
 
     handleChange (e) {
+        const { library } = this.props
         this.setState({ value: e.currentTarget.value })
+        this.requestSearching()
+
+        var results = searchSong(e.currentTarget.value, library)
+        this.setState({ searchResult: results })
+        this.searchingCompleted()
+    }
+
+    requestSearching () {
+        this.setState({ isSearchingMedia: true })
+    }
+
+    searchingCompleted () {
+        this.setState({ isSearchingMedia: false })
     }
 
     render () {
         const { isUpdating } = this.props
-        const { isFetchingMedia, searchResult } = this.state
+        const { isSearchingMedia, searchResult } = this.state
         return (
             <div className="Header">
                 <div className="update-library"
@@ -46,12 +62,16 @@ class Header extends React.Component {
                         <input type="search" placeholder="Search media" onChange={this.handleChange} />
                     </form>
                 </div>
-                <div className="search-result">
-                    <div style={isFetchingMedia ? { display: "block" }
-                        : { display: "none" }}>
+                <div className="search-result" style={searchResult.length < 1 ? { display: "none" }
+                    : { display: "block" }}>
+                    <div className="search-indicator" style={isSearchingMedia
+                        ? { display: "block" } : { display: "none" }}>
+                        <div className="search-marquee"></div>
                     </div>
                     {searchResult.map((item, i) =>
-                        <div key={i}>{item}</div>
+                        <div key={i} className={`${item} result-item`}>
+                            {path.basename(item, path.extname(item))}
+                        </div>
                     )}
                 </div>
             </div>
@@ -60,11 +80,18 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-    isUpdating: PropTypes.bool
+    isUpdating: PropTypes.bool,
+    library: PropTypes.array
+}
+
+Header.defaultProps = {
+    isUpdating: false,
+    library: []
 }
 
 const mapStateToProps = state => ({
-    isUpdating: state.media.isUpdating
+    isUpdating: state.media.isUpdating,
+    library: state.media.library
 })
 
 export default connect(mapStateToProps, null)(Header)

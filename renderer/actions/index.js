@@ -170,18 +170,19 @@ export function fetchLyricIfNeeded (lyric) {
     }
 }
 
-export function searchSong (media, library, callback) {
-    searchLocalMedia(media, library)
+export function searchSong (searchValue, library) {
+    const results = []
+    if (library.length < 1 || searchValue === "") {
+        return results
+    }
+    for (let i=0; i < library.length; i++) {
+        if (library[i].file_name.toString().startsWith(searchValue) ||
+            library[i].file_name.toString() === searchValue ||
+            (searchValue.length > 2 &&
+                library[i].file_name.toString().includes(searchValue)))
+        {
+            results.push(library[i].file)
+        }
+    }
+    return results
 }
-
-async function searchLocalMedia (media, library) {
-    // TODO: Async code of searching the file system for song
-    // if the song is not found in disk, call searchOnlineSong to search online
-}
-
-async function searchOnlineMedia (media) {
-    // TODO: Async code of searching the network for song
-    // if song is found return it and prompt/request the user to download
-}
-
-searchOnlineMedia()
