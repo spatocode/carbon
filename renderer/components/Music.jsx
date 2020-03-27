@@ -33,6 +33,10 @@ class Music extends React.Component {
         window.onresize = this.handleResize
     }
 
+    componentWillUnmount () {
+        window.onresize = null
+    }
+
     handleResize () {
         this.setState({ height: window.innerHeight-143 })
     }
