@@ -130,7 +130,7 @@ class Music extends React.Component {
 
     render () {
         const { highlight, height } = this.state
-        var { songs, favourite } = this.props
+        var { songs, favourite, media } = this.props
         songs = songs || favourite
         return (
             <div className="tab-view" id="Music" style={{ height: height }}>
@@ -152,7 +152,9 @@ class Music extends React.Component {
                                 onClick={this.handleClick}
                                 onDoubleClick={this.handlePlay}
                                 style={highlight === song.file
-                                    ? { backgroundColor: "teal", color: "whitesmoke" } : null}>
+                                    ? { backgroundColor: "teal", color: "whitesmoke" }
+                                    : media === song.file
+                                        ? { color: "salmon" } : null}>
                                 <td>{i}</td>
                                 {song.title
                                     ? <td>{this.formatMediaProp(song.title.toString(), 29)}
@@ -195,19 +197,22 @@ class Music extends React.Component {
 Music.propTypes = {
     favourite: PropTypes.array,
     playists: PropTypes.array,
-    player: PropTypes.object
+    player: PropTypes.object,
+    media: PropTypes.string
 }
 
 Music.defaultProps = {
     favourite: [],
     playists: [],
-    player: null
+    player: null,
+    media: ""
 }
 
 const mapStateToProps = (state) => ({
     favourite: state.media.library.filter(song => state.media.favourite.includes(song.file)),
     playists: state.media.playists,
-    player: state.media.player
+    player: state.media.player,
+    media: state.media.current
 })
 
 export default connect(mapStateToProps, null)(Music)
