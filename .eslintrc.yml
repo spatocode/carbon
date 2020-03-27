@@ -33,3 +33,5 @@ rules:
     - error
   react/jsx-uses-vars:
     - error
+  brace-style:
+    - 0
