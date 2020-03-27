@@ -157,21 +157,27 @@ function handleStop () {
 }
 
 function handlePrevious () {
+    window.webContents.send("previous-media", true)
 }
 
 function handleNext () {
+    window.webContents.send("next-media", true)
 }
 
 function handleRewind () {
+    window.webContents.send("rewind-media", true)
 }
 
 function handleFastFoward () {
+    window.webContents.send("fforward-media", true)
 }
 
 function handleShuffle () {
+    window.webContents.send("shuffle-media", true)
 }
 
 function handleRepeat () {
+    window.webContents.send("repeat-media", true)
 }
 
 function handleAbout () {

@@ -45,6 +45,38 @@ class Control extends React.Component {
     componentDidMount () {
         const { dispatch } = this.props
         dispatch(playMedia("", this.mediaPlayer.current))
+
+        ipcRenderer.on("play-media", (event, arg) => {
+            this.handlePlay()
+        })
+
+        ipcRenderer.on("stop-media", (event, arg) => {
+            this.stopMedia()
+        })
+
+        ipcRenderer.on("previous-media", (event, arg) => {
+            this.handlePrevious()
+        })
+
+        ipcRenderer.on("next-media", (event, arg) => {
+            this.handleNext()
+        })
+
+        ipcRenderer.on("rewind-media", (event, arg) => {
+            this.handleRewind()
+        })
+
+        ipcRenderer.on("fforward-media", (event, arg) => {
+            this.handleFastFoward()
+        })
+
+        ipcRenderer.on("repeat-media", (event, arg) => {
+            this.handleRepeat()
+        })
+
+        ipcRenderer.on("shuffle-media", (event, arg) => {
+            this.handleShuffle()
+        })
     }
 
     handlePlay () {
@@ -224,23 +256,8 @@ class Control extends React.Component {
 
     render () {
         const { volume } = this.state
-        const { mode, media, dispatch } = this.props
+        const { mode, media } = this.props
         const mediaName = path.basename(media, path.extname(media))
-        ipcRenderer.on("open-file", (event, file) => {
-            dispatch(playMedia(file[0], this.mediaPlayer.current))
-        })
-
-        ipcRenderer.on("play-media", (event, play) => {
-            if (media) {
-                this.handlePlay()
-            }
-        })
-
-        ipcRenderer.on("stop-media", (event, play) => {
-            if (media) {
-                this.stopMedia()
-            }
-        })
 
         return (
             <div className="Control">
