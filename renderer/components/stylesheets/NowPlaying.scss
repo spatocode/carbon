@@ -1,8 +1,19 @@
 .now-playing {
     height: 100%;
+    width: 100%;
+    background-color: rgba(13, 13, 17, 0.6);
 }
 
-.now-playing div {
+.album-art {
+    background-image: linear-gradient(rgba(13, 13, 17, 0.7), rgba(13, 13, 17, 0.7)); // url('../../assets/bri.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 44%;
+    background-position: 60% 20%;
+    min-height: 85vh;
+}
+
+.now-playing .lyric {
     text-align: center;
     margin-left: 22%;
     margin-right: 22%;
