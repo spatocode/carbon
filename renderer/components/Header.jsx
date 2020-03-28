@@ -16,6 +16,25 @@ class Header extends React.Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleClick = this.handleClick.bind(this)
+        this.handleClose = this.handleClose.bind(this)
+    }
+
+    componentDidMount () {
+        window.onclick = this.handleClose
+    }
+
+    // This component don't unmount but we need to be cautious anyway
+    componentWillUnmount () {
+        window.onclick = null
+    }
+
+    // Close search box
+    handleClose () {
+        const { searchResult } = this.state
+        if (searchResult.length > 0) {
+            this.setState({ searchResult: [] })
+            this.setState({ value: "" })
+        }
     }
 
     handleSubmit (e) {
