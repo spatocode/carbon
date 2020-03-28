@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { searchSong } from "../actions"
+import { searchSong, playMedia } from "../actions"
 import "./stylesheets/Header.scss"
 const path = require("path")
 
@@ -15,6 +15,7 @@ class Header extends React.Component {
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleClick = this.handleClick.bind(this)
     }
 
     handleSubmit (e) {
@@ -37,6 +38,13 @@ class Header extends React.Component {
         this.searchingCompleted()
     }
 
+    handleClick (e) {
+        const { dispatch, player } = this.props
+        dispatch(playMedia(e.currentTarget.className.split(" result-item")[0], player))
+        this.setState({ searchResult: [] })
+        this.setState({ value: "" })
+    }
+
     requestSearching () {
         this.setState({ isSearchingMedia: true })
     }
@@ -47,7 +55,7 @@ class Header extends React.Component {
 
     render () {
         const { isUpdating } = this.props
-        const { isSearchingMedia, searchResult } = this.state
+        const { isSearchingMedia, searchResult, value } = this.state
         return (
             <div className="Header">
                 <div className="update-library"
@@ -59,7 +67,9 @@ class Header extends React.Component {
                 <div className="media-search">
                     <form onSubmit={this.handleSubmit}>
                         <span><button type="submit"></button></span>
-                        <input type="search" placeholder="Search media" onChange={this.handleChange} />
+                        <input type="search" value={value}
+                            placeholder="Search media"
+                            onChange={this.handleChange} />
                     </form>
                 </div>
                 <div className="search-result" style={searchResult.length < 1 ? { display: "none" }
@@ -69,7 +79,8 @@ class Header extends React.Component {
                         <div className="search-marquee"></div>
                     </div>
                     {searchResult.map((item, i) =>
-                        <div key={i} className={`${item} result-item`}>
+                        <div key={i} className={`${item} result-item`}
+                            onClick={this.handleClick}>
                             {path.basename(item, path.extname(item))}
                         </div>
                     )}
@@ -81,17 +92,20 @@ class Header extends React.Component {
 
 Header.propTypes = {
     isUpdating: PropTypes.bool,
-    library: PropTypes.array
+    library: PropTypes.array,
+    player: PropTypes.object
 }
 
 Header.defaultProps = {
     isUpdating: false,
-    library: []
+    library: [],
+    player: new Audio()
 }
 
 const mapStateToProps = state => ({
     isUpdating: state.media.isUpdating,
-    library: state.media.library
+    library: state.media.library,
+    player: state.media.player
 })
 
 export default connect(mapStateToProps, null)(Header)
