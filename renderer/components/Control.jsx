@@ -8,9 +8,9 @@ import rewindIcon from "../assets/backward.png"
 import fastFwdIcon from "../assets/forward.png"
 import pauseIcon from "../assets/pause.png"
 import playIcon from "../assets/play.png"
-// import activeShuffleIcon from "../assets/shuffle-active.png"
+import activeShuffleIcon from "../assets/shuffle-active.png"
 import shuffleIcon from "../assets/shuffle.png"
-// import activeRepeatIcon from "../assets/repeat-active.png"
+import activeRepeatIcon from "../assets/repeat-active.png"
 import repeatIcon from "../assets/repeat.png"
 import soundIcon from "../assets/volume.png"
 const { ipcRenderer } = window.require("electron")
@@ -21,7 +21,6 @@ class Control extends React.Component {
         this.state = {
             clickTime: null,
             repeat: false,
-            muted: false,
             volume: 100
         }
         this.mediaPlayer = React.createRef()
@@ -40,6 +39,7 @@ class Control extends React.Component {
         this.handleRepeat = this.handleRepeat.bind(this)
         this.handleMute = this.handleMute.bind(this)
         this.handleVolume = this.handleVolume.bind(this)
+        this.handleShuffle = this.handleShuffle.bind(this)
     }
 
     componentDidMount () {
@@ -51,7 +51,7 @@ class Control extends React.Component {
         })
 
         ipcRenderer.on("stop-media", (event, arg) => {
-            this.stopMedia()
+            this.handleStop()
         })
 
         ipcRenderer.on("previous-media", (event, arg) => {
@@ -82,9 +82,8 @@ class Control extends React.Component {
     handlePlay () {
         var mediaPlayer = this.mediaPlayer.current
         const { media, dispatch } = this.props
-        if (this.fastFowardInterval || this.rewindInterval) {
-            clearInterval(this.fastFowardInterval)
-            clearInterval(this.rewindInterval)
+        if (this.controlInterval) {
+            this.handleClearInterval()
         }
 
         if (mediaPlayer.paused) {
@@ -170,10 +169,11 @@ class Control extends React.Component {
         this.setState({ repeat: !repeat })
     }
 
+    handleShuffle () {
+    }
+
     handleMute () {
-        const { mute } = this.state
-        this.mediaPlayer.current.muted = !mute
-        this.setState({ mute: !mute })
+        this.mediaPlayer.current.muted = !this.mediaPlayer.current.muted
     }
 
     handleVolume (e) {
@@ -182,7 +182,7 @@ class Control extends React.Component {
         mediaPlayer.volume = e.currentTarget.value / 100
     }
 
-    stopMedia () {
+    handleStop () {
         const { dispatch } = this.props
         var mediaPlayer = this.mediaPlayer.current
         mediaPlayer.pause()
@@ -192,18 +192,22 @@ class Control extends React.Component {
     }
 
     handleClearInterval () {
+        const { dispatch } = this.props
         clearTimeout(this.controlTimeout)
         clearInterval(this.controlInterval)
+        dispatch(setCurrentMediaMode("Playing"))
     }
 
     handleFastFoward () {
+        const { dispatch } = this.props
         this.setState({ clickTime: Math.floor(Date.now()/1000) })
         var mediaPlayer = this.mediaPlayer.current
         this.controlTimeout = setTimeout(() => {
             this.controlInterval = setInterval(() => {
                 if (mediaPlayer.currentTime >= mediaPlayer.duration - 3) {
-                    this.stopMedia()
+                    this.handleStop()
                 } else {
+                    dispatch(setCurrentMediaMode("Paused"))
                     mediaPlayer.currentTime += 3
                 }
             }, 200)
@@ -216,7 +220,7 @@ class Control extends React.Component {
         this.controlTimeout = setTimeout(() => {
             this.controlInterval = setInterval(() => {
                 if (mediaPlayer.currentTime <= 3) {
-                    this.stopMedia()
+                    this.handleStop()
                 } else {
                     mediaPlayer.currentTime -= 3
                 }
@@ -225,7 +229,13 @@ class Control extends React.Component {
     }
 
     handlePrevious () {
-        if (this.state.clickTime < Math.floor(Date.now()/1000)) {
+        const { clickTime } = this.state
+        // return if we are rewinding
+        if (typeof clickTime === "number" &&
+            clickTime < Math.floor(Date.now()/1000))
+        {
+            // allow us to handlePrevious next time
+            this.setState({ clickTime: null })
             return
         }
         var prev
@@ -240,13 +250,22 @@ class Control extends React.Component {
     }
 
     handleNext () {
-        if (this.state.clickTime < Math.floor(Date.now()/1000)) {
+        const { clickTime } = this.state
+        // return if we are fast forwarding
+        if (typeof clickTime === "number" &&
+            clickTime < Math.floor(Date.now()/1000))
+        {
+            // allow us to handleNext next time
+            this.setState({ clickTime: null })
             return
         }
+        console.log("no return")
         var next
         const { songs, media, dispatch } = this.props
         for (var i=0; i < songs.length; i++) {
             if ((songs[i].file) === media) {
+                // If we're at the last song, start afresh
+                // else play next song
                 next = (i === songs.length - 1) ? next = songs[0] : songs[++i].file
                 dispatch(playMedia(next, this.mediaPlayer.current))
                 break
@@ -255,16 +274,22 @@ class Control extends React.Component {
     }
 
     render () {
-        const { volume } = this.state
-        const { mode, media } = this.props
+        const { volume, repeat, shuffle } = this.state
+        const { mode, media, dispatch } = this.props
         const mediaName = path.basename(media, path.extname(media))
+        ipcRenderer.on("open-file", (event, file) => {
+            dispatch(playMedia(file[0], this.mediaPlayer.current))
+        })
 
         return (
             <div className="Control">
-                <audio ref={this.mediaPlayer} onTimeUpdate={this.handleTimeUpdate}></audio>
+                <audio ref={this.mediaPlayer} onEnded={this.handleNext}
+                    onTimeUpdate={this.handleTimeUpdate}></audio>
                 <div className="sound-option">
-                    <img src={shuffleIcon} className="shuffle" />
-                    <img src={repeatIcon} className="repeat" onClick={this.handleRepeat} />
+                    <img className="shuffle" onClick={this.handleShuffle}
+                        src={shuffle ? activeShuffleIcon : shuffleIcon} />
+                    <img className="repeat" onClick={this.handleRepeat}
+                        src={repeat ? activeRepeatIcon : repeatIcon} />
                 </div>
                 <div className="media-indicator">
                     <div className="media-title">
@@ -279,12 +304,14 @@ class Control extends React.Component {
                         <div className="timer-count" ref={this.duration}>00:00</div>
                     </div>
                     <div className="rwd-play-stop-fwd">
-                        <img src={rewindIcon} className="rwd" onClick={this.handlePrevious}
+                        <img src={rewindIcon} className="rwd"
+                            onClick={this.handlePrevious}
                             onMouseUp={this.handleClearInterval}
                             onMouseDown={this.handleRewind} />
                         <img src={mode === "Paused" ? playIcon : pauseIcon } className="playpause"
                             onClick={this.handlePlay} />
-                        <img src={fastFwdIcon} className="fwd" onClick={this.handleNext}
+                        <img src={fastFwdIcon} className="fwd"
+                            onClick={this.handleNext}
                             onMouseUp={this.handleClearInterval}
                             onMouseDown={this.handleFastFoward} />
                     </div>
