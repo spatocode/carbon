@@ -21,7 +21,8 @@ class Control extends React.Component {
         this.state = {
             clickTime: null,
             repeat: false,
-            volume: 100
+            volume: 100,
+            shuffle: false
         }
         this.mediaPlayer = React.createRef()
         this.currentTime = React.createRef()
@@ -170,6 +171,8 @@ class Control extends React.Component {
     }
 
     handleShuffle () {
+        const { shuffle } = this.state
+        this.setState({ shuffle: !shuffle })
     }
 
     handleMute () {
@@ -259,18 +262,35 @@ class Control extends React.Component {
             this.setState({ clickTime: null })
             return
         }
-        console.log("no return")
+
         var next
+        const { shuffle } = this.state
         const { songs, media, dispatch } = this.props
         for (var i=0; i < songs.length; i++) {
             if ((songs[i].file) === media) {
                 // If we're at the last song, start afresh
                 // else play next song
-                next = (i === songs.length - 1) ? next = songs[0] : songs[++i].file
+                if (i === songs.length - 1) {
+                    next = songs[0]
+                } else if (shuffle) {
+                    var rand = this.generateRandomNumber(i, songs.length)
+                    next = songs[++rand].file
+                } else {
+                    next = songs[++i].file
+                }
                 dispatch(playMedia(next, this.mediaPlayer.current))
                 break
             }
         }
+    }
+
+    generateRandomNumber (i, length) {
+        let rand = Math.floor(Math.random() * (i + 1))
+        // Make sure we don't select an out of bound index
+        while (length === rand) {
+            rand = Math.floor(Math.random() * (i + 1))
+        }
+        return rand
     }
 
     render () {
