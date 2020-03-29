@@ -188,9 +188,11 @@ function handleAbout () {
         title: "About",
         message: "Carbon Media Player",
         detail: `
-            Carbon media player is a free and open source media player 
-            created by Ekene Izukanne. Carbon is cross-platform which 
-            means that it works on essentially all popular platforms.
+            Carbon Media Player is a beautiful and elegant media player 
+            crafted with user experience in mind. It contains lots of 
+            features which gives you an unforgettable experience while
+            playing your media. Carbon is also cross-platform which means that 
+            it works on essentially all popular platforms.
 
             Copyright (c) 2020 Ekene Izukanne
             `
