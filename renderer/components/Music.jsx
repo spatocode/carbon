@@ -167,11 +167,7 @@ class Music extends React.Component {
                                 }
 
                                 {song.duration
-                                    ? <td>{
-                                        song.duration[4].slice(0, 2) === "00"
-                                            ? song.duration[4].slice(3, 8)
-                                            : song.duration[4].slice(0, 8)
-                                    }</td>
+                                    ? <td>{song.duration}</td>
                                     : <td>Unknown</td>
                                 }
 
