@@ -1,6 +1,6 @@
 {
   "name": "carbon",
-  "productName": "Carbon",
+  "productName": "carbon",
   "version": "0.0.0",
   "description": "A beautiful and elegant media player",
   "main": "main/index.js",
@@ -16,19 +16,40 @@
   },
   "keywords": [],
   "author": "Ekene Izukanne <ekeneizukanne@gmail.com>",
-  "license": "GPL-2.0",
+  "developer": "Munatek Inc.",
+  "license": "",
   "url": {
     "home": "",
     "about": ""
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "appCopyright": "Copyright (C) 2020 Munatek Inc.",
+        "executableName": "carbon",
+        "icon": "assets/icon.ico"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "electron_app"
+            "name": "carbon",
+            "authors": "Ekene Izukanne",
+            "owners": "Munatek Inc.",
+            "copyright": "Copyright (C) 2020 Munatek Inc.",
+            "exe": "carbon",
+            "iconUrl": "assets/icon.ico",
+            "loadingGif": "",
+            "certificateFile": "",
+            "certificatePassword": ""
+          }
+        },
+        {
+          "name": "@electron-forge/maker-appx",
+          "config": {
+            "publisher": "Munatek Inc.",
+            "devCert": "C:\\devcert.pfx",
+            "certPass": "abcd"
           }
         },
         {
@@ -39,16 +60,68 @@
         },
         {
           "name": "@electron-forge/maker-deb",
-          "config": {}
+          "config": {
+            "options": {
+              "name": "carbon",
+              "productName": "Carbon",
+              "categories": [
+                "Audio"
+              ],
+              "maintainer": "Munatek Inc.",
+              "description": "A beautiful and elegant media player",
+              "productDescription": "A beautiful and elegant media player with lots of features. Displays lyrics while playing songs. Downloads songs without the use of browsers. Stream musics from youtube and all popular streaming platforms.",
+              "homepage": "",
+              "version": "0.0.0",
+              "genericName": "Media Player",
+              "icon": "assets/icon.ico",
+              "mimeType": [
+                "audio/mpeg"
+              ],
+              "size": ""
+            }
+          }
+        },
+        {
+          "name": "@electron-forge/maker-snap",
+          "config": {
+            "name": "carbon",
+            "executableName": "carbon",
+            "features": {
+              "audio": true,
+              "webgl": true
+            },
+            "description": "A beautiful and elegant media player",
+            "summary": "A beautiful and elegant media player.",
+            "version": "0.0.0"
+          }
         },
         {
           "name": "@electron-forge/maker-rpm",
-          "config": {}
+          "config": {
+            "options": {
+              "name": "carbon",
+              "productName": "Carbon",
+              "version": "0.0.0",
+              "homepage": "",
+              "categories": [
+                "Audio"
+              ],
+              "description": "A beautiful and elegant media player",
+              "productDescription": "A beautiful and elegant media player with lots of features. Displays lyrics while playing songs. Downloads songs without the use of browsers. Stream musics from youtube and all popular streaming platforms.",
+              "mimeType": [
+                "audio/mpeg"
+              ],
+              "license": "",
+              "icon": "assets/icon.ico",
+              "genericName": "Media Player"
+            }
+          }
         }
       ]
     }
   },
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
     "mediainfo-wrapper": "^1.2.0",
     "react": "^16.10.0",
     "react-dom": "^16.10.0",
@@ -60,13 +133,16 @@
     "@babel/core": "7.6.0",
     "@babel/plugin-syntax-jsx": "^7.8.3",
     "@electron-forge/cli": "^6.0.0-beta.45",
+    "@electron-forge/maker-appx": "^6.0.0-beta.50",
     "@electron-forge/maker-deb": "^6.0.0-beta.45",
     "@electron-forge/maker-rpm": "^6.0.0-beta.45",
+    "@electron-forge/maker-snap": "^6.0.0-beta.50",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.45",
     "@electron-forge/maker-zip": "^6.0.0-beta.45",
     "@svgr/webpack": "4.3.2",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
     "@typescript-eslint/parser": "^2.2.0",
+    "axios": "^0.19.2",
     "babel-eslint": "10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "8.0.6",
@@ -74,11 +150,13 @@
     "babel-preset-react-app": "^9.0.2",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "cheerio": "^1.0.0-rc.3",
     "css-loader": "2.1.1",
     "dotenv": "6.2.0",
     "dotenv-expand": "5.1.0",
     "electron": "^8.0.1",
-    "electron-squirrel-startup": "^1.0.0",
+    "electron-builder": "^22.4.1",
+    "electron-installer-snap": "^5.0.0",
     "eslint": "^6.1.0",
     "eslint-config-react-app": "^5.0.2",
     "eslint-config-standard": "^14.1.0",
@@ -102,6 +180,7 @@
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.0",
     "mini-css-extract-plugin": "0.8.0",
+    "music-metadata": "^6.3.7",
     "node-sass": "^4.13.1",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "pnp-webpack-plugin": "1.5.0",
