@@ -2,7 +2,7 @@
   "name": "carbon",
   "productName": "carbon",
   "version": "0.0.0",
-  "description": "A beautiful and elegant media player",
+  "description": "Beautiful and elegant media player",
   "main": "main/index.js",
   "scripts": {
     "start": "electron .",
@@ -27,7 +27,7 @@
       "packagerConfig": {
         "appCopyright": "Copyright (C) 2020 Munatek Inc.",
         "executableName": "carbon",
-        "icon": "assets/icon.ico"
+        "icon": "icons/icon.ico"
       },
       "makers": [
         {
@@ -38,7 +38,7 @@
             "owners": "Munatek Inc.",
             "copyright": "Copyright (C) 2020 Munatek Inc.",
             "exe": "carbon",
-            "iconUrl": "assets/icon.ico",
+            "iconUrl": "icons/icon.ico",
             "loadingGif": "",
             "certificateFile": "",
             "certificatePassword": ""
@@ -68,12 +68,12 @@
                 "Audio"
               ],
               "maintainer": "Munatek Inc.",
-              "description": "A beautiful and elegant media player",
-              "productDescription": "A beautiful and elegant media player with lots of features. Displays lyrics while playing songs. Downloads songs without the use of browsers. Stream musics from youtube and all popular streaming platforms.",
+              "description": "Beautiful and elegant media player",
+              "productDescription": "Carbon Media Player is a beautiful and elegant media player crafted with user experience in mind. It contains lots of features which gives you an unforgettable experience while playing your songs. Carbon is also cross-platform which means that it works on essentially all popular platforms.\nFeatures:\nPlay songs from your local file.\nStream songs from youtube and all popular streaming platforms.\nDisplays lyrics while playing songs.\nDownloads songs without the use of browsers.",
               "homepage": "",
               "version": "0.0.0",
               "genericName": "Media Player",
-              "icon": "assets/icon.ico",
+              "icon": "icons/icon.ico",
               "mimeType": [
                 "audio/mpeg"
               ],
@@ -90,8 +90,8 @@
               "audio": true,
               "webgl": true
             },
-            "description": "A beautiful and elegant media player",
-            "summary": "A beautiful and elegant media player.",
+            "description": "Beautiful and elegant media player",
+            "summary": "Beautiful and elegant media player.",
             "version": "0.0.0"
           }
         },
@@ -106,13 +106,13 @@
               "categories": [
                 "Audio"
               ],
-              "description": "A beautiful and elegant media player",
-              "productDescription": "A beautiful and elegant media player with lots of features. Displays lyrics while playing songs. Downloads songs without the use of browsers. Stream musics from youtube and all popular streaming platforms.",
+              "description": "Beautiful and elegant media player",
+              "productDescription": "Carbon Media Player is a beautiful and elegant media player crafted with user experience in mind. It contains lots of features which gives you an unforgettable experience while playing your songs. Carbon is also cross-platform which means that it works on essentially all popular platforms.\nFeatures:\nPlay songs from your local file.\nStream songs from youtube and all popular streaming platforms.\nDisplays lyrics while playing songs.\nDownloads songs without the use of browsers.",
               "mimeType": [
                 "audio/mpeg"
               ],
               "license": "",
-              "icon": "assets/icon.ico",
+              "icon": "icons/icon.ico",
               "genericName": "Media Player"
             }
           }
@@ -179,6 +179,7 @@
     "jest-environment-jsdom-fourteen": "0.1.0",
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.0",
+    "klaw-sync": "^6.0.0",
     "mini-css-extract-plugin": "0.8.0",
     "music-metadata": "^6.3.7",
     "node-sass": "^4.13.1",
