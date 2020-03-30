@@ -1,6 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
+import { getPlayer } from "../utils"
 import {
     updateFavourite, playMedia, registerNewPlayist,
     updatePlayist, removeMedia
@@ -82,7 +83,8 @@ class Music extends React.Component {
     }
 
     handlePlay () {
-        const { dispatch, player } = this.props
+        const { dispatch } = this.props
+        const player = getPlayer()
         dispatch(playMedia(this.state.highlight, player))
     }
 
@@ -197,21 +199,18 @@ class Music extends React.Component {
 Music.propTypes = {
     favourite: PropTypes.array,
     playists: PropTypes.array,
-    player: PropTypes.object,
     media: PropTypes.string
 }
 
 Music.defaultProps = {
     favourite: [],
     playists: [],
-    player: null,
     media: ""
 }
 
 const mapStateToProps = (state) => ({
     favourite: state.media.library.filter(song => state.media.favourite.includes(song.file)),
     playists: state.media.playists,
-    player: state.media.player,
     media: state.media.current
 })
 

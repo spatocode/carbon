@@ -51,7 +51,6 @@ export function media (state=mediaState, action) {
     case C.PLAY_MEDIA:
         return Object.assign({}, state, {
             current: action.media,
-            player: action.player,
             recent: (state.recent.length < 11)
                 ? [...state.recent, action.media]
                 : state.recent

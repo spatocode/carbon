@@ -3,6 +3,7 @@ import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { playMedia, setCurrentMediaMode } from "../actions"
+import { setPlayer } from "../utils"
 import "./stylesheets/Control.scss"
 import * as icon from "../assets/staticbase64"
 const { ipcRenderer } = window.require("electron")
@@ -37,8 +38,7 @@ class Control extends React.Component {
     }
 
     componentDidMount () {
-        const { dispatch } = this.props
-        dispatch(playMedia("", this.mediaPlayer.current))
+        setPlayer(this.mediaPlayer.current)
 
         ipcRenderer.on("play-media", (event, arg) => {
             this.handlePlay()

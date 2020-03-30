@@ -1,3 +1,4 @@
+import { setPlayer } from "../utils"
 import C from "./constant"
 
 export const requestUpdateLibrary = () => ({
@@ -53,12 +54,14 @@ export const nightMode = (night) => ({
     night
 })
 
-// Make HTMLMediaElement available in state
-const setCurrentMedia = (media, mediaPlayer) => ({
-    type: C.PLAY_MEDIA,
-    media: media,
-    player: mediaPlayer
-})
+// Make HTMLMediaElement available in memory
+const setCurrentMedia = (media, mediaPlayer) => {
+    setPlayer(mediaPlayer)
+    return {
+        type: C.PLAY_MEDIA,
+        media: media
+    }
+}
 
 export const setCurrentMediaMode = (mode) => ({
     type: C.MEDIA_MODE,
