@@ -11,8 +11,14 @@ class App extends Component {
     componentWillMount () {
         const store = new Store()
         const { dispatch } = this.props
+
+        // We gat delete isUpdating if its in store
+        // It's not needed in store
+        if (store.has("state.media.isUpdating")) {
+            store.delete("state.media.isUpdating")
+        }
+
         const state = store.get("state")
-        console.log(state)
         if (!state || state.media.library.length === 0) {
             ipcRenderer.send("should-update", true)
             dispatch(requestUpdateLibrary())
