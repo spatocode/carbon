@@ -46,14 +46,28 @@ export function view (state=viewState, action) {
     }
 } */
 
+function updateRecents (recent, media) {
+    if (recent.length < 9) {
+        console.log("Lesser than")
+        if (media !== "") {
+            console.log("Push")
+            recent.push(media)
+            return recent
+        }
+    } else {
+        recent.shift()
+        recent.push(media)
+        return recent
+    }
+    return recent
+}
+
 export function media (state=mediaState, action) {
     switch (action.type) {
     case C.PLAY_MEDIA:
         return Object.assign({}, state, {
             current: action.media,
-            recent: (state.recent.length < 11)
-                ? [...state.recent, action.media]
-                : state.recent
+            recent: updateRecents(state.recent, action.media)
         })
     case C.MEDIA_MODE:
         return Object.assign({}, state, {

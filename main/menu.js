@@ -1,9 +1,19 @@
 const os = require("os")
 const { app, dialog, Menu } = require("electron")
+const Store = require("electron-store")
 
 let window
 
 function buildMenu (win) {
+    const menuItem = []
+    const store = new Store()
+    const recent = store.get("state.media.recent")
+    recent.forEach((song) => {
+        menuItem.push({
+            label: song,
+            click: handlePlay
+        })
+    })
     window = win
     const template = [
         {
@@ -18,9 +28,7 @@ function buildMenu (win) {
                 click: handleOpenURL
             }, {
                 label: "Open recent",
-                submenu: [{
-                    label: "Joyner Lucas - Devil's work"
-                }]
+                submenu: [...menuItem]
             }, {
                 label: "Create playist",
                 accelerator: "Ctrl+N",
@@ -51,7 +59,7 @@ function buildMenu (win) {
             label: "Playback",
             submenu: [{
                 label: "Play/Pause",
-                click: handlePlayPause
+                click: handlePlay
             }, {
                 label: "Stop",
                 click: handleStop
@@ -148,8 +156,12 @@ function handleCreatePlayist () {
     window.webContents.send("register-playist", true)
 }
 
-function handlePlayPause () {
-    window.webContents.send("play-media", true)
+function handlePlay (e) {
+    if (e.label !== "Play/Pause") {
+        window.webContents.send("play-media", e.label)
+        return
+    }
+    window.webContents.send("playpause", true)
 }
 
 function handleStop () {

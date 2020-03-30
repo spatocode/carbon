@@ -47,7 +47,13 @@ class Control extends React.Component {
             dispatch(setCurrentMediaMode("Paused"))
         }
 
-        ipcRenderer.on("play-media", (event, arg) => {
+        ipcRenderer.on("play-media", (event, media) => {
+            const { dispatch } = this.props
+            const player = getPlayer()
+            dispatch(playMedia(media, player))
+        })
+
+        ipcRenderer.on("playpause", (event, arg) => {
             this.handlePlay()
         })
 
@@ -99,6 +105,7 @@ class Control extends React.Component {
         var hourValue, minuteValue, secondValue, durHourValue,
             durMinValue, durSecValue
         var mediaPlayer = getPlayer()
+        console.log(mediaPlayer.currentTime)
         var currentTime = this.currentTime.current
         var duration = this.duration.current
         var timerBar = this.timerBar.current
