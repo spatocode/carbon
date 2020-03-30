@@ -38,7 +38,14 @@ class Control extends React.Component {
     }
 
     componentDidMount () {
+        const { mode, dispatch } = this.props
         setPlayer(this.mediaPlayer.current)
+
+        // This prevents the app from being in playing mode on start,
+        // which normally happen when app was quit while on playing mode
+        if (mode === "Playing") {
+            dispatch(setCurrentMediaMode("Paused"))
+        }
 
         ipcRenderer.on("play-media", (event, arg) => {
             this.handlePlay()
