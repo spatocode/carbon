@@ -121,8 +121,11 @@
     }
   },
   "dependencies": {
+    "download": "^7.1.0",
     "electron-squirrel-startup": "^1.0.0",
-    "mediainfo-wrapper": "^1.2.0",
+    "electron-store": "^5.1.1",
+    "klaw-sync": "^6.0.0",
+    "music-metadata": "^6.3.7",
     "react": "^16.10.0",
     "react-dom": "^16.10.0",
     "react-redux": "^7.1.1",
@@ -179,9 +182,7 @@
     "jest-environment-jsdom-fourteen": "0.1.0",
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.0",
-    "klaw-sync": "^6.0.0",
     "mini-css-extract-plugin": "0.8.0",
-    "music-metadata": "^6.3.7",
     "node-sass": "^4.13.1",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "pnp-webpack-plugin": "1.5.0",
