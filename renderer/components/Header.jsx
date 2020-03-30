@@ -2,6 +2,7 @@ import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { searchSong, playMedia } from "../actions"
+import { getPlayer } from "../utils"
 import "./stylesheets/Header.scss"
 const path = require("path")
 
@@ -58,8 +59,8 @@ class Header extends React.Component {
     }
 
     handleClick (e) {
-        const { dispatch, player } = this.props
-        dispatch(playMedia(e.currentTarget.className.split(" result-item")[0], player))
+        const { dispatch } = this.props
+        dispatch(playMedia(e.currentTarget.className.split(" result-item")[0], getPlayer()))
         this.setState({ searchResult: [] })
         this.setState({ value: "" })
     }
@@ -111,20 +112,17 @@ class Header extends React.Component {
 
 Header.propTypes = {
     isUpdating: PropTypes.bool,
-    library: PropTypes.array,
-    player: PropTypes.object
+    library: PropTypes.array
 }
 
 Header.defaultProps = {
     isUpdating: false,
-    library: [],
-    player: new Audio()
+    library: []
 }
 
 const mapStateToProps = state => ({
     isUpdating: state.media.isUpdating,
-    library: state.media.library,
-    player: state.media.player
+    library: state.media.library
 })
 
 export default connect(mapStateToProps, null)(Header)
