@@ -357,8 +357,7 @@ class Control extends React.Component {
 Control.propTypes = {
     songs: PropTypes.array,
     media: PropTypes.string,
-    mode: PropTypes.string,
-    loadMedia: PropTypes.func
+    mode: PropTypes.string
 }
 
 Control.defaultProps = {
