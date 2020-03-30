@@ -3,7 +3,7 @@ import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { playMedia, setCurrentMediaMode } from "../actions"
-import { setPlayer } from "../utils"
+import { setPlayer, getPlayer } from "../utils"
 import "./stylesheets/Control.scss"
 import * as icon from "../assets/staticbase64"
 const { ipcRenderer } = window.require("electron")
@@ -81,14 +81,14 @@ class Control extends React.Component {
     }
 
     handlePlay () {
-        var mediaPlayer = this.mediaPlayer.current
+        var mediaPlayer = getPlayer()
         const { media, dispatch } = this.props
         if (this.controlInterval) {
             this.handleClearInterval()
         }
 
         if (mediaPlayer.paused) {
-            dispatch(playMedia(media, this.mediaPlayer.current))
+            dispatch(playMedia(media, mediaPlayer))
         } else {
             mediaPlayer.pause()
             dispatch(setCurrentMediaMode("Paused"))
@@ -98,7 +98,7 @@ class Control extends React.Component {
     handleTimeUpdate () {
         var hourValue, minuteValue, secondValue, durHourValue,
             durMinValue, durSecValue
-        var mediaPlayer = this.mediaPlayer.current
+        var mediaPlayer = getPlayer()
         var currentTime = this.currentTime.current
         var duration = this.duration.current
         var timerBar = this.timerBar.current
@@ -176,18 +176,19 @@ class Control extends React.Component {
     }
 
     handleMute () {
-        this.mediaPlayer.current.muted = !this.mediaPlayer.current.muted
+        var mediaPlayer = getPlayer()
+        getPlayer().muted = !mediaPlayer.muted
     }
 
     handleVolume (e) {
-        var mediaPlayer = this.mediaPlayer.current
+        var mediaPlayer = getPlayer()
         this.setState({ volume: e.currentTarget.value })
         mediaPlayer.volume = e.currentTarget.value / 100
     }
 
     handleStop () {
         const { dispatch } = this.props
-        var mediaPlayer = this.mediaPlayer.current
+        var mediaPlayer = getPlayer()
         mediaPlayer.pause()
         dispatch(setCurrentMediaMode("Paused"))
         mediaPlayer.currentTime = 0
@@ -204,7 +205,7 @@ class Control extends React.Component {
     handleFastFoward () {
         const { dispatch } = this.props
         this.setState({ clickTime: Math.floor(Date.now()/1000) })
-        var mediaPlayer = this.mediaPlayer.current
+        var mediaPlayer = getPlayer()
         this.controlTimeout = setTimeout(() => {
             this.controlInterval = setInterval(() => {
                 if (mediaPlayer.currentTime >= mediaPlayer.duration - 3) {
@@ -219,7 +220,7 @@ class Control extends React.Component {
 
     handleRewind () {
         this.setState({ clickTime: Math.floor(Date.now()/1000) })
-        var mediaPlayer = this.mediaPlayer.current
+        var mediaPlayer = getPlayer()
         this.controlTimeout = setTimeout(() => {
             this.controlInterval = setInterval(() => {
                 if (mediaPlayer.currentTime <= 3) {
@@ -246,7 +247,7 @@ class Control extends React.Component {
         for (var i=0; i < songs.length; i++) {
             if ((songs[i].file) === media) {
                 prev = (i === 0) ? songs[songs.length - 1] : songs[--i].file
-                dispatch(playMedia(prev, this.mediaPlayer.current))
+                dispatch(playMedia(prev, getPlayer()))
                 break
             }
         }
@@ -278,7 +279,7 @@ class Control extends React.Component {
                 } else {
                     next = songs[++i].file
                 }
-                dispatch(playMedia(next, this.mediaPlayer.current))
+                dispatch(playMedia(next, getPlayer()))
                 break
             }
         }
@@ -302,7 +303,7 @@ class Control extends React.Component {
         const { mode, media, dispatch } = this.props
         const mediaName = path.basename(media, path.extname(media))
         ipcRenderer.on("open-file", (event, file) => {
-            dispatch(playMedia(file[0], this.mediaPlayer.current))
+            dispatch(playMedia(file[0], getPlayer()))
         })
 
         return (
