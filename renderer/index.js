@@ -4,8 +4,10 @@ import { Provider } from "react-redux"
 import App from "./App"
 import storeFactory from "./store"
 import "./index.css"
+const Store = window.require("electron-store")
 
-const store = storeFactory()
+const db = new Store()
+const store = storeFactory(db.get("state"))
 
 ReactDOM.render(
     <Provider store={ store }>

@@ -1,6 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux"
 import thunkMiddleware from "redux-thunk"
 import * as reducers from "../reducers"
+const Store = window.require("electron-store")
 
 /**
  * Logs state and action to the console
@@ -15,11 +16,13 @@ const logger = store => next => action => {
 }
 
 /**
- * Saves the state in the localStorage
+ * Saves the state in the local disk
  */
 const saver = store => next => action => {
     const result = next(action)
-    localStorage["redux-store"] = JSON.stringify(store.getState())
+    const db = new Store()
+    db.set("state", store.getState())
+    console.log("Saved to local store!!!")
     return result
 }
 
