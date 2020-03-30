@@ -4,15 +4,7 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { playMedia, setCurrentMediaMode } from "../actions"
 import "./stylesheets/Control.scss"
-import rewindIcon from "../assets/backward.png"
-import fastFwdIcon from "../assets/forward.png"
-import pauseIcon from "../assets/pause.png"
-import playIcon from "../assets/play.png"
-import activeShuffleIcon from "../assets/shuffle-active.png"
-import shuffleIcon from "../assets/shuffle.png"
-import activeRepeatIcon from "../assets/repeat-active.png"
-import repeatIcon from "../assets/repeat.png"
-import soundIcon from "../assets/volume.png"
+import * as icon from "../assets/staticbase64"
 const { ipcRenderer } = window.require("electron")
 
 class Control extends React.Component {
@@ -41,6 +33,7 @@ class Control extends React.Component {
         this.handleMute = this.handleMute.bind(this)
         this.handleVolume = this.handleVolume.bind(this)
         this.handleShuffle = this.handleShuffle.bind(this)
+        this.getImageUrl = this.getImageUrl.bind(this)
     }
 
     componentDidMount () {
@@ -293,6 +286,10 @@ class Control extends React.Component {
         return rand
     }
 
+    getImageUrl (icon) {
+        return `data:image/png;base64,${icon}`
+    }
+
     render () {
         const { volume, repeat, shuffle } = this.state
         const { mode, media, dispatch } = this.props
@@ -307,9 +304,11 @@ class Control extends React.Component {
                     onTimeUpdate={this.handleTimeUpdate}></audio>
                 <div className="sound-option">
                     <img className="shuffle" onClick={this.handleShuffle}
-                        src={shuffle ? activeShuffleIcon : shuffleIcon} />
+                        src={shuffle ? this.getImageUrl(icon.shuffleActive)
+                            : this.getImageUrl(icon.shuffle)} />
                     <img className="repeat" onClick={this.handleRepeat}
-                        src={repeat ? activeRepeatIcon : repeatIcon} />
+                        src={repeat ? this.getImageUrl(icon.repeatActive)
+                            : this.getImageUrl(icon.repeat)} />
                 </div>
                 <div className="media-indicator">
                     <div className="media-title">
@@ -324,20 +323,21 @@ class Control extends React.Component {
                         <div className="timer-count" ref={this.duration}>00:00</div>
                     </div>
                     <div className="rwd-play-stop-fwd">
-                        <img src={rewindIcon} className="rwd"
+                        <img src={this.getImageUrl(icon.backward)} className="rwd"
                             onClick={this.handlePrevious}
                             onMouseUp={this.handleClearInterval}
                             onMouseDown={this.handleRewind} />
-                        <img src={mode === "Paused" ? playIcon : pauseIcon } className="playpause"
-                            onClick={this.handlePlay} />
-                        <img src={fastFwdIcon} className="fwd"
+                        <img src={mode === "Paused" ? this.getImageUrl(icon.play)
+                            : this.getImageUrl(icon.pause) } className="playpause"
+                        onClick={this.handlePlay} />
+                        <img src={this.getImageUrl(icon.forward)} className="fwd"
                             onClick={this.handleNext}
                             onMouseUp={this.handleClearInterval}
                             onMouseDown={this.handleFastFoward} />
                     </div>
                 </div>
                 <div className="volume">
-                    <img src={soundIcon} className="mute" onClick={this.handleMute} />
+                    <img src={this.getImageUrl(icon.volume)} className="mute" onClick={this.handleMute} />
                     <input type="range" min="0" max="100" value={volume}
                         className="volume-range" onChange={this.handleVolume} />
                 </div>
