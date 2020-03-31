@@ -39,6 +39,7 @@ class Control extends React.Component {
 
     componentDidMount () {
         const { mode, dispatch } = this.props
+        // Stores the audio player in memory to be used from all modules
         setPlayer(this.mediaPlayer.current)
 
         // This prevents the app from being in playing mode on start,
@@ -86,6 +87,9 @@ class Control extends React.Component {
         })
     }
 
+    /**
+     * Play/Pause media
+     */
     handlePlay () {
         var mediaPlayer = getPlayer()
         const { media, dispatch } = this.props
@@ -101,11 +105,14 @@ class Control extends React.Component {
         }
     }
 
+    /**
+     * Updates media timer.
+     * This is called when the media is at progress
+     */
     handleTimeUpdate () {
         var hourValue, minuteValue, secondValue, durHourValue,
             durMinValue, durSecValue
         var mediaPlayer = getPlayer()
-        console.log(mediaPlayer.currentTime)
         var currentTime = this.currentTime.current
         var duration = this.duration.current
         var timerBar = this.timerBar.current
@@ -171,28 +178,43 @@ class Control extends React.Component {
         timerLength.style.width = `${length}px`
     }
 
+    /**
+     * Set media on repeat mode
+     */
     handleRepeat () {
         const { repeat } = this.state
         this.mediaPlayer.current.loop = !repeat
         this.setState({ repeat: !repeat })
     }
 
+    /**
+     * Set media on shuffle mode
+     */
     handleShuffle () {
         const { shuffle } = this.state
         this.setState({ shuffle: !shuffle })
     }
 
+    /**
+     * Set media on mute mode
+     */
     handleMute () {
         var mediaPlayer = getPlayer()
         getPlayer().muted = !mediaPlayer.muted
     }
 
+    /**
+     * Increases/decreases the media volume
+     */
     handleVolume (e) {
         var mediaPlayer = getPlayer()
         this.setState({ volume: e.currentTarget.value })
         mediaPlayer.volume = e.currentTarget.value / 100
     }
 
+    /**
+     * Stops the media from playing
+     */
     handleStop () {
         const { dispatch } = this.props
         var mediaPlayer = getPlayer()
@@ -202,6 +224,10 @@ class Control extends React.Component {
         clearInterval(this.controlInterval)
     }
 
+    /**
+     * Clears/Stops any control interval.
+     * Control intervals handles media fast-forwards/rewinds
+     */
     handleClearInterval () {
         const { dispatch } = this.props
         clearTimeout(this.controlTimeout)
@@ -209,6 +235,9 @@ class Control extends React.Component {
         dispatch(setCurrentMediaMode("Playing"))
     }
 
+    /**
+     * Fast forwards the media
+     */
     handleFastFoward () {
         const { dispatch } = this.props
         this.setState({ clickTime: Math.floor(Date.now()/1000) })
@@ -225,6 +254,9 @@ class Control extends React.Component {
         }, 800)
     }
 
+    /**
+     * Rewinds the media
+     */
     handleRewind () {
         this.setState({ clickTime: Math.floor(Date.now()/1000) })
         var mediaPlayer = getPlayer()
@@ -239,6 +271,9 @@ class Control extends React.Component {
         }, 800)
     }
 
+    /**
+     * Play the previous song in library
+     */
     handlePrevious () {
         const { clickTime } = this.state
         // return if we are rewinding
@@ -260,6 +295,9 @@ class Control extends React.Component {
         }
     }
 
+    /**
+     * Plays the next song in memory
+     */
     handleNext () {
         const { clickTime } = this.state
         // return if we are fast forwarding
@@ -292,6 +330,9 @@ class Control extends React.Component {
         }
     }
 
+    /**
+     * Generates random number for media shuffle
+     */
     generateRandomNumber (i, length) {
         let rand = Math.floor(Math.random() * (i + 1))
         // Make sure we don't select an out of bound index
@@ -301,6 +342,11 @@ class Control extends React.Component {
         return rand
     }
 
+    /**
+     * Returns the image url.
+     * This is used in setting the image src
+     * @param {icon} string `The base64 encoding of the image to use`
+     */
     getImageUrl (icon) {
         return `data:image/png;base64,${icon}`
     }
