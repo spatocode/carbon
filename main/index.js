@@ -1,6 +1,7 @@
 const os = require("os")
 const path = require("path")
 const { app, BrowserWindow, ipcMain } = require("electron")
+const Store = require("electron-store")
 const mm = require("music-metadata")
 const klawSync = require("klaw-sync")
 const buildMenu = require("./menu")
@@ -21,6 +22,7 @@ const createWindow = () => {
         useContentSize: true,
         minHeight: 500,
         minWidth: 860,
+        backgroundColor: "#eee8e8",
         webPreferences: {
             nodeIntegration: true,
             preload: path.join(__dirname, "/preload.js")
@@ -46,27 +48,35 @@ const createWindow = () => {
 function fetchMedia () {
     const homeDir = os.homedir()
     const musicDir = path.join(homeDir, "Music")
-    const downloadsDir = path.join(homeDir, "Downloads")
-    const videosDir = path.join(homeDir, "Videos")
-    const dirs = [musicDir, videosDir, downloadsDir]
+    const store = new Store()
+    if (!store.has("libLocation")) {
+        store.set("libLocation", [musicDir])
+    }
+
+    const dirs = store.get("libLocation")
 
     ipcMain.on("should-update", (event, arg) => {
         if (arg) {
-            extractMediaInfo(musicDir)
+            extractMediaInfo(dirs)
         }
     })
 }
 
-async function extractMediaInfo (musicDir) {
-    var metadata = []
+async function extractMediaInfo (dirs) {
+    const metadata = []
+    let files = []
 
     // ignore hidden folders and non-mp3 files
     const filterFunc = item => {
         const basename = path.basename(item.path)
-        return basename === "." || basename[0] !== "." || (!item.stat.isDirectory() && path.extname(basename) !== ".mp3")
+        return path.extname(basename) === ".mp3" || basename !== "." || basename[0] !== "."
     }
 
-    var files = klawSync(musicDir, { nodir: true, filter: filterFunc })
+    for (var i=0; i < dirs.length; i++) {
+        const dirFiles = klawSync(dirs[i], { nodir: true, filter: filterFunc })
+        files = files.concat(dirFiles)
+    }
+
     for (const file of files) {
         var filepath = file.path
         await mm.parseFile(filepath)
@@ -82,21 +92,30 @@ async function extractMediaInfo (musicDir) {
                 metadata.push({
                     file: filepath,
                     file_name: path.basename(filepath, path.extname(filepath)),
-                    artist: common.artist,
-                    title: common.title,
-                    album: common.album,
-                    genre: common.genre,
-                    duration: dur,
-                    year: common.year,
-                    track: common.track.no,
-                    lyrics: common.lyrics
+                    artist: common.artist || "Unknown",
+                    title: common.title || path.basename(filepath, path.extname(filepath)),
+                    album: common.album || "Unknown",
+                    genre: common.genre ? common.genre.toString() : "Unknown",
+                    duration: dur || "Unknown",
+                    year: common.year || "Unknown",
+                    track: common.track.no || "",
+                    lyrics: common.lyrics ? common.lyrics.toString() : "Unknown",
+                    comment: common.comment ? common.comment.toString() : "Unknown",
+                    rating: common.rating ? common.rating.toString() : "Unknown",
+                    common: common.composer ? common.composer.toString() : "Unknown",
+                    play_count: 0,
+                    last_played: null,
+                    date_added: new Date().toString().split(" GMT")[0],
+                    quality: format.bitrate || "Unknown"
+
                 })
                 console.log(filepath)
             })
-            .catch(err => console.error("ERROR:", err.message))
+            .catch(err => console.error("Error: ", err.message))
     }
+
     window.webContents.send("update-library", metadata)
-    console.log("DONE")
+    console.log("DONE", metadata.length, files.length)
 }
 
 app.on("ready", createWindow)
