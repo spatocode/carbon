@@ -12,6 +12,7 @@ class Control extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
+            timeRange: 0,
             clickTime: null,
             repeat: false,
             volume: 100,
@@ -35,6 +36,7 @@ class Control extends React.Component {
         this.handleVolume = this.handleVolume.bind(this)
         this.handleShuffle = this.handleShuffle.bind(this)
         this.getImageUrl = this.getImageUrl.bind(this)
+        this.handleSeek = this.handleSeek.bind(this)
     }
 
     componentDidMount () {
@@ -115,8 +117,7 @@ class Control extends React.Component {
         var mediaPlayer = getPlayer()
         var currentTime = this.currentTime.current
         var duration = this.duration.current
-        var timerBar = this.timerBar.current
-        var timerLength = this.timerLength.current
+        // var timerLength = this.timerLength.current
 
         var hours = Math.floor(mediaPlayer.currentTime / 3600)
         var minutes = Math.floor(mediaPlayer.currentTime / 60)
@@ -172,10 +173,22 @@ class Control extends React.Component {
 
         var durationTime = `${durHourValue}${durMinValue}${durSecValue}`
         var mediaTime = `${hourValue}${minuteValue}${secondValue}`
-        var length = timerBar.clientWidth * (mediaPlayer.currentTime/mediaPlayer.duration)
+        var length = 100 * (mediaPlayer.currentTime/mediaPlayer.duration)
         currentTime.innerText = mediaTime
         duration.innerText = durationTime
-        timerLength.style.width = `${length}px`
+        this.setState({ timeRange: length })
+    }
+
+    /**
+     * Update the media timer by seeking
+     */
+    handleSeek (e) {
+        const { timeRange } = this.state
+        const mediaPlayer = getPlayer()
+        const value = e.currentTarget.value
+        console.log(value)
+        mediaPlayer.currentTime = (value * mediaPlayer.currentTime) / timeRange
+        this.setState({ timeRange: value })
     }
 
     /**
@@ -352,7 +365,7 @@ class Control extends React.Component {
     }
 
     render () {
-        const { volume, repeat, shuffle } = this.state
+        const { volume, repeat, shuffle, timeRange } = this.state
         const { mode, media, dispatch } = this.props
         const mediaName = path.basename(media, path.extname(media))
         ipcRenderer.on("open-file", (event, file) => {
@@ -378,9 +391,9 @@ class Control extends React.Component {
                     </div>
                     <div className="timer">
                         <div className="timer-count" ref={this.currentTime}>00:00</div>
-                        <div className="timer-bar" ref={this.timerBar}>
-                            <div className="timer-length" ref={this.timerLength}></div>
-                        </div>
+                        <input type="range" min="0" max="100" value={timeRange}
+                            className="timer-length" ref={this.timerLength}
+                            onChange={this.handleSeek} />
                         <div className="timer-count" ref={this.duration}>00:00</div>
                     </div>
                     <div className="rwd-play-stop-fwd">
