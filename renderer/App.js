@@ -29,6 +29,16 @@ class App extends Component {
         })
     }
 
+    componentWillUnmount () {
+        // This is a check in case of an error which may occur
+        // while updating the library and thereby leaving the
+        // updating mode to true without truely updating
+        const store = new Store()
+        if (store.get("state.media.isUpdating")) {
+            store.set("state.media.isUpdating", false)
+        }
+    }
+
     render () {
         return (
             <div className="App">
