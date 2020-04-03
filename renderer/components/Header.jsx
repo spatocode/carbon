@@ -1,10 +1,12 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { searchSong, playMedia } from "../actions"
+import { searchSong, playMedia, requestUpdateLibrary } from "../actions"
 import { getPlayer } from "../utils"
+import { refresh } from "../assets/staticbase64"
 import "./stylesheets/Header.scss"
 const path = require("path")
+const { ipcRenderer } = window.require("electron")
 
 class Header extends React.Component {
     constructor (props) {
@@ -18,6 +20,7 @@ class Header extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.handleClose = this.handleClose.bind(this)
+        this.updateLibrary = this.updateLibrary.bind(this)
     }
 
     componentDidMount () {
@@ -69,6 +72,12 @@ class Header extends React.Component {
         this.setState({ isSearchingMedia: true })
     }
 
+    updateLibrary () {
+        const { dispatch } = this.props
+        ipcRenderer.send("should-update", true)
+        dispatch(requestUpdateLibrary())
+    }
+
     searchingCompleted () {
         this.setState({ isSearchingMedia: false })
     }
@@ -78,11 +87,17 @@ class Header extends React.Component {
         const { isSearchingMedia, searchResult, value } = this.state
         return (
             <div className="Header">
-                <div className="update-library"
-                    style={isUpdating ? { visibility: "visible" }
-                        : { visibility: "hidden" }}>
-                    <div className="spinner-wrapper"></div>
-                    <div>Updating library...</div>
+                <div className="update-library">
+                    {isUpdating
+                        ? <div className="is-updating">
+                            <div className="spinner-wrapper"></div>
+                            <div>Updating library...</div>
+                        </div>
+                        : <div className="refresh" onClick={this.updateLibrary}>
+                            <img src={`data:image/png;base64,${refresh}`}
+                                width="20" height="20" />
+                        </div>
+                    }
                 </div>
                 <div className="media-search">
                     <form onSubmit={this.handleSubmit}>

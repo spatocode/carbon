@@ -10,6 +10,14 @@
         border: none;
         color: grey;
     }
+    form input[type=search]:focus {
+        outline: none;
+    }
+
+    form button:focus {
+        outline: none;
+    }
+
     form span {
         border: none;
         padding: 5px;
@@ -96,6 +104,15 @@
     .update-library {
         float: right;
         font-size: 11px;
+    }
+
+    .update-library .refresh {
+        cursor: pointer;
+        padding: 4px;
+    }
+
+    .update-library .refresh:hover {
+        background: rgb(255, 255, 255);
     }
 }
 
