@@ -41,18 +41,43 @@ const createWindow = () => {
     window.webContents.on("dom-ready", () => {
         window.show()
     })
-
+    initStore()
     fetchMedia()
 }
 
-function fetchMedia () {
+function initStore () {
+    const store = new Store()
     const homeDir = os.homedir()
     const musicDir = path.join(homeDir, "Music")
-    const store = new Store()
+    const visibleColumn = {
+        track: true,
+        title: true,
+        artist: true,
+        duration: true,
+        album: true,
+        genre: true,
+        rating: false,
+        composer: false,
+        play_count: false,
+        date_added: false,
+        location: false,
+        last_played: false,
+        year: false,
+        quality: false,
+        comment: false
+    }
+
     if (!store.has("libLocation")) {
         store.set("libLocation", [musicDir])
     }
 
+    if (!store.has("state.settings.visibleColumn")) {
+        store.set("state.settings.visibleColumn", visibleColumn)
+    }
+}
+
+function fetchMedia () {
+    const store = new Store()
     const dirs = store.get("libLocation")
 
     ipcMain.on("should-update", (event, arg) => {
@@ -104,10 +129,10 @@ async function extractMediaInfo (dirs) {
                     rating: common.rating ? common.rating.toString() : "Unknown",
                     common: common.composer ? common.composer.toString() : "Unknown",
                     play_count: 0,
-                    last_played: null,
+                    last_played: "Never",
                     date_added: new Date().toString().split(" GMT")[0],
-                    quality: format.bitrate || "Unknown"
-
+                    quality: format.bitrate ? `${Math.floor(format.bitrate/1000)}kbps` : "Unknown",
+                    location: filepath.split(path.basename(filepath, path.extname(filepath)))[0]
                 })
                 console.log(filepath)
             })
