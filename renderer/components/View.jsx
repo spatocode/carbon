@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import Music from "./Music"
 import NowPlaying from "./NowPlaying"
+import Setting from "./Setting"
 import "./stylesheets/View.scss"
 
 const View = ({ view="Now Playing", songs=[], playists=[] }) => {
@@ -13,8 +14,11 @@ const View = ({ view="Now Playing", songs=[], playists=[] }) => {
         return <Music />
     case "Now Playing":
         return <NowPlaying />
+    case "Setting":
+        return <Setting />
     }
 
+    // Check if we opened playist view
     for (var i=0; i < playists.length; i++) {
         if (view.includes(playists[i][0])) {
             var playist = songs.filter(song => playists[i].includes(song.file))

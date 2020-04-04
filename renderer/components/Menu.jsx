@@ -44,6 +44,7 @@ class Menu extends React.Component {
     render () {
         const { show, height } = this.state
         const { playists, night } = this.props
+        // TODO: Provide a separate component for menu list
         return (
             <div className="Menu" style={{ height: height }}>
                 <div className="title">
@@ -74,8 +75,11 @@ class Menu extends React.Component {
                     <span></span>
                     <span>Favourite</span>
                 </div>
+                <div className="menu-list" onClick={this.handleView}>
+                    <span></span>
+                    <span>Setting</span>
+                </div>
                 <div className="menu-list" onClick={this.handleNightmode}>
-                    <span>Night mode</span>
                     <div className="mode-toggle-bar">
                         <div className="mode-toggle" style={night ? { float: "right" } : { float: "left" }}></div>
                     </div>
