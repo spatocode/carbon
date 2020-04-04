@@ -9,8 +9,7 @@ import {
 import "./stylesheets/Music.scss"
 const fs = window.require("fs")
 const path = window.require("path")
-const { remote } = window.require("electron")
-const { Menu, dialog } = remote
+const { Menu, dialog } = window.require("electron").remote
 
 class Music extends React.Component {
     constructor (props) {
@@ -126,8 +125,9 @@ class Music extends React.Component {
         dispatch(updateFavourite(newFav))
     }
 
-    formatMediaProp (mediaProp, lastIndex) {
-        var fmt = mediaProp.toString().slice(0, lastIndex)
+    formatMediaProp (mediaProp, index) {
+        const lastIndex = index === 1 ? 29 : 20
+        const fmt = mediaProp.slice(0, lastIndex)
         if (mediaProp === fmt) {
             return fmt
         }
@@ -136,19 +136,18 @@ class Music extends React.Component {
 
     render () {
         const { highlight, height } = this.state
-        var { songs, favourite, media } = this.props
+        var { songs, favourite, media, visibleColumn } = this.props
         songs = songs || favourite
         return (
             <div className="tab-view" id="Music" style={{ height: height }}>
                 <table className="">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Title</th>
-                            <th>Length</th>
-                            <th>Artist</th>
-                            <th>Album</th>
-                            <th>Genre</th>
+                            {Object.entries(visibleColumn).map((item, i) =>
+                                item[1]
+                                    ? <th>{item[0].charAt(0).toUpperCase()+item[0].slice(1).replace("_", " ")}</th>
+                                    : null
+                            )}
                         </tr>
                     </thead>
                     <tbody>
@@ -161,32 +160,11 @@ class Music extends React.Component {
                                     ? { backgroundColor: "teal", color: "whitesmoke" }
                                     : media === song.file
                                         ? { color: "salmon" } : null}>
-                                <td>{i}</td>
-                                {song.title
-                                    ? <td>{this.formatMediaProp(song.title.toString(), 29)}
-                                    </td>
-                                    : <td>{this.formatMediaProp(song.file_name.toString(), 29)}</td>
-                                }
-
-                                {song.duration
-                                    ? <td>{song.duration}</td>
-                                    : <td>Unknown</td>
-                                }
-
-                                {song.artist
-                                    ? <td>{this.formatMediaProp(song.artist.toString(), 20)}</td>
-                                    : <td>Unknown</td>
-                                }
-
-                                {song.album
-                                    ? <td>{this.formatMediaProp(song.album.toString(), 20)}</td>
-                                    : <td>Unknown</td>
-                                }
-
-                                {song.genre
-                                    ? <td>{this.formatMediaProp(song.genre.toString(), 20)}</td>
-                                    : <td>Unknown</td>
-                                }
+                                {Object.entries(visibleColumn).map((item, i) =>
+                                    item[1]
+                                        ? <td>{this.formatMediaProp(song[`${item[0]}`].toString(), i)}</td>
+                                        : null
+                                )}
                             </tr>
                         )}
                     </tbody>
@@ -199,19 +177,22 @@ class Music extends React.Component {
 Music.propTypes = {
     favourite: PropTypes.array,
     playists: PropTypes.array,
-    media: PropTypes.string
+    media: PropTypes.string,
+    visibleColumn: PropTypes.object
 }
 
 Music.defaultProps = {
     favourite: [],
     playists: [],
-    media: ""
+    media: "",
+    visibleColumn: {}
 }
 
 const mapStateToProps = (state) => ({
     favourite: state.media.library.filter(song => state.media.favourite.includes(song.file)),
     playists: state.media.playists,
-    media: state.media.current
+    media: state.media.current,
+    visibleColumn: state.settings.visibleColumn
 })
 
 export default connect(mapStateToProps, null)(Music)
