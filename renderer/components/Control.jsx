@@ -173,7 +173,7 @@ class Control extends React.Component {
 
         var durationTime = `${durHourValue}${durMinValue}${durSecValue}`
         var mediaTime = `${hourValue}${minuteValue}${secondValue}`
-        var length = 100 * (mediaPlayer.currentTime/mediaPlayer.duration)
+        var length = 100 * (mediaPlayer.currentTime/mediaPlayer.duration) || 0
         currentTime.innerText = mediaTime
         duration.innerText = durationTime
         this.setState({ timeRange: length })
@@ -186,8 +186,7 @@ class Control extends React.Component {
         const { timeRange } = this.state
         const mediaPlayer = getPlayer()
         const value = e.currentTarget.value
-        console.log(value)
-        mediaPlayer.currentTime = (value * mediaPlayer.currentTime) / timeRange
+        mediaPlayer.currentTime = (value * mediaPlayer.currentTime) / timeRange || 0
         this.setState({ timeRange: value })
     }
 
@@ -234,6 +233,7 @@ class Control extends React.Component {
         mediaPlayer.pause()
         dispatch(setCurrentMediaMode("Paused"))
         mediaPlayer.currentTime = 0
+        this.setState({ timeRange: 0 })
         clearInterval(this.controlInterval)
     }
 
@@ -243,9 +243,11 @@ class Control extends React.Component {
      */
     handleClearInterval () {
         const { dispatch } = this.props
+        if (this.controlInterval) {
+            clearInterval(this.controlInterval)
+            dispatch(setCurrentMediaMode("Playing"))
+        }
         clearTimeout(this.controlTimeout)
-        clearInterval(this.controlInterval)
-        dispatch(setCurrentMediaMode("Playing"))
     }
 
     /**
@@ -298,10 +300,21 @@ class Control extends React.Component {
             return
         }
         var prev
+        const { shuffle } = this.state
         const { songs, media, dispatch } = this.props
         for (var i=0; i < songs.length; i++) {
-            if ((songs[i].file) === media) {
-                prev = (i === 0) ? songs[songs.length - 1] : songs[--i].file
+            if (songs[i].file === media) {
+                // If we're at the first song, play the last song
+                // else play prev song
+                if (i === 0) {
+                    prev = songs[songs.length - 1].file
+                    console.log(prev)
+                } else if (shuffle) {
+                    var rand = this.generateRandomNumber(i, songs.length)
+                    prev = songs[--rand].file
+                } else {
+                    prev = songs[--i].file
+                }
                 dispatch(playMedia(prev, getPlayer()))
                 break
             }
@@ -326,11 +339,11 @@ class Control extends React.Component {
         const { shuffle } = this.state
         const { songs, media, dispatch } = this.props
         for (var i=0; i < songs.length; i++) {
-            if ((songs[i].file) === media) {
+            if (songs[i].file === media) {
                 // If we're at the last song, start afresh
                 // else play next song
                 if (i === songs.length - 1) {
-                    next = songs[0]
+                    next = songs[0].file
                 } else if (shuffle) {
                     var rand = this.generateRandomNumber(i, songs.length)
                     next = songs[++rand].file
@@ -392,7 +405,7 @@ class Control extends React.Component {
                     <div className="timer">
                         <div className="timer-count" ref={this.currentTime}>00:00</div>
                         <input type="range" min="0" max="100" value={timeRange}
-                            className="timer-length" ref={this.timerLength}
+                            className="timer-length"
                             onChange={this.handleSeek} />
                         <div className="timer-count" ref={this.duration}>00:00</div>
                     </div>
