@@ -11,6 +11,11 @@ export const shouldUpdateLibrary = (shouldUpdate) => ({
     shouldUpdate
 })
 
+export const updateVisibleColumn = (item) => ({
+    type: C.VISIBLE_COLUMN,
+    item
+})
+
 export const updatePlayist = (playist, item) => ({
     type: C.UPDATE_PLAYIST,
     playist: playist,
@@ -30,6 +35,11 @@ export const updateFavourite = (favourite) => ({
 
 export const removeMedia = (media) => ({
     type: C.REMOVE_MEDIA,
+    media
+})
+
+export const updateMediaInfo = (media) => ({
+    type: C.UPDATE_MEDIA_INFO,
     media
 })
 
@@ -107,7 +117,10 @@ function setupMediaSrc (filepath, mediaPlayer) {
                 sourceBuffer.addEventListener("updateend", function () {
                     mediaSrc.endOfStream()
                     mediaPlayer.play()
-                        .then(() => dispatch(setCurrentMediaMode("Playing")))
+                        .then(() => {
+                            dispatch(updateMediaInfo(filepath))
+                            dispatch(setCurrentMediaMode("Playing"))
+                        })
                         .catch((err) => {
                             console.log(err)
                             dispatch(setCurrentMediaMode("Paused"))
