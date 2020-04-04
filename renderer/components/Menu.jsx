@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { selectView, nightMode } from "../actions"
 import { version } from "../../package.json"
+import * as icon from "../assets/staticbase64"
 import "./stylesheets/Menu.scss"
 
 class Menu extends React.Component {
@@ -51,15 +52,24 @@ class Menu extends React.Component {
                     <div>{version}</div>
                 </div>
                 <div className="menu-list" onClick={this.handleView}>
-                    <span></span>
+                    <span className="menu-icon">
+                        <img src={`data:image/png;base64,${icon.nowplaying}`}
+                            width="16" height="16" />
+                    </span>
                     <span>Now Playing</span>
                 </div>
                 <div className="menu-list" onClick={this.handleView}>
-                    <span><img src=""/></span>
+                    <span className="menu-icon">
+                        <img src={`data:image/png;base64,${icon.music}`}
+                            width="20" height="20" />
+                    </span>
                     <span>Music</span>
                 </div>
                 <div className={(show && playists.length > 0) ? "menu-list no-hover" : "menu-list"}>
-                    <span></span>
+                    <span className="menu-icon">
+                        <img src={`data:image/png;base64,${icon.playist}`}
+                            width="20" height="20" />
+                    </span>
                     <span onClick={this.showDropdown}>Playists</span>
                     <div className="menu-dropdown"
                         style={show ? { display: "block" } : { display: "none" }}>
@@ -71,7 +81,10 @@ class Menu extends React.Component {
                     </div>
                 </div>
                 <div className="menu-list" onClick={this.handleView}>
-                    <span></span>
+                    <span className="menu-icon">
+                        <img src={`data:image/png;base64,${icon.favourite}`}
+                            width="15" height="15" />
+                    </span>
                     <span>Favourite</span>
                 </div>
                 <div className="menu-list" onClick={this.handleNightmode}>
