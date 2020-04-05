@@ -1,0 +1,63 @@
+.Setting {
+    width: 100%;
+    margin-left: 30px;
+    overflow-y: auto;
+    form {
+        label {
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        h6 {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .setting-head div {
+            margin-left: 10px;
+        }
+
+        .setting-head {
+            margin-bottom: 10px;
+        }
+    }
+}
+
+.tab-view {
+    margin-left: 10px;
+}
+
+.visible-column {
+    display: flex;
+}
+
+select {
+    width: 150px;
+}
+
+.library-location {
+    display: flex;
+}
+
+.library-location input[type=button] {
+    width: 115px;
+    height: 30px;
+    font-size: 14px;
+}
+
+.library-location input[type=button]:focus {
+    outline: none;
+}
+
+.library-location li {
+    font-size: 14px;
+}
+
+.library-location ul li span {
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+.library-location ul li span:hover {
+    color: red;
+}

@@ -20,6 +20,26 @@ const viewState = {
     settingsTab: "General"
 }
 
+const settingsState = {
+    visibleColumn: {
+        track: true,
+        title: true,
+        artist: true,
+        duration: true,
+        album: true,
+        genre: true,
+        rating: false,
+        composer: false,
+        play_count: false,
+        date_added: false,
+        location: false,
+        last_played: false,
+        year: false,
+        quality: false,
+        comment: false
+    }
+}
+
 export function view (state=viewState, action) {
     switch (action.type) {
     case C.SELECT_VIEW:
@@ -35,16 +55,16 @@ export function view (state=viewState, action) {
     }
 }
 
-/* export function settings (state=settingsState, action) {
+export function settings (state=settingsState, action) {
     switch (action.type) {
-    case C.SELECT_SETTINGS_TAB:
+    case C.VISIBLE_COLUMN:
         return Object.assign({}, state, {
-            tab: action.tabItem
+            visibleColumn: Object.assign({}, state.visibleColumn, action.item)
         })
     default:
         return state
     }
-} */
+}
 
 function updateRecents (recent, media) {
     if (recent.length < 9) {
@@ -98,6 +118,16 @@ export function media (state=mediaState, action) {
         return Object.assign({}, state, {
             library: action.data,
             isUpdating: action.isUpdating
+        })
+    case C.UPDATE_MEDIA_INFO:
+        return Object.assign({}, state, {
+            library: state.library.map((v, i) => {
+                return (v.file !== action.media) ? v : Object.assign({}, state, {
+                    ...v,
+                    play_count: ++v.play_count,
+                    last_played: new Date().toString().split(" GMT")[0]
+                })
+            })
         })
     case C.SHOULD_UPDATE:
         return Object.assign({}, state, {

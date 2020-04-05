@@ -45,6 +45,7 @@ class Menu extends React.Component {
     render () {
         const { show, height } = this.state
         const { playists, night } = this.props
+        // TODO: Provide a separate component for menu list
         return (
             <div className="Menu" style={{ height: height }}>
                 <div className="title">
@@ -54,21 +55,21 @@ class Menu extends React.Component {
                 <div className="menu-list" onClick={this.handleView}>
                     <span className="menu-icon">
                         <img src={`data:image/png;base64,${icon.nowplaying}`}
-                            width="16" height="16" />
+                            width="13" height="13" />
                     </span>
                     <span>Now Playing</span>
                 </div>
                 <div className="menu-list" onClick={this.handleView}>
                     <span className="menu-icon">
                         <img src={`data:image/png;base64,${icon.music}`}
-                            width="20" height="20" />
+                            width="16" height="16" />
                     </span>
                     <span>Music</span>
                 </div>
                 <div className={(show && playists.length > 0) ? "menu-list no-hover" : "menu-list"}>
                     <span className="menu-icon">
                         <img src={`data:image/png;base64,${icon.playist}`}
-                            width="20" height="20" />
+                            width="16" height="16" />
                     </span>
                     <span onClick={this.showDropdown}>Playists</span>
                     <div className="menu-dropdown"
@@ -83,12 +84,18 @@ class Menu extends React.Component {
                 <div className="menu-list" onClick={this.handleView}>
                     <span className="menu-icon">
                         <img src={`data:image/png;base64,${icon.favourite}`}
-                            width="15" height="15" />
+                            width="12" height="12" />
                     </span>
                     <span>Favourite</span>
                 </div>
+                <div className="menu-list" onClick={this.handleView}>
+                    <span className="menu-icon">
+                        <img src={`data:image/png;base64,${icon.settings}`}
+                            width="13" height="13" />
+                    </span>
+                    <span>Setting</span>
+                </div>
                 <div className="menu-list" onClick={this.handleNightmode}>
-                    <span>Night mode</span>
                     <div className="mode-toggle-bar">
                         <div className="mode-toggle" style={night ? { float: "right" } : { float: "left" }}></div>
                     </div>
