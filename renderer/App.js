@@ -18,8 +18,8 @@ class App extends Component {
             store.delete("state.media.isUpdating")
         }
 
-        const state = store.get("state")
-        if (!state || state.media.library.length === 0) {
+        if (!store.has("state") || !store.has("state.media") ||
+            store.get("state.media.library").length === 0) {
             ipcRenderer.send("should-update", true)
             dispatch(requestUpdateLibrary())
         }
