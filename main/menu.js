@@ -7,13 +7,15 @@ let window
 function buildMenu (win) {
     const menuItem = []
     const store = new Store()
-    const recent = store.get("state.media.recent")
-    recent.forEach((song) => {
-        menuItem.push({
-            label: song,
-            click: handlePlay
+    if (store.has("state.media.recent")) {
+        const recent = store.get("state.media.recent")
+        recent.forEach((song) => {
+            menuItem.push({
+                label: song,
+                click: handlePlay
+            })
         })
-    })
+    }
     window = win
     const template = [
         {
