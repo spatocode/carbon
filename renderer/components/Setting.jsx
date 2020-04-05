@@ -37,7 +37,7 @@ class Setting extends React.Component {
         const { tabView, height } = this.state
         const tabTitles = ["General", "Music"]
         const visibility = ["Artist", "Title", "Rating", "Track",
-            "Composer", "Play count", "Duration", "Date added",
+            "Composer", "Play count", "Length", "Date added",
             "Location", "Last played", "Album", "Year", "Genre",
             "Quality", "Comment"]
         const themes = ["Carbon", "Ola-edo", "Onyinye", "Cherokee"]

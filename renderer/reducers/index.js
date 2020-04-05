@@ -25,7 +25,7 @@ const settingsState = {
         track: true,
         title: true,
         artist: true,
-        duration: true,
+        length: true,
         album: true,
         genre: true,
         rating: false,
