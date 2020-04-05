@@ -1,11 +1,19 @@
 #Music{
     display: block;
     width: 100%;
-    overflow-y: auto;
-    white-space: nowrap;
+    margin: 0 auto;
 }
 
-th{
+.table:focus, .column-data:focus {
+    outline: none;
+}
+
+.headerColumn {
+    text-decoration: none;
+}
+
+.table-header{
+    text-transform: none;
     width: 300px;
     background-color: rgb(243, 243, 243);
     position: sticky;
@@ -18,26 +26,21 @@ th{
     padding: 3px;
 }
 
-th:first-child {
+.table-header:first-child {
     width: 50px;
 }
 
-th:last-child {
+.table-header:last-child {
     border-right: 0px solid rgb(179, 179, 179);
 }
 
-td:nth-child(2) {
-    
-}
-
-td{
+.column-data {
     font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-th, td{
-    padding-left: 4px;
-    padding-right: 4px;
+.table-header, .column-data {
+
 }

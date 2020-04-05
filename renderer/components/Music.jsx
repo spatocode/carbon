@@ -1,6 +1,8 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
+import { AutoSizer, Column, Table } from "react-virtualized"
+import "react-virtualized/styles.css"
 import { getPlayer } from "../utils"
 import {
     updateFavourite, playMedia, registerNewPlayist,
@@ -35,6 +37,17 @@ class Music extends React.Component {
 
     componentWillUnmount () {
         window.onresize = null
+    }
+
+    shouldComponentUpdate (nextProps, nextState) {
+        let { favourite, media, songs, visibleColumn } = this.props
+        songs = songs || favourite
+        if (songs !== nextProps.songs || media !== nextProps.media ||
+            visibleColumn !== nextProps.visibleColumn ||
+            this.state !== nextState) {
+            return true
+        }
+        return false
     }
 
     handleResize () {
@@ -77,8 +90,8 @@ class Music extends React.Component {
         ]).popup()
     }
 
-    handleClick (e) {
-        this.setState({ highlight: e.currentTarget.className })
+    handleClick (param) {
+        this.setState({ highlight: param.rowData.file })
     }
 
     handlePlay () {
@@ -140,35 +153,38 @@ class Music extends React.Component {
         songs = songs || favourite
         return (
             <div className="tab-view" id="Music" style={{ height: height }}>
-                <table className="">
-                    <thead>
-                        <tr>
+                <AutoSizer disableHeight>
+                    {({ width }) => (
+                        <Table
+                            ref="Table"
+                            width={width}
+                            height={height}
+                            headerHeight={20}
+                            className="table"
+                            headerClassName="table-header"
+                            rowHeight={25}
+                            rowCount={songs.length}
+                            rowGetter={({ index }) => songs[index]}
+                            onRowClick={(param) => (this.handleClick(param))}
+                            onRowDoubleClick={(param) => (this.handlePlay(param))}
+                            rowStyle={({ index }) => (
+                                typeof songs[index] === "undefined"
+                                    ? null : highlight === songs[index].file
+                                        ? { backgroundColor: "teal", color: "whitesmoke" }
+                                        : media === songs[index].file
+                                            ? { color: "salmon" } : null)}>
                             {Object.entries(visibleColumn).map((item, i) =>
                                 item[1]
-                                    ? <th>{item[0].charAt(0).toUpperCase()+item[0].slice(1).replace("_", " ")}</th>
+                                    ? <Column key={i} label={item[0].charAt(0).toUpperCase()+item[0].slice(1).replace("_", " ")}
+                                        dataKey={item[0].toLowerCase().replace("_", " ")}
+                                        width={i === 0 ? 45 : i === 3 ? 60 : i === 1 ? window.innerWidth-300 : window.innerWidth-500}
+                                        minWidth={i === 0 ? 45 : i === 3 ? 60 : null}
+                                        className="column-data"/>
                                     : null
                             )}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {songs.map((song, i) =>
-                            <tr key={i} className={song.file}
-                                onContextMenu={this.handleContextMenu}
-                                onClick={this.handleClick}
-                                onDoubleClick={this.handlePlay}
-                                style={highlight === song.file
-                                    ? { backgroundColor: "teal", color: "whitesmoke" }
-                                    : media === song.file
-                                        ? { color: "salmon" } : null}>
-                                {Object.entries(visibleColumn).map((item, i) =>
-                                    item[1]
-                                        ? <td>{this.formatMediaProp(song[`${item[0]}`].toString(), i)}</td>
-                                        : null
-                                )}
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                        </Table>
+                    )}
+                </AutoSizer>
             </div>
         )
     }
