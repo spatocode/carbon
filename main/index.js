@@ -1,6 +1,6 @@
 const os = require("os")
 const path = require("path")
-const { app, BrowserWindow, ipcMain } = require("electron")
+const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron")
 const Store = require("electron-store")
 const mm = require("music-metadata")
 const klawSync = require("klaw-sync")
@@ -33,6 +33,7 @@ const createWindow = () => {
     // window.loadFile(path.join(__dirname, "../renderer/build/index.html"))
 
     buildMenu(window)
+    registerShortcuts()
 
     window.on("closed", () => {
         window = null
@@ -43,6 +44,24 @@ const createWindow = () => {
     })
     initStore()
     fetchMedia()
+}
+
+function registerShortcuts () {
+    globalShortcut.register("MediaPlayPause", () => {
+        window.webContents.send("playpause", true)
+    })
+
+    globalShortcut.register("MediaStop", () => {
+        window.webContents.send("stop-media", true)
+    })
+
+    globalShortcut.register("MediaPreviousTrack", () => {
+        window.webContents.send("previous-media", true)
+    })
+
+    globalShortcut.register("MediaNextTrack", () => {
+        window.webContents.send("next-media", true)
+    })
 }
 
 function initStore () {
