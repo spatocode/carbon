@@ -1,11 +1,5 @@
 import C from "../actions/constant"
 
-const lyricState = {
-    isFetchingLyric: false,
-    error: false,
-    data: []
-}
-
 const mediaState = {
     recent: [],
     playists: [],
@@ -16,8 +10,7 @@ const mediaState = {
 }
 
 const viewState = {
-    category: "Now Playing",
-    settingsTab: "General"
+    category: "Now Playing"
 }
 
 const settingsState = {
@@ -143,27 +136,6 @@ export function mode (state={ night: false }, action) {
     case C.SELECT_MODE:
         return Object.assign({}, state, {
             night: action.night
-        })
-    default:
-        return state
-    }
-}
-
-export function lyric (state=lyricState, action) {
-    switch (action.type) {
-    case C.REQUEST_LYRIC:
-        return Object.assign({}, state, {
-            isFetching: action.isFetching
-        })
-    case C.RECEIVE_LYRIC:
-        return Object.assign({}, state, {
-            isFetching: action.isFetching,
-            data: [...state.data, action.data]
-        })
-    case C.ERROR_REPORT:
-        return Object.assign({}, state, {
-            isFetching: action.isFetching,
-            error: action.error
         })
     default:
         return state

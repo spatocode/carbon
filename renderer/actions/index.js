@@ -54,11 +54,6 @@ export const selectView = (category) => ({
     category
 })
 
-export const selectSettingsTab = (tabItem) => ({
-    type: C.SELECT_SETTINGS_TAB,
-    tabItem
-})
-
 export const nightMode = (night) => ({
     type: C.SELECT_MODE,
     night
@@ -133,56 +128,6 @@ function setupMediaSrc (filepath, mediaPlayer) {
 
         mediaPlayer.src = window.URL.createObjectURL(mediaSrc)
         mediaPlayer.setAttribute("crossorigin", "anonymous")
-    }
-}
-
-export const requestLyric = () => ({
-    type: C.REQUEST_LYRIC,
-    isFetchingLyric: true
-})
-
-export const receiveLyric = (json) => ({
-    type: C.RECEIVE_LYRIC,
-    isFetchingLyric: false,
-    data: json.data
-})
-
-export const errorReport = () => ({
-    type: C.ERROR_REPORT,
-    error: true
-})
-
-function fetchLyric (lyric) {
-    return dispatch => {
-        dispatch(requestLyric())
-        return fetch(lyric)
-            .then(response => response.json())
-            .then(json => {
-                if (json.data === "") {
-                    json = scrapLyric()
-                }
-                dispatch(receiveLyric(json))
-            })
-            .catch(error => dispatch(errorReport(error)))
-    }
-}
-
-function scrapLyric () {
-}
-
-function shouldFetchLyric (state, lyric) {
-    const lyrics = state.data.lyrics
-    if (state.isFetchingLyric || lyrics.includes(lyric)) {
-        return false
-    }
-    return true
-}
-
-export function fetchLyricIfNeeded (lyric) {
-    return (dispatch, getState) => {
-        if (shouldFetchLyric(getState(), lyric)) {
-            dispatch(fetchLyric(lyric))
-        }
     }
 }
 
