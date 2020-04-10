@@ -413,8 +413,8 @@ class Control extends React.Component {
                             onClick={this.handlePrevious}
                             onMouseUp={this.handleClearInterval}
                             onMouseDown={this.handleRewind} />
-                        <img src={mode === "Paused" ? this.getImageUrl(icon.play)
-                            : this.getImageUrl(icon.pause) } className="playpause"
+                        <img src={mode === "Playing" ? this.getImageUrl(icon.pause)
+                            : this.getImageUrl(icon.play) } className="playpause"
                         onClick={this.handlePlay} />
                         <img src={this.getImageUrl(icon.forward)} className="fwd"
                             onClick={this.handleNext}
