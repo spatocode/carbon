@@ -46,7 +46,7 @@ const createWindow = () => {
 }
 
 function initStore () {
-    const store = new Store()
+    const store = new Store({ defaults: { state: { media: { library: [], favourite: [], playists: [], recent: [] } } } })
     const homeDir = os.homedir()
     const musicDir = path.join(homeDir, "Music")
     const visibleColumn = {
