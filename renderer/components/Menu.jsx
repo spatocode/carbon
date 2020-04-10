@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { selectView, nightMode } from "../actions"
+import { selectView } from "../actions"
 import { version } from "../../package.json"
 import * as icon from "../assets/staticbase64"
 import "./stylesheets/Menu.scss"
@@ -14,22 +14,7 @@ class Menu extends React.Component {
             height: window.innerHeight - 142
         }
         this.showDropdown = this.showDropdown.bind(this)
-        this.handleNightmode = this.handleNightmode.bind(this)
         this.handleView = this.handleView.bind(this)
-        this.handleResize = this.handleResize.bind(this)
-    }
-
-    componentDidMount () {
-        window.onresize = this.handleResize
-    }
-
-    handleResize () {
-        this.setState({ height: window.innerHeight - 142 })
-    }
-
-    handleNightmode () {
-        const { dispatch, night } = this.props
-        dispatch(nightMode(!night))
     }
 
     handleView (e) {
@@ -43,11 +28,11 @@ class Menu extends React.Component {
     }
 
     render () {
-        const { show, height } = this.state
-        const { playists, night } = this.props
+        const { show } = this.state
+        const { playists } = this.props
         // TODO: Provide a separate component for menu list
         return (
-            <div className="Menu" style={{ height: height }}>
+            <div className="Menu" style={{ height: window.innerHeight*2 }}>
                 <div className="title">
                     <h1>carbon</h1>
                     <div>{version}</div>
@@ -95,24 +80,17 @@ class Menu extends React.Component {
                     </span>
                     <span>Setting</span>
                 </div>
-                <div className="menu-list" onClick={this.handleNightmode}>
-                    <div className="mode-toggle-bar">
-                        <div className="mode-toggle" style={night ? { float: "right" } : { float: "left" }}></div>
-                    </div>
-                </div>
             </div>
         )
     }
 }
 
 Menu.propTypes = {
-    night: PropTypes.bool,
     itemToNewPlayist: PropTypes.string,
     playists: PropTypes.array
 }
 
 const mapStateToProps = (state) => ({
-    night: state.mode.night,
     itemToNewPlayist: state.media.itemToNewPlayist,
     playists: state.media.playists
 })
