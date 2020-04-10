@@ -61,7 +61,6 @@ export function settings (state=settingsState, action) {
 
 function updateRecents (recent, media) {
     if (recent.length < 9) {
-        console.log("Lesser than")
         if (media !== "") {
             console.log("Push")
             recent.push(media)
