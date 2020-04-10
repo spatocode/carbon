@@ -3,7 +3,8 @@ import thunkMiddleware from "redux-thunk"
 import * as reducers from "../reducers"
 const Store = window.require("electron-store")
 
-console.log(process.env)
+let persistTimeout
+
 /**
  * Logs state and action to the console
  */
@@ -20,35 +21,52 @@ const logger = store => next => action => {
     return next(action)
 }
 
+function save (state) {
+    return new Promise(resolve => {
+        if (persistTimeout) {
+            clearTimeout(persistTimeout)
+        }
+        persistTimeout = setTimeout(function () {
+            const db = new Store()
+            const localState = db.get("state")
+            if (localState.media.mode !== state.media.mode) {
+                db.set("state.media.mode", state.media.mode)
+                console.log("Saved media view to local store!!!")
+            }
+            if (!localState.view || localState.view.category !== state.view.category) {
+                db.set("state.view.category", state.view.category)
+                console.log("Saved view to local store!!!")
+            }
+            if (state.media.playists && state.media.playists.length > 0) {
+                db.set("state.media.playists", state.media.playists)
+                console.log("Saved playists to local store!!!")
+            }
+            if (state.media.favourite && state.media.favourite.length > 0) {
+                db.set("state.media.favourite", state.media.favourite)
+                console.log("Saved favourite to local store!!!")
+            }
+            if (state.media.recent && state.media.recent.length > 0) {
+                db.set("state.media.recent", state.media.recent)
+                console.log("Saved recent to local store!!!")
+            }
+            resolve("Saved to local store!!!")
+        }, 100)
+    })
+}
+
+async function persistData (state) {
+    await save(state)
+}
+
 /**
  * Saves the state in the local disk
  */
 const saver = store => next => action => {
     const result = next(action)
     const db = new Store()
-    const localState = db.get("state")
     const state = store.getState()
     db.set("state.settings", state.settings)
-    if (localState.media.mode !== state.media.mode) {
-        db.set("state.media.mode", state.media.mode)
-        console.log("Saved media view to local store!!!")
-    }
-    if (!localState.view || localState.view.category !== state.view.category) {
-        db.set("state.view.category", state.view.category)
-        console.log("Saved view to local store!!!")
-    }
-    if (state.media.playists && state.media.playists.length > 0) {
-        db.set("state.media.playists", state.media.playists)
-        console.log("Saved playists to local store!!!")
-    }
-    if (state.media.favourite && state.media.favourite.length > 0) {
-        db.set("state.media.favourite", state.media.favourite)
-        console.log("Saved favourite to local store!!!")
-    }
-    if (state.media.recent && state.media.recent.length > 0) {
-        db.set("state.media.recent", state.media.recent)
-        console.log("Saved recent to local store!!!")
-    }
+    persistData(state)
     return result
 }
 
