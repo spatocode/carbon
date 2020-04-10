@@ -100,10 +100,6 @@ function fetchMediaBuffer (url, loadMedia) {
 
 function setupMediaSrc (filepath, mediaPlayer) {
     return dispatch => {
-        if (!MediaSource.isTypeSupported("audio/mpeg")) {
-            console.log("Codec not supported")
-            return dispatch(setCurrentMedia())
-        }
         var mediaSrc = new MediaSource()
 
         mediaSrc.addEventListener("sourceopen", function () {
