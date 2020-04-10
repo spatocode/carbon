@@ -88,6 +88,7 @@ function fetchMedia () {
 }
 
 async function extractMediaInfo (dirs) {
+    const store = new Store()
     const metadata = []
     let files = []
 
@@ -140,6 +141,7 @@ async function extractMediaInfo (dirs) {
     }
 
     window.webContents.send("update-library", metadata)
+    store.set("state.media.library", metadata)
     console.log("DONE", metadata.length, files.length)
 }
 
