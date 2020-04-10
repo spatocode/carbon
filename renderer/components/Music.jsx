@@ -28,7 +28,6 @@ class Music extends React.Component {
         this.handleNewPlayist = this.handleNewPlayist.bind(this)
         this.handleNewFavourite = this.handleNewFavourite.bind(this)
         this.handleResize = this.handleResize.bind(this)
-        this.formatMediaProp = this.formatMediaProp.bind(this)
     }
 
     componentDidMount () {
@@ -136,15 +135,6 @@ class Music extends React.Component {
         const { dispatch } = this.props
         const newFav = this.state.highlight
         dispatch(updateFavourite(newFav))
-    }
-
-    formatMediaProp (mediaProp, index) {
-        const lastIndex = index === 1 ? 29 : 20
-        const fmt = mediaProp.slice(0, lastIndex)
-        if (mediaProp === fmt) {
-            return fmt
-        }
-        return fmt+"..."
     }
 
     render () {
