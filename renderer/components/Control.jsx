@@ -273,6 +273,7 @@ class Control extends React.Component {
      * Rewinds the media
      */
     handleRewind () {
+        const { dispatch } = this.props
         this.setState({ clickTime: Math.floor(Date.now()/1000) })
         var mediaPlayer = getPlayer()
         this.controlTimeout = setTimeout(() => {
@@ -280,6 +281,7 @@ class Control extends React.Component {
                 if (mediaPlayer.currentTime <= 3) {
                     this.handleStop()
                 } else {
+                    dispatch(setCurrentMediaMode("Paused"))
                     mediaPlayer.currentTime -= 3
                 }
             }, 200)
@@ -290,7 +292,9 @@ class Control extends React.Component {
      * Play the previous song in library
      */
     handlePrevious () {
+        const { dispatch } = this.props
         const { clickTime } = this.state
+        dispatch(setCurrentMediaMode("Paused"))
         // return if we are rewinding
         if (typeof clickTime === "number" &&
             clickTime < Math.floor(Date.now()/1000))
@@ -301,7 +305,7 @@ class Control extends React.Component {
         }
         var prev
         const { shuffle } = this.state
-        const { songs, media, dispatch } = this.props
+        const { songs, media } = this.props
         for (var i=0; i < songs.length; i++) {
             if (songs[i].file === media) {
                 // If we're at the first song, play the last song
@@ -325,7 +329,9 @@ class Control extends React.Component {
      * Plays the next song in memory
      */
     handleNext () {
+        const { dispatch } = this.props
         const { clickTime } = this.state
+        dispatch(setCurrentMediaMode("Paused"))
         // return if we are fast forwarding
         if (typeof clickTime === "number" &&
             clickTime < Math.floor(Date.now()/1000))
@@ -337,7 +343,7 @@ class Control extends React.Component {
 
         var next
         const { shuffle } = this.state
-        const { songs, media, dispatch } = this.props
+        const { songs, media } = this.props
         for (var i=0; i < songs.length; i++) {
             if (songs[i].file === media) {
                 // If we're at the last song, start afresh

@@ -83,7 +83,7 @@ export function playMedia (media, mediaPlayer) {
         if (mediaPlayer.currentTime > 0 && mediaPlayer.paused && !mediaPlayer.ended) {
             mediaPlayer.play()
                 .then(() => dispatch(setCurrentMediaMode("Playing")))
-                .catch((err) => console.log(err))
+                .catch(() => dispatch(setCurrentMediaMode("Paused")))
         } else {
             // start a fresh play
             dispatch(setupMediaSrc(media, mediaPlayer))
@@ -95,7 +95,7 @@ function fetchMediaBuffer (url, loadMedia) {
     return fetch(url)
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => loadMedia(arrayBuffer))
-        .catch(err => console.log(err))
+        .catch(() => loadMedia(null, true))
 }
 
 function setupMediaSrc (filepath, mediaPlayer) {
@@ -108,7 +108,10 @@ function setupMediaSrc (filepath, mediaPlayer) {
 
         mediaSrc.addEventListener("sourceopen", function () {
             var sourceBuffer = mediaSrc.addSourceBuffer("audio/mpeg")
-            return fetchMediaBuffer(filepath, function (buffer) {
+            return fetchMediaBuffer(filepath, function (buffer, error) {
+                if (error) {
+                    return dispatch(setCurrentMediaMode("Paused"))
+                }
                 sourceBuffer.addEventListener("updateend", function () {
                     mediaSrc.endOfStream()
                     mediaPlayer.play()
