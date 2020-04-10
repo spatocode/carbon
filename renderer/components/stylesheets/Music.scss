@@ -2,6 +2,7 @@
     display: block;
     width: 100%;
     margin: 0 auto;
+    background-color: rgb(250, 250, 250);
 }
 
 .table:focus, .column-data:focus {
@@ -15,7 +16,7 @@
 .table-header{
     text-transform: none;
     width: 300px;
-    background-color: rgb(243, 243, 243);
+    background-color: rgb(240, 240, 240);
     position: sticky;
     top: 0;
     border-bottom-width:12px;
