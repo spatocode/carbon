@@ -54,13 +54,13 @@ class Music extends React.Component {
         this.setState({ height: window.innerHeight-143 })
     }
 
-    handleContextMenu (e) {
+    handleContextMenu (param) {
         var playist = []
         var favMenuLabel = "Add to Favourite"
         var { favourite, playists } = this.props
 
         favourite.forEach((fav) => {
-            if (fav.file === e.currentTarget.className) {
+            if (fav.file === param.rowData.file) {
                 favMenuLabel = "Remove from Favourite"
             }
         })
@@ -72,7 +72,7 @@ class Music extends React.Component {
             })
         })
 
-        this.setState({ highlight: e.currentTarget.className })
+        this.setState({ highlight: param.rowData.file })
         Menu.buildFromTemplate([
             { label: "Play", click: this.handlePlay },
             { type: "separator" },
@@ -167,6 +167,7 @@ class Music extends React.Component {
                             rowGetter={({ index }) => songs[index]}
                             onRowClick={(param) => (this.handleClick(param))}
                             onRowDoubleClick={(param) => (this.handlePlay(param))}
+                            onRowRightClick={(param) => (this.handleContextMenu(param))}
                             rowStyle={({ index }) => (
                                 typeof songs[index] === "undefined"
                                     ? null : highlight === songs[index].file
