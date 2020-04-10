@@ -15,7 +15,6 @@
         color: white;
         margin-bottom: 6px;
         font-size: 14px;
-        width: 300px;
         padding-left: 40px;
         white-space: nowrap;
         overflow: hidden;
@@ -23,17 +22,6 @@
     }
     .media-title span {
         display: inline-block;
-    }
-    .marquee {
-        animation: marquee 15s linear infinite;
-    }
-    @keyframes marquee {
-        0% {
-            transform: translate(0, 0);
-        }
-        100% {
-            transform: translate(-100%, 0);
-        }
     }
     .timer{
         display: flex;

@@ -399,8 +399,7 @@ class Control extends React.Component {
                 </div>
                 <div className="media-indicator">
                     <div className="media-title">
-                        <span className={(mode === "Paused")
-                            ? "" : "marquee"}>{mediaName}</span>
+                        <span>{mediaName}</span>
                     </div>
                     <div className="timer">
                         <div className="timer-count" ref={this.currentTime}>00:00</div>
