@@ -134,14 +134,10 @@ function handleOpenFile () {
     dialog.showOpenDialog(window, {
         title: "Select a media file to open",
         properties: ["openFile"],
-        defaultPath: home
-        // TODO: filters somehow doesn't work on linux.
-        // Let's comment it out till a fix comes.
-        /* filters: [
-            { name: "All media files", extensions: [] },
-            { name: "Audio files", extensions: ["mp3", "wma", "midi", "mka", "m4a"] },
-            { name: "Video files", extensions: ["mp4", "mpeg", "mpg", "3gp", "mkv", "wmv", "avi"] }
-        ] */
+        defaultPath: home,
+        filters: [
+            { name: "Audio files", extensions: ["mp3", "wma", "midi", "mka", "m4a"] }
+        ]
     }).then(result => {
         if (result.filePaths.length > 0 && window) {
             window.webContents.send("open-file", result.filePaths)
