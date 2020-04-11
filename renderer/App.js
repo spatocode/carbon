@@ -1,9 +1,10 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { updateLibrary, requestUpdateLibrary } from "./actions"
+import { updateLibrary, requestUpdateLibrary, playMedia } from "./actions"
 import Header from "./components/Header"
 import Main from "./components/Main"
 import Control from "./components/Control"
+import { getPlayer } from "./utils"
 const { ipcRenderer } = window.require("electron")
 const Store = window.require("electron-store")
 
@@ -26,6 +27,7 @@ class App extends Component {
 
         ipcRenderer.on("update-library", (event, files) => {
             dispatch(updateLibrary(files))
+            dispatch(playMedia("", getPlayer()))
         })
     }
 

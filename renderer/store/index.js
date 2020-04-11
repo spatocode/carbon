@@ -49,6 +49,11 @@ function save (state) {
                 db.set("state.media.recent", state.media.recent)
                 console.log("Saved recent to local store!!!")
             }
+            if (state.media.current &&
+                state.media.current !== localState.media.current) {
+                db.set("state.media.current", state.media.current)
+                console.log("Saved current to local store!!!")
+            }
             resolve("Saved to local store!!!")
         }, 100)
     })
