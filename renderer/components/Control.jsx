@@ -16,9 +16,8 @@ class Control extends React.Component {
         const repeat = store.get("control.repeat")
         const shuffle = store.get("control.shuffle")
         const volume = store.get("control.volume")
-        const timeRange = store.get("control.timeRange")
         this.state = {
-            timeRange: timeRange,
+            progress: 0,
             clickTime: null,
             repeat: repeat,
             volume: volume,
@@ -47,13 +46,11 @@ class Control extends React.Component {
     }
 
     componentDidMount () {
-        const { mode, dispatch } = this.props
-        const store = new Store()
-        const timer = store.get("control.timer")
+        const { media, mode, dispatch } = this.props
+        const mediaPlayer = this.mediaPlayer.current
+        mediaPlayer.volume = this.state.volume / 100
         // Stores the audio player in memory to be used from all modules
-        setPlayer(this.mediaPlayer.current)
-        getPlayer().currentTime = timer
-        getPlayer().volume = this.state.volume / 100
+        setPlayer(mediaPlayer)
 
         // This prevents the app from being in playing mode on start,
         // which normally happen when app was quit while on playing mode
@@ -61,43 +58,40 @@ class Control extends React.Component {
             dispatch(setCurrentMediaMode("Paused"))
         }
 
-        ipcRenderer.on("play-media", (event, media) => {
+        if (media) {
             const { dispatch } = this.props
             const player = getPlayer()
-            dispatch(playMedia(media, player))
-        })
-
-        ipcRenderer.on("playpause", (event, arg) => {
-            this.handlePlay()
-        })
-
-        ipcRenderer.on("stop-media", (event, arg) => {
-            this.handleStop()
-        })
-
-        ipcRenderer.on("previous-media", (event, arg) => {
-            this.handlePrevious()
-        })
-
-        ipcRenderer.on("next-media", (event, arg) => {
-            this.handleNext()
-        })
-
-        ipcRenderer.on("rewind-media", (event, arg) => {
-            this.handleRewind()
-        })
-
-        ipcRenderer.on("fforward-media", (event, arg) => {
-            this.handleFastFoward()
-        })
-
-        ipcRenderer.on("repeat-media", (event, arg) => {
-            this.handleRepeat()
-        })
-
-        ipcRenderer.on("shuffle-media", (event, arg) => {
-            this.handleShuffle()
-        })
+            ipcRenderer.on("control", (event, action) => {
+                switch (action) {
+                case "playpause":
+                    this.handlePlay()
+                    break
+                case "stop-media":
+                    this.handleStop()
+                    break
+                case "previous-media":
+                    this.handlePrevious()
+                    break
+                case "next-media":
+                    this.handleNext()
+                    break
+                case "rewind-media":
+                    this.handleRewind()
+                    break
+                case "fforward-media":
+                    this.handleFastFoward()
+                    break
+                case "repeat-media":
+                    this.this.handleRepeat()
+                    break
+                case "shuffle-media":
+                    this.handleShuffle()
+                    break
+                default:
+                    dispatch(playMedia(action, player))
+                }
+            })
+        }
     }
 
     persistData (key, value) {
@@ -108,7 +102,7 @@ class Control extends React.Component {
             this.persistTimeout = setTimeout(function () {
                 const store = new Store()
                 store.set(`${key}`, value)
-                resolve("Saved to local store!!!")
+                return resolve("Saved to local store!!!")
             }, 100)
         })
     }
@@ -118,12 +112,15 @@ class Control extends React.Component {
      */
     handlePlay () {
         var mediaPlayer = getPlayer()
-        const { media, dispatch } = this.props
+        const { mode, media, dispatch } = this.props
+        if (!media) {
+            return
+        }
         if (this.controlInterval) {
             this.handleClearInterval()
         }
 
-        if (mediaPlayer.paused) {
+        if (mode === "Paused") {
             dispatch(playMedia(media, mediaPlayer))
         } else {
             mediaPlayer.pause()
@@ -135,7 +132,7 @@ class Control extends React.Component {
      * Updates media timer.
      * This is called when the media is at progress
      */
-    handleTimeUpdate () {
+    async handleTimeUpdate () {
         var hourValue, minuteValue, secondValue, durHourValue,
             durMinValue, durSecValue
         var mediaPlayer = getPlayer()
@@ -200,20 +197,21 @@ class Control extends React.Component {
         var length = 100 * (mediaPlayer.currentTime/mediaPlayer.duration) || 0
         currentTime.innerText = mediaTime
         duration.innerText = durationTime
-        this.setState({ timeRange: length })
+        this.setState({ progress: length })
     }
 
     /**
      * Update the media timer by seeking
      */
     async handleSeek (e) {
-        const { timeRange } = this.state
+        const { progress } = this.state
         const mediaPlayer = getPlayer()
         const value = e.currentTarget.value
-        mediaPlayer.currentTime = (value * mediaPlayer.currentTime) / timeRange || 0
-        this.setState({ timeRange: value })
-        await this.persistData("control.timeRange", value)
-        await this.persistData("control.timer", mediaPlayer.currentTime)
+        // TODO: enhance calculation to fix bug which can occur when
+        // currentTime is 0 while seeking. This causes currentTime
+        // to return to value
+        mediaPlayer.currentTime = (value * mediaPlayer.currentTime) / progress || 0
+        this.setState({ progress: value })
     }
 
     /**
@@ -259,12 +257,15 @@ class Control extends React.Component {
      * Stops the media from playing
      */
     handleStop () {
-        const { dispatch } = this.props
+        const { dispatch, media } = this.props
+        if (!media) {
+            return
+        }
         var mediaPlayer = getPlayer()
         mediaPlayer.pause()
         dispatch(setCurrentMediaMode("Paused"))
         mediaPlayer.currentTime = 0
-        this.setState({ timeRange: 0 })
+        this.setState({ progress: 0 })
         clearInterval(this.controlInterval)
     }
 
@@ -285,7 +286,10 @@ class Control extends React.Component {
      * Fast forwards the media
      */
     handleFastFoward () {
-        const { dispatch } = this.props
+        const { dispatch, media } = this.props
+        if (!media) {
+            return
+        }
         this.setState({ clickTime: Math.floor(Date.now()/1000) })
         var mediaPlayer = getPlayer()
         this.controlTimeout = setTimeout(() => {
@@ -304,7 +308,10 @@ class Control extends React.Component {
      * Rewinds the media
      */
     handleRewind () {
-        const { dispatch } = this.props
+        const { dispatch, media } = this.props
+        if (!media) {
+            return
+        }
         this.setState({ clickTime: Math.floor(Date.now()/1000) })
         var mediaPlayer = getPlayer()
         this.controlTimeout = setTimeout(() => {
@@ -323,7 +330,13 @@ class Control extends React.Component {
      * Play the previous song in library
      */
     handlePrevious () {
-        const { clickTime } = this.state
+        var prev
+        const { shuffle, clickTime } = this.state
+        const { songs, media, dispatch } = this.props
+        var mediaPlayer = getPlayer()
+        if (!media) {
+            return
+        }
         // return if we are rewinding
         if (typeof clickTime === "number" &&
             clickTime < Math.floor(Date.now()/1000))
@@ -332,23 +345,24 @@ class Control extends React.Component {
             this.setState({ clickTime: null })
             return
         }
-        var prev
-        const { shuffle } = this.state
-        const { songs, media, dispatch } = this.props
+
         for (var i=0; i < songs.length; i++) {
             if (songs[i].file === media) {
+                if (mediaPlayer.currentTime >= 5) {
+                    mediaPlayer.currentTime = 0
+                    return
+                }
                 // If we're at the first song, play the last song
                 // else play prev song
-                if (i === 0) {
+                else if (i === 0) {
                     prev = songs[songs.length - 1].file
-                    console.log(prev)
                 } else if (shuffle) {
                     var rand = this.generateRandomNumber(i, songs.length)
                     prev = songs[--rand].file
                 } else {
                     prev = songs[--i].file
                 }
-                dispatch(playMedia(prev, getPlayer()))
+                dispatch(playMedia(prev, mediaPlayer))
                 break
             }
         }
@@ -358,7 +372,12 @@ class Control extends React.Component {
      * Plays the next song in memory
      */
     handleNext () {
-        const { clickTime } = this.state
+        var next
+        const { shuffle, clickTime } = this.state
+        const { songs, media, dispatch } = this.props
+        if (!media) {
+            return
+        }
         // return if we are fast forwarding
         if (typeof clickTime === "number" &&
             clickTime < Math.floor(Date.now()/1000))
@@ -368,9 +387,6 @@ class Control extends React.Component {
             return
         }
 
-        var next
-        const { shuffle } = this.state
-        const { songs, media, dispatch } = this.props
         for (var i=0; i < songs.length; i++) {
             if (songs[i].file === media) {
                 // If we're at the last song, start afresh
@@ -378,6 +394,7 @@ class Control extends React.Component {
                 if (i === songs.length - 1) {
                     next = songs[0].file
                 } else if (shuffle) {
+                    console.log("shufffle", shuffle)
                     var rand = this.generateRandomNumber(i, songs.length)
                     next = songs[++rand].file
                 } else {
@@ -393,11 +410,14 @@ class Control extends React.Component {
      * Generates random number for media shuffle
      */
     generateRandomNumber (i, length) {
-        let rand = Math.floor(Math.random() * (i + 1))
+        let rand = Math.floor(Math.random() * length-1) + 1
         // Make sure we don't select an out of bound index
-        while (length === rand) {
-            rand = Math.floor(Math.random() * (i + 1))
+        // Just a cautious check anyway
+        while (rand === length) {
+            console.log("BAD RAND", rand)
+            rand = Math.floor(Math.random() * length-1) + 1
         }
+        console.log("GOOD RAND", rand)
         return rand
     }
 
@@ -411,7 +431,7 @@ class Control extends React.Component {
     }
 
     render () {
-        const { volume, repeat, shuffle, timeRange } = this.state
+        const { volume, repeat, shuffle, progress } = this.state
         const { mode, media, dispatch } = this.props
         const mediaName = path.basename(media, path.extname(media))
         ipcRenderer.on("open-file", (event, file) => {
@@ -436,7 +456,7 @@ class Control extends React.Component {
                     </div>
                     <div className="timer">
                         <div className="timer-count" ref={this.currentTime}>00:00</div>
-                        <input type="range" min="0" max="100" value={timeRange}
+                        <input disabled={!media} type="range" min="0" max="100" value={progress}
                             className="timer-length"
                             onChange={this.handleSeek} />
                         <div className="timer-count" ref={this.duration}>00:00</div>

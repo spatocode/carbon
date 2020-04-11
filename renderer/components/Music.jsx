@@ -91,12 +91,14 @@ class Music extends React.Component {
 
     handleClick (param) {
         this.setState({ highlight: param.rowData.file })
+        this.setState({ index: param.index })
     }
 
     handlePlay () {
+        var { highlight } = this.state
         const { dispatch } = this.props
         const player = getPlayer()
-        dispatch(playMedia(this.state.highlight, player))
+        dispatch(playMedia(highlight, player))
     }
 
     handleRemove () {
@@ -133,7 +135,8 @@ class Music extends React.Component {
 
     handleNewFavourite () {
         const { dispatch } = this.props
-        const newFav = this.state.highlight
+        const { highlight } = this.state
+        const newFav = highlight
         dispatch(updateFavourite(newFav))
     }
 
@@ -163,11 +166,11 @@ class Music extends React.Component {
                                     ? null : highlight === songs[index].file
                                         ? { backgroundColor: "teal", color: "whitesmoke" }
                                         : media === songs[index].file
-                                            ? { color: "salmon" } : null)}>
+                                            ? { color: "rgb(255, 93, 75)" } : null)}>
                             {Object.entries(visibleColumn).map((item, i) =>
                                 item[1]
-                                    ? <Column key={i} label={item[0].charAt(0).toUpperCase()+item[0].slice(1).replace("_", " ")}
-                                        dataKey={item[0].toLowerCase().replace("_", " ")}
+                                    ? <Column key={i} label={item[0].charAt(0).toUpperCase()+item[0].slice(1)}
+                                        dataKey={item[0]}
                                         width={i === 0 ? 45 : i === 3 ? 60 : i === 1 ? window.innerWidth-300 : window.innerWidth-500}
                                         minWidth={i === 0 ? 45 : i === 3 ? 60 : null}
                                         className="column-data"/>
