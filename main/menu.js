@@ -151,43 +151,43 @@ function handleOpenURL () {
 }
 
 function handleCreatePlayist () {
-    window.webContents.send("register-playist", true)
+    window.webContents.send("register-playist", "register-playist")
 }
 
 function handlePlay (e) {
     if (e.label !== "Play/Pause") {
-        window.webContents.send("play-media", e.label)
+        window.webContents.send("control", e.label)
         return
     }
-    window.webContents.send("playpause", true)
+    window.webContents.send("playpause", "playpause")
 }
 
 function handleStop () {
-    window.webContents.send("stop-media", true)
+    window.webContents.send("control", "stop-media")
 }
 
 function handlePrevious () {
-    window.webContents.send("previous-media", true)
+    window.webContents.send("control", "previous-media")
 }
 
 function handleNext () {
-    window.webContents.send("next-media", true)
+    window.webContents.send("control", "next-media")
 }
 
 function handleRewind () {
-    window.webContents.send("rewind-media", true)
+    window.webContents.send("control", "rewind-media")
 }
 
 function handleFastFoward () {
-    window.webContents.send("fforward-media", true)
+    window.webContents.send("control", "fforward-media")
 }
 
 function handleShuffle () {
-    window.webContents.send("shuffle-media", true)
+    window.webContents.send("control", "shuffle-media")
 }
 
 function handleRepeat () {
-    window.webContents.send("repeat-media", true)
+    window.webContents.send("control", "repeat-media")
 }
 
 function handleAbout () {

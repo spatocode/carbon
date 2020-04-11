@@ -48,19 +48,19 @@ const createWindow = () => {
 
 function registerShortcuts () {
     globalShortcut.register("MediaPlayPause", () => {
-        window.webContents.send("playpause", true)
+        window.webContents.send("control", "playpause")
     })
 
     globalShortcut.register("MediaStop", () => {
-        window.webContents.send("stop-media", true)
+        window.webContents.send("control", "stop-media")
     })
 
     globalShortcut.register("MediaPreviousTrack", () => {
-        window.webContents.send("previous-media", true)
+        window.webContents.send("control", "previous-media")
     })
 
     globalShortcut.register("MediaNextTrack", () => {
-        window.webContents.send("next-media", true)
+        window.webContents.send("control", "next-media")
     })
 }
 
@@ -78,7 +78,8 @@ function initStore () {
                 library: [],
                 favourite: [],
                 playists: [],
-                recent: []
+                recent: [],
+                current: ""
             }
         }
     }
