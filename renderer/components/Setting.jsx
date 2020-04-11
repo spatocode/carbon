@@ -1,8 +1,5 @@
 import React from "react"
-// import PropTypes from "prop-types"
 import { connect } from "react-redux"
-import Tab from "./Tab"
-import GeneralSetting from "./GeneralSetting"
 import MusicSetting from "./MusicSetting"
 import "./stylesheets/Setting.scss"
 
@@ -34,36 +31,18 @@ class Setting extends React.Component {
     }
 
     render () {
-        const { tabView, height } = this.state
-        const tabTitles = ["General", "Music"]
-        const visibility = ["Artist", "Title", "Rating", "Track",
-            "Composer", "Play count", "Length", "Date added",
-            "Location", "Last played", "Album", "Year", "Genre",
-            "Quality", "Comment"]
-        const themes = ["Carbon", "Ola-edo", "Onyinye", "Cherokee"]
-        const lyricsFont = ["Arial", "sans-seriff", "Helvetica"]
+        const { height } = this.state
+        const visibility = ["Artist", "Title", "Track", "Play count",
+            "Length", "Location", "Album", "Year", "Genre", "Quality",
+            "Comment"]
         return (
             <div className="Setting" style={{ height: height }}>
-                <Tab titles={tabTitles} selectTab={this.selectTab}
-                    tabView={tabView} />
                 <div className="tab-view">
-                    {
-                        tabView === "General"
-                            ? <GeneralSetting themes={themes} lyricsFont={lyricsFont} />
-                            : <MusicSetting visibility={visibility} />
-                    }
+                    <MusicSetting visibility={visibility} />
                 </div>
             </div>
         )
     }
-}
-
-Setting.propTypes = {
-
-}
-
-Setting.defaultProps = {
-
 }
 
 export default connect()(Setting)
