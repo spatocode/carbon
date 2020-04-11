@@ -71,11 +71,11 @@ class MusicSetting extends React.Component {
                                         (i === 0 && j < 5) || (i === 1 && j >= 5 && j <= 9) || (i === 2 && j > 9 && j <= 14)
                                             ? <div key={j}>
                                                 <input type="checkbox"
-                                                    id={item.toLowerCase().replace(" ", "_")}
-                                                    name={item.toLowerCase().replace(" ", "_")}
+                                                    id={item.toLowerCase()}
+                                                    name={item.toLowerCase()}
                                                     onChange={this.handleChange}
-                                                    checked={visibleColumn[`${item.toLowerCase().replace(" ", "_")}`]} />
-                                                <label for={item.toLowerCase().replace(" ", "_")}>
+                                                    checked={visibleColumn[`${item.toLowerCase()}`]} />
+                                                <label for={item.toLowerCase()}>
                                                     {item}
                                                 </label>
                                             </div>

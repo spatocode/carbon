@@ -23,10 +23,8 @@ const settingsState = {
         genre: true,
         rating: false,
         composer: false,
-        play_count: false,
-        date_added: false,
+        "date added": false,
         location: false,
-        last_played: false,
         year: false,
         quality: false,
         comment: false
