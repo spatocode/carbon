@@ -109,16 +109,15 @@ export function media (state=mediaState, action) {
             library: action.data,
             isUpdating: action.isUpdating
         })
-    case C.UPDATE_MEDIA_INFO:
+    /* case C.UPDATE_MEDIA_INFO:
         return Object.assign({}, state, {
             library: state.library.map((v, i) => {
-                return (v.file !== action.media) ? v : Object.assign({}, state, {
-                    ...v,
+                return (v.file !== action.media) ? v : Object.assign({}, v, {
                     play_count: ++v.play_count,
                     last_played: new Date().toString().split(" GMT")[0]
                 })
             })
-        })
+        }) */
     case C.SHOULD_UPDATE:
         return Object.assign({}, state, {
             shouldUpdate: action.shouldUpdate

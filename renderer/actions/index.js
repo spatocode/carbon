@@ -38,10 +38,10 @@ export const removeMedia = (media) => ({
     media
 })
 
-export const updateMediaInfo = (media) => ({
+/* export const updateMediaInfo = (media) => ({
     type: C.UPDATE_MEDIA_INFO,
     media
-})
+}) */
 
 export const updateLibrary = (data) => ({
     type: C.UPDATE_LIBRARY,
@@ -112,7 +112,7 @@ function setupMediaSrc (filepath, mediaPlayer) {
                     mediaSrc.endOfStream()
                     mediaPlayer.play()
                         .then(() => {
-                            dispatch(updateMediaInfo(filepath))
+                            // dispatch(updateMediaInfo(filepath))
                             dispatch(setCurrentMediaMode("Playing"))
                         })
                         .catch((err) => {
