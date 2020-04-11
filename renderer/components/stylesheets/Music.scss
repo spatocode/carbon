@@ -42,6 +42,32 @@
     text-overflow: ellipsis;
 }
 
+.ReactVirtualized__Table__headerColumn:focus,
+.ReactVirtualized__Table__rowColumn:focus,
+.ReactVirtualized__Table__row:focus,
+.ReactVirtualized__Table__headerTruncatedText:focus,
+.ReactVirtualized__Table__headerRow:focus,
+.ReactVirtualized__Table:focus,
+.ReactVirtualized__Collection:focus,
+.ReactVirtualized__Collection__innerScrollContainer:focus {
+  outline: none;
+}
+
+.ReactVirtualized__Table__headerColumn,
+.ReactVirtualized__Table__rowColumn {
+  margin-right: 0px;
+  min-width: 0px;
+}
+
+.ReactVirtualized__Table__headerColumn,
+.ReactVirtualized__Table__rowColumn {
+  padding-left: 4px;
+}
+
+.ReactVirtualized__Table__row:hover {
+    color: salmon;
+}
+
 .table-header, .column-data {
 
 }
