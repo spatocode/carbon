@@ -2,7 +2,7 @@ body{
   overflow: hidden;
 }
 
-.Control, .Menu, #Music, .now-playing {
+.Control, .Menu, #Music, .now-playing, .Header, .Setting {
   user-select: none;
 }
 
