@@ -21,7 +21,6 @@ const settingsState = {
         length: true,
         album: true,
         genre: true,
-        rating: false,
         composer: false,
         "date added": false,
         location: false,
