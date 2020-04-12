@@ -159,7 +159,7 @@ function handlePlay (e) {
         window.webContents.send("control", e.label)
         return
     }
-    window.webContents.send("playpause", "playpause")
+    window.webContents.send("control", "playpause")
 }
 
 function handleStop () {
