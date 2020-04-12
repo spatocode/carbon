@@ -130,7 +130,7 @@ async function extractMediaInfo (dirs) {
     // ignore hidden folders and non-mp3 files
     const filterFunc = item => {
         const basename = path.basename(item.path)
-        return path.extname(basename) === ".mp3" || basename !== "." || basename[0] !== "."
+        return path.extname(basename) === ".mp3" || (item.stats.isDirectory() && basename[0] !== ".")
     }
 
     for (var i=0; i < dirs.length; i++) {
