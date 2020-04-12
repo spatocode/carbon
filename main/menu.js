@@ -5,22 +5,23 @@ const Store = require("electron-store")
 let window
 
 function buildMenu (win) {
-    const menuItem = []
+    const recentItem = []
     const visibleItems = []
     const store = new Store()
     const visibleColumn = store.get("state.settings.visibleColumn")
     const entries = Object.entries(visibleColumn)
+    window = win
 
     if (store.has("state.media.recent")) {
         const recent = store.get("state.media.recent")
         recent.forEach((song) => {
-            menuItem.push({
+            recentItem.push({
                 label: song,
                 click: handlePlay
             })
         })
     }
-    window = win
+
     entries.forEach((v) => {
         visibleItems.push({
             label: v[0].charAt(0).toUpperCase()+v[0].slice(1),
@@ -43,7 +44,7 @@ function buildMenu (win) {
                 click: handleOpenURL
             }, {
                 label: "Open recent",
-                submenu: [...menuItem]
+                submenu: [...recentItem]
             }, {
                 label: "Create playist",
                 accelerator: "Ctrl+N",
@@ -100,18 +101,6 @@ function buildMenu (win) {
             }, {
                 label: "Repeat",
                 click: handleRepeat
-            }]
-        },
-        {
-            label: "Audio",
-            submenu: [{
-                label: "Speed"
-            }]
-        },
-        {
-            label: "Video",
-            submenu: [{
-                label: "Stream"
             }]
         },
         {
