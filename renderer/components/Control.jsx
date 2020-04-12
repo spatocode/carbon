@@ -2,7 +2,7 @@ import path from "path"
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { playMedia, setCurrentMediaMode } from "../actions"
+import { playMedia, setCurrentMediaMode, updateVisibleColumn } from "../actions"
 import { setPlayer, getPlayer } from "../utils"
 import "./stylesheets/Control.scss"
 import * as icon from "../assets/staticbase64"
@@ -92,6 +92,12 @@ class Control extends React.Component {
                 }
             })
         }
+
+        ipcRenderer.on("toggle-visible-column", (event, action) => {
+            const obj = {}
+            obj[`${action[0].toLowerCase()}`] = action[1]
+            dispatch(updateVisibleColumn(obj))
+        })
     }
 
     persistData (key, value) {

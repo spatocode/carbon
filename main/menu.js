@@ -6,7 +6,11 @@ let window
 
 function buildMenu (win) {
     const menuItem = []
+    const visibleItems = []
     const store = new Store()
+    const visibleColumn = store.get("state.settings.visibleColumn")
+    const entries = Object.entries(visibleColumn)
+
     if (store.has("state.media.recent")) {
         const recent = store.get("state.media.recent")
         recent.forEach((song) => {
@@ -17,6 +21,15 @@ function buildMenu (win) {
         })
     }
     window = win
+    entries.forEach((v) => {
+        visibleItems.push({
+            label: v[0].charAt(0).toUpperCase()+v[0].slice(1),
+            type: "checkbox",
+            checked: v[1],
+            click: handleVisibleColumn
+        })
+    })
+
     const template = [
         {
             label: "Media",
@@ -55,7 +68,7 @@ function buildMenu (win) {
                 click: function () {
                     window.webContents.reload()
                 }
-            }]
+            }, ...visibleItems]
         },
         {
             label: "Playback",
@@ -152,6 +165,10 @@ function handleOpenURL () {
 
 function handleCreatePlayist () {
     window.webContents.send("register-playist", "register-playist")
+}
+
+function handleVisibleColumn (e) {
+    window.webContents.send("toggle-visible-column", [e.label, e.checked])
 }
 
 function handlePlay (e) {
