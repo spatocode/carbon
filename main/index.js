@@ -2,9 +2,11 @@ const os = require("os")
 const path = require("path")
 const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron")
 const Store = require("electron-store")
+const isDev = require("electron-is-dev")
 const mm = require("music-metadata")
 const klawSync = require("klaw-sync")
 const buildMenu = require("./menu")
+const checkForUpdates = require("./updater")
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) { // eslint-disable-line global-require
@@ -44,6 +46,10 @@ const createWindow = () => {
     })
     initStore()
     fetchMedia()
+
+    if (!isDev) {
+        checkForUpdates(60000)
+    }
 }
 
 function registerShortcuts () {

@@ -1,6 +1,8 @@
 const os = require("os")
 const { app, dialog, Menu } = require("electron")
 const Store = require("electron-store")
+const isDev = require("electron-is-dev")
+const checkForUpdates = require("./updater")
 
 let window
 
@@ -216,6 +218,9 @@ function handleAbout () {
 }
 
 function handleUpdates () {
+    if (!isDev) {
+        checkForUpdates()
+    }
 }
 
 module.exports = buildMenu
