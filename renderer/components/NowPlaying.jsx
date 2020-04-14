@@ -18,6 +18,7 @@ const NowPlaying = ({ media="", mode="Paused" }) => {
         else {
             mm.parseFile(media)
                 .then((data) => {
+                    // TODO: handle metadata of streamed media
                     let picture = data.common.picture
                     if (picture) {
                         picture = picture[0]
