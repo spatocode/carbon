@@ -84,13 +84,14 @@ export const setCurrentMediaMode = (mode) => ({
 })
 
 export function playMedia (media, mediaPlayer) {
-    return dispatch => {
+    return (dispatch, getState) => {
+        const currentMedia = getState().media.current
         if (media === "") {
             // This happens when Control element initially mounts
             return dispatch(setCurrentMedia(media, mediaPlayer))
         }
-        // resume play if already in progress and paused
-        if (mediaPlayer.currentTime > 0 && mediaPlayer.paused && !mediaPlayer.ended) {
+        // resume play if the same media is already in progress and paused
+        if (mediaPlayer.currentTime > 0 && mediaPlayer.paused && !mediaPlayer.ended && media === currentMedia) {
             mediaPlayer.play()
                 .then(() => dispatch(setCurrentMediaMode("Playing")))
                 .catch(() => dispatch(setCurrentMediaMode("Paused")))
