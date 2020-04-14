@@ -97,6 +97,7 @@ class ModalBox extends React.Component {
         const checked = e.currentTarget.checked
         if (downloadWhileStreaming !== checked) {
             dispatch(downloadAndStream(checked))
+            return
         }
         this.setState({ data: data })
     }
