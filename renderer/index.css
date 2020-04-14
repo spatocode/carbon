@@ -1,8 +1,9 @@
 body{
   overflow: hidden;
+  background-color: rgb(240, 240, 240);
 }
 
-.Control, .Menu, #Music, .now-playing, .Header, .Setting {
+.Control, .Menu, #Music, .now-playing, .Header, .Setting, .modalbox {
   user-select: none;
 }
 
