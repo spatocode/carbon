@@ -153,6 +153,7 @@ function handleOpenFile () {
 }
 
 function handleOpenURL () {
+    window.webContents.send("open-url", "open-url")
 }
 
 function handleCreatePlayist () {

@@ -23,7 +23,7 @@ export const updatePlayist = (playist, item) => ({
     itemToNewPlayist: null
 })
 
-export const registerNewPlayist = (item) => ({
+export const addItemToNewPlayist = (item) => ({
     type: C.UPDATE_PLAYIST,
     itemToNewPlayist: item
 })
@@ -95,24 +95,27 @@ function fetchMediaBuffer (url, loadMedia) {
     return fetch(url)
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => loadMedia(arrayBuffer))
-        .catch(() => loadMedia(null, true))
+        .catch((err) => {
+            console.log(err)
+            loadMedia(null)
+        })
 }
 
-function setupMediaSrc (filepath, mediaPlayer) {
+function setupMediaSrc (url, mediaPlayer) {
     return dispatch => {
         var mediaSrc = new MediaSource()
 
         mediaSrc.addEventListener("sourceopen", function () {
             var sourceBuffer = mediaSrc.addSourceBuffer("audio/mpeg")
-            return fetchMediaBuffer(filepath, function (buffer, error) {
-                if (error) {
+            return fetchMediaBuffer(url, function (buffer) {
+                if (!buffer) {
                     return dispatch(setCurrentMediaMode("Paused"))
                 }
                 sourceBuffer.addEventListener("updateend", function () {
                     mediaSrc.endOfStream()
                     mediaPlayer.play()
                         .then(() => {
-                            // dispatch(updateMediaInfo(filepath))
+                            // dispatch(updateMediaInfo(url))
                             dispatch(setCurrentMediaMode("Playing"))
                         })
                         .catch((err) => {
@@ -121,7 +124,7 @@ function setupMediaSrc (filepath, mediaPlayer) {
                         })
                 })
                 sourceBuffer.appendBuffer(buffer)
-                return dispatch(setCurrentMedia(filepath, mediaPlayer))
+                return dispatch(setCurrentMedia(url, mediaPlayer))
             })
         })
 

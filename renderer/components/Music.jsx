@@ -5,7 +5,7 @@ import { AutoSizer, Column, Table } from "react-virtualized"
 import "react-virtualized/styles.css"
 import { getPlayer } from "../utils"
 import {
-    updateFavourite, playMedia, registerNewPlayist,
+    updateFavourite, playMedia, addItemToNewPlayist,
     updatePlayist, removeMedia
 } from "../actions"
 import "./stylesheets/Music.scss"
@@ -128,7 +128,7 @@ class Music extends React.Component {
         const { highlight } = this.state
         const { dispatch } = this.props
         if (e.label === "Add new playist") {
-            return dispatch(registerNewPlayist(highlight))
+            return dispatch(addItemToNewPlayist(highlight))
         }
         dispatch(updatePlayist(e.label, highlight))
     }

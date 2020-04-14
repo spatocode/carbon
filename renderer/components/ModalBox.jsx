@@ -1,7 +1,8 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { updatePlayist, registerNewPlayist } from "../actions"
+import { updatePlayist, addItemToNewPlayist, playMedia } from "../actions"
+import { getPlayer } from "../utils"
 import "./stylesheets/ModalBox.scss"
 const { ipcRenderer } = window.require("electron")
 
@@ -9,49 +10,92 @@ class ModalBox extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
-            newPlayist: "",
-            registerPlayist: false
+            data: "",
+            isPlayist: false,
+            isOpenURL: false,
+            inputError: ""
         }
         this.closeModal = this.closeModal.bind(this)
-        this.registerNewPlayist = this.registerNewPlayist.bind(this)
+        this.createNewPlayist = this.createNewPlayist.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.isOpenURL = this.isOpenURL.bind(this)
     }
 
     componentDidMount () {
+        // create new playist from application native menu in main process
         ipcRenderer.on("register-playist", (event, arg) => {
-            this.setState({ registerPlayist: true })
+            this.setState({ isPlayist: true })
+        })
+
+        ipcRenderer.on("open-url", (event, arg) => {
+            this.setState({ isOpenURL: true })
         })
     }
 
     closeModal () {
+        const { isPlayist, isOpenURL, inputError } = this.state
         const { itemToNewPlayist, dispatch } = this.props
         if (itemToNewPlayist) {
-            return dispatch(registerNewPlayist(""))
+            return dispatch(addItemToNewPlayist(""))
         }
-        this.setState({ registerPlayist: false })
+        if (isPlayist) {
+            this.setState({ isPlayist: false })
+        }
+        if (isOpenURL) {
+            this.setState({ isOpenURL: false })
+        }
+        if (inputError) {
+            this.setState({ inputError: "" })
+        }
+        this.setState({ data: "" })
     }
 
-    registerNewPlayist (e) {
-        const { newPlayist, registerPlayist } = this.state
+    createNewPlayist (data) {
+        const { isPlayist } = this.state
         let { dispatch, itemToNewPlayist } = this.props
+        // check if we're calling from native menu or context menu
+        itemToNewPlayist = isPlayist ? "" : itemToNewPlayist
+        dispatch(updatePlayist(data, itemToNewPlayist))
+        this.closeModal()
+    }
+
+    isOpenURL (data) {
+        const { dispatch } = this.props
+        if (data.startsWith("https://") || data.startsWith("http://")) {
+            const mediaPlayer = getPlayer()
+            dispatch(playMedia(data, mediaPlayer))
+            this.closeModal()
+            return
+        }
+        this.setState({ inputError: "Please enter a valid url!" })
+    }
+
+    handleSubmit (e) {
+        let { data, isOpenURL } = this.state
         e.preventDefault()
-        itemToNewPlayist = registerPlayist ? "" : itemToNewPlayist
-        dispatch(updatePlayist(newPlayist, itemToNewPlayist))
-        this.setState({ newPlayist: "" })
-        if (registerPlayist) {
-            this.setState({ registerPlayist: false })
+        if (data) {
+            data = data.trim()
+            if (isOpenURL) {
+                this.isOpenURL(data)
+            } else {
+                this.createNewPlayist()
+            }
         }
     }
 
     handleChange (e) {
-        this.setState({ newPlayist: e.currentTarget.value })
+        const data = e.currentTarget.value
+        this.setState({ data: data })
     }
 
     render () {
-        const { newPlayist, registerPlayist } = this.state
+        const { data, isPlayist, isOpenURL, inputError } = this.state
         const { itemToNewPlayist } = this.props
+        const title = isPlayist || itemToNewPlayist ? "Create Playist" : "Enter URL"
         return (
-            <div className="modalbox" style={itemToNewPlayist || registerPlayist
+            <div className="modalbox" style={itemToNewPlayist ||
+                isPlayist || isOpenURL
                 ? { display: "block" } : { display: "none" } }>
                 <div className="modal-content">
                     <div className="header">
@@ -60,10 +104,13 @@ class ModalBox extends React.Component {
                         </span>
                     </div>
                     <div className="body">
-                        <h5>Create Playist</h5>
-                        <form onSubmit={this.registerNewPlayist}>
-                            <input placeholder="New Playist" type="input" autoFocus
-                                onChange={this.handleChange} value={newPlayist} />
+                        <h5>{title}</h5>
+                        <form onSubmit={this.handleSubmit}>
+                            <input type="input" autoFocus
+                                onChange={this.handleChange} value={data} />
+                            <div style={{ color: "red", fontSize: "12px" }}>
+                                <span>{inputError}</span>
+                            </div>
                         </form>
                     </div>
                 </div>
