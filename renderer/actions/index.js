@@ -1,9 +1,10 @@
 import { setPlayer } from "../utils"
 import C from "./constant"
-const fs = require("fs")
-const os = require("os")
-const path = require("path")
-const mm = require("music-metadata")
+const fs = window.require("fs")
+const os = window.require("os")
+const path = window.require("path")
+const { dialog } = window.require("electron").remote
+const mm = window.require("music-metadata")
 
 export const requestUpdateLibrary = () => ({
     type: C.REQUEST_UPDATE,
@@ -101,12 +102,27 @@ export function playMedia (media, mediaPlayer) {
 }
 
 function fetchMediaBuffer (url, loadMedia) {
+    if ((url.startsWith("https://") || url.startsWith("http://")) && !navigator.onLine) {
+        const title = "Network error"
+        const message = `
+        Cannot stream or download media without an internet connection.
+        Please make sure you're connected to the internet and try again
+        later
+        `
+        return dialog.showErrorBox(title, message)
+    }
     return fetch(url, { mode: "no-cors" })
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => loadMedia(arrayBuffer))
         .catch((err) => {
             console.log(err)
+            const title = "Media error"
+            const message = `
+            An error was encountered while attempting to play media.
+            Error: ${err.message} ${err.code}
+            `
             loadMedia(null)
+            dialog.showErrorBox(title, message)
         })
 }
 
