@@ -75,7 +75,7 @@ class MusicSetting extends React.Component {
                                                     name={item.toLowerCase()}
                                                     onChange={this.handleChange}
                                                     checked={visibleColumn[`${item.toLowerCase()}`]} />
-                                                <label for={item.toLowerCase()}>
+                                                <label htmlFor={item.toLowerCase()}>
                                                     {item}
                                                 </label>
                                             </div>
