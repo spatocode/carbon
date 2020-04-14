@@ -51,6 +51,10 @@ export function settings (state=settingsState, action) {
         return Object.assign({}, state, {
             visibleColumn: Object.assign({}, state.visibleColumn, action.item)
         })
+    case C.DOWNLOAD_AND_STREAM:
+        return Object.assign({}, state, {
+            downloadAndStream: action.checked
+        })
     default:
         return state
     }

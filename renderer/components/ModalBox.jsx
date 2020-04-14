@@ -1,7 +1,10 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { updatePlayist, addItemToNewPlayist, playMedia } from "../actions"
+import {
+    updatePlayist, addItemToNewPlayist, playMedia,
+    downloadAndStream
+} from "../actions"
 import { getPlayer } from "../utils"
 import "./stylesheets/ModalBox.scss"
 const { ipcRenderer } = window.require("electron")
@@ -52,6 +55,10 @@ class ModalBox extends React.Component {
     }
 
     createNewPlayist (data) {
+        if (!data) {
+            this.setState({ inputError: "Please enter a valid name!" })
+            return
+        }
         const { isPlayist } = this.state
         let { dispatch, itemToNewPlayist } = this.props
         // check if we're calling from native menu or context menu
@@ -79,19 +86,24 @@ class ModalBox extends React.Component {
             if (isOpenURL) {
                 this.isOpenURL(data)
             } else {
-                this.createNewPlayist()
+                this.createNewPlayist(data)
             }
         }
     }
 
     handleChange (e) {
+        const { downloadWhileStreaming, dispatch } = this.props
         const data = e.currentTarget.value
+        const checked = e.currentTarget.checked
+        if (downloadWhileStreaming !== checked) {
+            dispatch(downloadAndStream(checked))
+        }
         this.setState({ data: data })
     }
 
     render () {
         const { data, isPlayist, isOpenURL, inputError } = this.state
-        const { itemToNewPlayist } = this.props
+        const { itemToNewPlayist, downloadWhileStreaming } = this.props
         const title = isPlayist || itemToNewPlayist ? "Create Playist" : "Enter URL"
         return (
             <div className="modalbox" style={itemToNewPlayist ||
@@ -106,9 +118,19 @@ class ModalBox extends React.Component {
                     <div className="body">
                         <h5>{title}</h5>
                         <form onSubmit={this.handleSubmit}>
-                            <input type="input" autoFocus
-                                onChange={this.handleChange} value={data} />
-                            <div style={{ color: "red", fontSize: "12px" }}>
+                            <div className="input">
+                                <input type="input" autoFocus
+                                    onChange={this.handleChange} value={data} />
+                            </div>
+                            <div className="download">
+                                <label htmlFor="download">
+                                    Download media while streaming
+                                </label>
+                                <input type="checkbox" name="download"
+                                    onChange={this.handleChange}
+                                    checked={downloadWhileStreaming} />
+                            </div>
+                            <div className="input-error">
                                 <span>{inputError}</span>
                             </div>
                         </form>

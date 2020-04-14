@@ -1,5 +1,9 @@
 import { setPlayer } from "../utils"
 import C from "./constant"
+const fs = require("fs")
+const os = require("os")
+const path = require("path")
+const mm = require("music-metadata")
 
 export const requestUpdateLibrary = () => ({
     type: C.REQUEST_UPDATE,
@@ -14,6 +18,11 @@ export const shouldUpdateLibrary = (shouldUpdate) => ({
 export const updateVisibleColumn = (item) => ({
     type: C.VISIBLE_COLUMN,
     item
+})
+
+export const downloadAndStream = (checked) => ({
+    type: C.DOWNLOAD_AND_STREAM,
+    checked
 })
 
 export const updatePlayist = (playist, item) => ({
@@ -92,7 +101,7 @@ export function playMedia (media, mediaPlayer) {
 }
 
 function fetchMediaBuffer (url, loadMedia) {
-    return fetch(url)
+    return fetch(url, { mode: "no-cors" })
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => loadMedia(arrayBuffer))
         .catch((err) => {
@@ -101,15 +110,38 @@ function fetchMediaBuffer (url, loadMedia) {
         })
 }
 
+function arrayBufferToBuffer (arrayBuffer) {
+    const buffer = Buffer.alloc(arrayBuffer.byteLength)
+    const view = new Uint8Array(buffer)
+    for (var i=0; i < buffer.length; ++i) {
+        buffer[i] = view[i]
+    }
+    return buffer
+}
+
+function parseBufferMetaData (buffer) {
+    mm.parseBuffer(buffer, "audio/mpeg")
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+}
+
 function setupMediaSrc (url, mediaPlayer) {
-    return dispatch => {
+    return (dispatch, getState) => {
+        const downloadAndStream = getState().settings.downloadAndStream
         var mediaSrc = new MediaSource()
 
         mediaSrc.addEventListener("sourceopen", function () {
             var sourceBuffer = mediaSrc.addSourceBuffer("audio/mpeg")
-            return fetchMediaBuffer(url, function (buffer) {
-                if (!buffer) {
+            return fetchMediaBuffer(url, function (arrayBuffer) {
+                if (!arrayBuffer) {
                     return dispatch(setCurrentMediaMode("Paused"))
+                }
+                if (downloadAndStream) {
+                    const downloadDir = path.join(os.homedir(), "Downloads")
+                    const filename = path.join(downloadDir, url+".mp3")
+                    const buffer = arrayBufferToBuffer(arrayBuffer)
+                    parseBufferMetaData(buffer)
+                    fs.writeFile(filename, buffer)
                 }
                 sourceBuffer.addEventListener("updateend", function () {
                     mediaSrc.endOfStream()
@@ -123,7 +155,7 @@ function setupMediaSrc (url, mediaPlayer) {
                             dispatch(setCurrentMediaMode("Paused"))
                         })
                 })
-                sourceBuffer.appendBuffer(buffer)
+                sourceBuffer.appendBuffer(arrayBuffer)
                 return dispatch(setCurrentMedia(url, mediaPlayer))
             })
         })

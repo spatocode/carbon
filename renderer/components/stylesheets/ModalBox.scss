@@ -13,14 +13,14 @@
 
     /* Modal Content/Box */
     .modal-content {
-        background-color: #fefefe;
+        background-color: rgb(240, 240, 240);
         margin: 15% auto; /* 15% from the top and centered */
-        border: 1px solid #888;
+        border: 1px solid rgb(70, 70, 70);
         width: 280px; /* Could be more or less, depending on screen size */
     }
 
     .header {
-        background-color: rgb(221, 221, 221);
+        background-color: rgb(200, 200, 200);
         padding: 3px;
         float: right;
         border-radius: 5px 5px 0 0;
@@ -28,7 +28,7 @@
 
     /* The Close Button */
     .close {
-        color: #aaa;
+        color: rgb(71, 71, 71);
         float: right;
         font-size: 28px;
         font-weight: bold;
@@ -51,7 +51,18 @@
     form {
         text-align: center;
     }
-    input {
+    input[type=text] {
         outline: none;
+        width: 200px;
+    }
+    .download {
+        label {
+            font-size: 12px;
+            margin-right: 10px;
+        }
+    }
+    .input-error {
+        color: "red";
+        font-size: 12px
     }
 }
