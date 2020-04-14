@@ -34,6 +34,7 @@ const createWindow = () => {
     window.loadURL("http://localhost:3000")
     // window.loadFile(path.join(__dirname, "../renderer/build/index.html"))
 
+    initStore()
     buildMenu(window)
     registerShortcuts()
 
@@ -44,7 +45,6 @@ const createWindow = () => {
     window.webContents.on("dom-ready", () => {
         window.show()
     })
-    initStore()
     fetchMedia()
 
     if (!isDev) {
