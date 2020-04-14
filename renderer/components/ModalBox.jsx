@@ -122,7 +122,11 @@ class ModalBox extends React.Component {
                                 <input type="input" autoFocus
                                     onChange={this.handleChange} value={data} />
                             </div>
-                            <div className="download">
+                            <div className="download" style={
+                                isPlayist || itemToNewPlayist
+                                    ? { display: "none" }
+                                    : { display: "block" }
+                            }>
                                 <label htmlFor="download">
                                     Download media while streaming
                                 </label>
