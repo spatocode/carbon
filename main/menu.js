@@ -246,7 +246,7 @@ function handleRepeat () {
 
 function handleAbout () {
     const icon = nativeImage.createFromPath(path.join(__dirname, "../", "icons", "carbon.png"))
-    dialog.showMessageBox({
+    dialog.showMessageBox(window, {
         type: "info",
         buttons: ["Ok"],
         defaultId: 0,
