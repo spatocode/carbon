@@ -16,12 +16,14 @@ class Control extends React.Component {
         const repeat = store.get("control.repeat")
         const shuffle = store.get("control.shuffle")
         const volume = store.get("control.volume")
+        const playbackrate = store.get("control.playbackrate")
         this.state = {
             progress: 0,
             clickTime: null,
             repeat: repeat,
             volume: volume,
-            shuffle: shuffle
+            shuffle: shuffle,
+            playbackrate: playbackrate
         }
         this.mediaPlayer = React.createRef()
         this.currentTime = React.createRef()
@@ -44,12 +46,14 @@ class Control extends React.Component {
         this.handleSeek = this.handleSeek.bind(this)
         this.persistData = this.persistData.bind(this)
         this.handlePlaybackRate = this.handlePlaybackRate.bind(this)
+        this.nameToPlaybackRate = this.nameToPlaybackRate.bind(this)
     }
 
     componentDidMount () {
+        const { volume } = this.state
         const { media, mode, dispatch } = this.props
         const mediaPlayer = this.mediaPlayer.current
-        mediaPlayer.volume = this.state.volume / 100
+        mediaPlayer.volume = volume / 100
         // Stores the audio player in memory to be used from all modules
         setPlayer(mediaPlayer)
 
@@ -108,31 +112,10 @@ class Control extends React.Component {
             })
 
             ipcRenderer.on("playbackrate", (event, action) => {
-                let rate
-                switch (action) {
-                case "Very Slow":
-                    rate = 0.4
-                    break
-                case "Slower":
-                    rate = 0.6
-                    break
-                case "Slow":
-                    rate = 0.8
-                    break
-                case "Normal":
-                    rate = 1
-                    break
-                case "Fast":
-                    rate = 1.2
-                    break
-                case "Faster":
-                    rate = 1.4
-                    break
-                case "Very Fast":
-                    rate = 1.6
-                    break
-                }
-                this.handlePlaybackRate(rate)
+                const rate = this.nameToPlaybackRate(action)
+                this.handlePlaybackRate(rate, function () {
+                    this.persistData("control.playbackrate", action)
+                })
             })
         }
 
@@ -141,6 +124,27 @@ class Control extends React.Component {
             obj[`${action[0].toLowerCase()}`] = action[1]
             dispatch(updateVisibleColumn(obj))
         })
+    }
+
+    nameToPlaybackRate (name) {
+        switch (name) {
+        case "Very Slow":
+            return 0.4
+        case "Slower":
+            return 0.6
+        case "Slow":
+            return 0.8
+        case "Normal":
+            return 1
+        case "Fast":
+            return 1.2
+        case "Faster":
+            return 1.4
+        case "Very Fast":
+            return 1.6
+        default:
+            return 1
+        }
     }
 
     persistData (key, value) {
@@ -161,6 +165,7 @@ class Control extends React.Component {
      */
     handlePlay () {
         var mediaPlayer = getPlayer()
+        const { playbackrate } = this.state
         const { mode, media, dispatch } = this.props
         if (!media) {
             return
@@ -168,20 +173,25 @@ class Control extends React.Component {
         if (this.controlInterval) {
             this.handleClearInterval()
         }
-
         if (mode === "Paused") {
             dispatch(playMedia(media, mediaPlayer))
+            mediaPlayer.playbackRate = this.nameToPlaybackRate(playbackrate)
+            console.log(this.nameToPlaybackRate(playbackrate))
         } else {
             mediaPlayer.pause()
             dispatch(setCurrentMediaMode("Paused"))
         }
     }
 
-    async handlePlaybackRate (rate) {
+    handlePlaybackRate (rate, callback) {
+        const { media } = this.props
+        if (!media) {
+            return
+        }
         var mediaPlayer = getPlayer()
-        console.log(rate)
         mediaPlayer.playbackRate = rate
-        await this.persistData("control.playbackrate", rate)
+        this.setState({ playbackrate: rate })
+        callback()
     }
 
     /**
@@ -261,6 +271,10 @@ class Control extends React.Component {
      */
     handleSeek (e) {
         const { progress } = this.state
+        const { media } = this.props
+        if (!media) {
+            return
+        }
         const mediaPlayer = getPlayer()
         const value = e.currentTarget.value
         // TODO: enhance calculation to fix bug which can occur when
