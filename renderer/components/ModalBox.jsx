@@ -20,7 +20,8 @@ class ModalBox extends React.Component {
         }
         this.closeModal = this.closeModal.bind(this)
         this.createNewPlayist = this.createNewPlayist.bind(this)
-        this.handleChange = this.handleChange.bind(this)
+        this.handleTextChange = this.handleTextChange.bind(this)
+        this.handleCheckChange = this.handleCheckChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.isOpenURL = this.isOpenURL.bind(this)
     }
@@ -91,15 +92,15 @@ class ModalBox extends React.Component {
         }
     }
 
-    handleChange (e) {
-        const { downloadWhileStreaming, dispatch } = this.props
+    handleTextChange (e) {
         const data = e.currentTarget.value
-        const checked = e.currentTarget.checked
-        if (downloadWhileStreaming !== checked) {
-            dispatch(downloadAndStream(checked))
-            return
-        }
         this.setState({ data: data })
+    }
+
+    handleCheckChange (e) {
+        const { dispatch } = this.props
+        const checked = e.currentTarget.checked
+        dispatch(downloadAndStream(checked))
     }
 
     render () {
@@ -120,8 +121,8 @@ class ModalBox extends React.Component {
                         <h5>{title}</h5>
                         <form onSubmit={this.handleSubmit}>
                             <div className="input">
-                                <input type="input" autoFocus
-                                    onChange={this.handleChange} value={data} />
+                                <input type="text" autoFocus
+                                    onChange={this.handleTextChange} value={data} />
                             </div>
                             <div className="download" style={
                                 isPlayist || itemToNewPlayist
@@ -132,7 +133,7 @@ class ModalBox extends React.Component {
                                     Download media while streaming
                                 </label>
                                 <input type="checkbox" name="download"
-                                    onChange={this.handleChange}
+                                    onChange={this.handleCheckChange}
                                     checked={downloadWhileStreaming} />
                             </div>
                             <div className="input-error">
@@ -151,7 +152,8 @@ ModalBox.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-    itemToNewPlayist: state.media.itemToNewPlayist
+    itemToNewPlayist: state.media.itemToNewPlayist,
+    downloadWhileStreaming: state.settings.downloadAndStream
 })
 
 export default connect(mapStateToProps)(ModalBox)
