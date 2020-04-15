@@ -191,7 +191,7 @@ class Control extends React.Component {
         var mediaPlayer = getPlayer()
         mediaPlayer.playbackRate = rate
         this.setState({ playbackrate: rate })
-        callback()
+        callback.call(this)
     }
 
     /**
