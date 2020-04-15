@@ -73,11 +73,10 @@ function registerShortcuts () {
 function initStore () {
     const defaults = {
         control: {
-            timeRange: 0,
             repeat: false,
             shuffle: false,
             volume: 100,
-            timer: 0
+            playbackrate: "Normal"
         },
         state: {
             media: {

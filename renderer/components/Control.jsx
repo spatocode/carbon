@@ -43,6 +43,7 @@ class Control extends React.Component {
         this.getImageUrl = this.getImageUrl.bind(this)
         this.handleSeek = this.handleSeek.bind(this)
         this.persistData = this.persistData.bind(this)
+        this.handlePlaybackRate = this.handlePlaybackRate.bind(this)
     }
 
     componentDidMount () {
@@ -105,6 +106,34 @@ class Control extends React.Component {
                     break
                 }
             })
+
+            ipcRenderer.on("playbackrate", (event, action) => {
+                let rate
+                switch (action) {
+                case "Very Slow":
+                    rate = 0.4
+                    break
+                case "Slower":
+                    rate = 0.6
+                    break
+                case "Slow":
+                    rate = 0.8
+                    break
+                case "Normal":
+                    rate = 1
+                    break
+                case "Fast":
+                    rate = 1.2
+                    break
+                case "Faster":
+                    rate = 1.4
+                    break
+                case "Very Fast":
+                    rate = 1.6
+                    break
+                }
+                this.handlePlaybackRate(rate)
+            })
         }
 
         ipcRenderer.on("toggle-visible-column", (event, action) => {
@@ -146,6 +175,13 @@ class Control extends React.Component {
             mediaPlayer.pause()
             dispatch(setCurrentMediaMode("Paused"))
         }
+    }
+
+    async handlePlaybackRate (rate) {
+        var mediaPlayer = getPlayer()
+        console.log(rate)
+        mediaPlayer.playbackRate = rate
+        await this.persistData("control.playbackrate", rate)
     }
 
     /**
@@ -223,7 +259,7 @@ class Control extends React.Component {
     /**
      * Update the media timer by seeking
      */
-    async handleSeek (e) {
+    handleSeek (e) {
         const { progress } = this.state
         const mediaPlayer = getPlayer()
         const value = e.currentTarget.value

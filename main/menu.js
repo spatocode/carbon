@@ -8,9 +8,11 @@ const checkForUpdates = require("./updater")
 let window
 
 function buildMenu (win) {
+    const speedItem = []
     const recentItem = []
     const visibleItems = []
     const store = new Store()
+    const playbackrate = store.get("control.playbackrate")
     const visibleColumn = store.get("state.settings.visibleColumn")
     const entries = Object.entries(visibleColumn)
     window = win
@@ -31,6 +33,16 @@ function buildMenu (win) {
             type: "checkbox",
             checked: v[1],
             click: handleVisibleColumn
+        })
+    })
+
+    const speed = ["Very Slow", "Slower", "Slow", "Normal", "Fast", "Faster", "Very Fast"]
+    speed.forEach((v) => {
+        speedItem.push({
+            label: `${v}`,
+            type: "radio",
+            checked: playbackrate === v,
+            click: handleRate
         })
     })
 
@@ -109,6 +121,9 @@ function buildMenu (win) {
         {
             label: "Audio",
             submenu: [{
+                label: "Rate",
+                submenu: [...speedItem]
+            }, {
                 label: "Increase volume",
                 click: handleVolume
             }, {
@@ -187,6 +202,10 @@ function handleVolume (e) {
 
 function handleMute () {
     window.webContents.send("volume", "mute")
+}
+
+function handleRate (e) {
+    window.webContents.send("playbackrate", e.label)
 }
 
 function handlePlay (e) {
