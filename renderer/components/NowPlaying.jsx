@@ -1,5 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
+import { appIcon } from "../assets/staticbase64"
 import "./stylesheets/NowPlaying.scss"
 const mm = window.require("music-metadata")
 
@@ -27,11 +28,16 @@ const NowPlaying = ({ media="", mode="Paused" }) => {
                         initImage(url, function () {
                             albumArt.current.style.backgroundImage = `linear-gradient(rgba(13, 13, 17, 0.7), rgba(13, 13, 17, 0.7)), url("${url}")`
                         })
+                    } else {
+                        url = `data:image/png;base64,${appIcon}`
+                        cache.data = { file: media, url: url }
+                        initImage(url, function () {
+                            albumArt.current.style.backgroundImage = `linear-gradient(rgba(13, 13, 17, 0.7), rgba(13, 13, 17, 0.7)), url("${url}")`
+                        })
                     }
                 })
                 .catch((err) => {
-                    console.log(err.message)
-                    // TODO: Fallback to a default Carbon Media Player icon
+                    console.log(err)
                 })
         }
     }
