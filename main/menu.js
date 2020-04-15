@@ -107,6 +107,19 @@ function buildMenu (win) {
             }]
         },
         {
+            label: "Audio",
+            submenu: [{
+                label: "Increase volume",
+                click: handleVolume
+            }, {
+                label: "Decrease volume",
+                click: handleVolume
+            }, {
+                label: "Mute",
+                click: handleMute
+            }]
+        },
+        {
             label: "Help",
             submenu: [{
                 label: "Check for updates",
@@ -162,6 +175,18 @@ function handleCreatePlayist () {
 
 function handleVisibleColumn (e) {
     window.webContents.send("toggle-visible-column", [e.label, e.checked])
+}
+
+function handleVolume (e) {
+    if (e.label === "Increase volume") {
+        window.webContents.send("volume", "increase")
+        return
+    }
+    window.webContents.send("volume", "decrease")
+}
+
+function handleMute () {
+    window.webContents.send("volume", "mute")
 }
 
 function handlePlay (e) {

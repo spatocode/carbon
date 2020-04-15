@@ -91,6 +91,20 @@ class Control extends React.Component {
                     dispatch(playMedia(action, player))
                 }
             })
+
+            ipcRenderer.on("volume", (event, action) => {
+                switch (action) {
+                case "increase":
+                    this.handleVolume(null, true)
+                    break
+                case "decrease":
+                    this.handleVolume(null, false)
+                    break
+                case "mute":
+                    this.handleMute()
+                    break
+                }
+            })
         }
 
         ipcRenderer.on("toggle-visible-column", (event, action) => {
@@ -252,8 +266,22 @@ class Control extends React.Component {
     /**
      * Increases/decreases the media volume
      */
-    async handleVolume (e) {
+    async handleVolume (e, increase) {
         var mediaPlayer = getPlayer()
+        // Check if we're calling from the main process native menu
+        if (!e) {
+            const { volume } = this.state
+            if (increase && volume < 100) {
+                this.setState({ volume: 100 })
+                mediaPlayer.volume = 1
+                await this.persistData("control.volume", 100)
+            } else if (!increase && volume > 0) {
+                this.setState({ volume: 0 })
+                mediaPlayer.volume = 0
+                await this.persistData("control.volume", 0)
+            }
+            return
+        }
         this.setState({ volume: e.currentTarget.value })
         mediaPlayer.volume = e.currentTarget.value / 100
         await this.persistData("control.volume", e.currentTarget.value)
