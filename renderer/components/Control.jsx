@@ -243,13 +243,13 @@ class Control extends React.Component {
         } else if (durHours < 10) {
             durHourValue = `0${durHours}:`
         } else {
-            durHourValue = durHours
+            durHourValue = `${durHours}:`
         }
 
         if (durMinutes < 10) {
             durMinValue = `0${durMinutes}:`
         } else {
-            durMinValue = durMinutes
+            durMinValue = `${durMinutes}:`
         }
 
         if (durSeconds < 10) {
