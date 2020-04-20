@@ -25,6 +25,7 @@ const createWindow = () => {
         minHeight: 500,
         minWidth: 860,
         backgroundColor: "#eee8e8",
+        icon: path.join(__dirname, "../icons/64x64.png"),
         webPreferences: {
             nodeIntegration: true,
             preload: path.join(__dirname, "/preload.js")
