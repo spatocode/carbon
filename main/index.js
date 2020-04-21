@@ -49,7 +49,7 @@ const createWindow = () => {
     fetchMedia()
 
     if (!isDev) {
-        checkForUpdates(60000)
+        checkForUpdates()
     }
 }
 

@@ -1,25 +1,10 @@
-const { autoUpdater, app, dialog, shell } = require("electron")
+const { dialog, shell } = require("electron")
+const { autoUpdater } = require("electron-updater")
 
-function checkForUpdates (interval) {
-    const server = ""
-    const feed = `${server}/update${process.platform}/${app.getVersion()}`
+const URL = "https://carbonplayer.github.io"
 
-    autoUpdater.setFeedURL(feed)
-    autoUpdater.on("update-downloaded", (event, releaseNotes, releaseNames) => {
-        dialog.showMessageBox({
-            type: "info",
-            buttons: ["Restart", "Later"],
-            title: "Application Update",
-            message: process.platform === "win32" ? releaseNotes : releaseNames,
-            detail: "A new version of Carbon Media Player has been downloaded. Restart the application to apply the updates."
-        }).then((ret) => {
-            if (ret.response === 0) {
-                autoUpdater.quitAndInstall()
-            }
-        })
-    })
-
-    autoUpdater.on("error", message => {
+function checkForUpdates (menuItem, focusedWindow, event) {
+    autoUpdater.on("error", error => {
         dialog.showMessageBox({
             type: "error",
             buttons: ["Download Update", "Later"],
@@ -28,19 +13,59 @@ function checkForUpdates (interval) {
             detail: `
             An error occured while updating the application. Please try 
             downloading an update manually.
+            <${(error.stack || error).toString()}>
             `
         }).then((ret) => {
             if (ret.response === 0) {
-                shell.openExternal(feed)
+                shell.openExternal(URL)
             }
         })
     })
-    if (interval) {
-        return setInterval(() => {
+
+    autoUpdater.on("update-downloaded", (event, releaseNotes, releaseNames) => {
+        dialog.showMessageBox({
+            type: "info",
+            title: "Install Updates",
+            messge: "Updates downloaded, application will be quit for update..."
+        }).then((ret) => {
+            setImmediate(() => autoUpdater.quitAndInstall())
+        })
+    })
+
+    if (!menuItem) {
+        setInterval(() => {
             autoUpdater.checkForUpdates()
-        }, interval)
+        }, 60000)
+        return
     }
-    return autoUpdater.checkForUpdates()
+
+    autoUpdater.autoDownload = false
+    menuItem.enabled = false
+    autoUpdater.checkForUpdates()
+
+    autoUpdater.on("update-available", () => {
+        dialog.showMessageBox({
+            type: "info",
+            title: "Found Updates",
+            message: "Found updates, do you want update now?",
+            buttons: ["Sure", "No"]
+        }, (buttonIndex) => {
+            if (buttonIndex === 0) {
+                autoUpdater.downloadUpdate()
+            }
+            else {
+                menuItem.enabled = true
+            }
+        })
+    })
+
+    autoUpdater.on("update-not-available", () => {
+        dialog.showMessageBox({
+            title: "No Updates",
+            message: "Current version is up-to-date."
+        })
+        menuItem.enabled = true
+    })
 }
 
 module.exports = checkForUpdates
