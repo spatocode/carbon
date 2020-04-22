@@ -86,10 +86,7 @@ export function media (state=mediaState, action) {
             mode: action.mode
         })
     case C.UPDATE_PLAYIST:
-        return Object.assign({}, state, {
-            playists: updatePlayists(action.playist, action.item, state.playists),
-            itemToNewPlayist: action.itemToNewPlayist
-        })
+        return updatePlayists(action, state)
     case C.UPDATE_FAVOURITE:
         return (state.favourite.includes(action.favourite))
             ? Object.assign({}, state, {
@@ -140,16 +137,38 @@ export function mode (state={ night: false }, action) {
     }
 }
 
-function updatePlayists (playist, item, playists) {
-    if (!playist && !item) {
-        return playists
+function updatePlayists (action, state) {
+    if (!action.playist && !action.item) {
+        return Object.assign({}, state, {
+            playists: state.playists,
+            itemToNewPlayist: action.itemToNewPlayist
+        })
     }
-    for (var i=0; i < playists.length; i++) {
-        if (playists[i].includes(playist)) {
-            playists[i].push(item)
-            return playists
+    for (var i=0; i < state.playists.length; i++) {
+        if (state.playists[i].includes(action.playist)) {
+            // Delete item from playist if item exists in playist
+            if (state.playists[i].includes(action.item)) {
+                const playist = state.playists[i].filter(pl => pl !== action.item)
+                state.playists[i] = playist
+                return Object.assign({}, state, {
+                    playists: [...state.playists],
+                    itemToNewPlayist: action.itemToNewPlayist
+                })
+            }
+            // Add item to playist if the playist name exists in state
+            const playist = [...state.playists[i], action.item]
+            state.playists[i] = playist
+            return Object.assign({}, state, {
+                playists: [...state.playists],
+                itemToNewPlayist: action.itemToNewPlayist
+            })
         }
     }
-    playists.push([playist, item])
-    return playists
+
+    // Create new playist with initial item
+    const newPlayist = [action.playist, action.item]
+    return Object.assign({}, state, {
+        playists: [...state.playists, newPlayist],
+        itemToNewPlayist: action.itemToNewPlayist
+    })
 }

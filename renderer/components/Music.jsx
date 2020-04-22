@@ -39,8 +39,8 @@ class Music extends React.Component {
     }
 
     shouldComponentUpdate (nextProps, nextState) {
-        let { favourite, media, songs, visibleColumn } = this.props
-        songs = songs || favourite
+        let { playist, favourite, media, songs, visibleColumn } = this.props
+        songs = songs || playist || favourite
         if (songs !== nextProps.songs || media !== nextProps.media ||
             visibleColumn !== nextProps.visibleColumn ||
             this.state !== nextState) {
@@ -54,9 +54,10 @@ class Music extends React.Component {
     }
 
     handleContextMenu (param) {
+        var removePlayistItem = []
         var playist = []
         var favMenuLabel = "Add to Favourite"
-        var { favourite, playists } = this.props
+        var { favourite, playists, view } = this.props
 
         favourite.forEach((fav) => {
             if (fav.file === param.rowData.file) {
@@ -65,6 +66,13 @@ class Music extends React.Component {
         })
 
         playists.forEach((pl) => {
+            if (pl[0] === view) {
+                removePlayistItem.push({
+                    label: "Remove from Playist",
+                    click: this.handleNewPlayist
+                })
+                return
+            }
             playist.push({
                 label: pl[0],
                 click: this.handleNewPlayist
@@ -83,6 +91,7 @@ class Music extends React.Component {
                 }].concat(playist)
             },
             { label: favMenuLabel, click: this.handleNewFavourite },
+            ...removePlayistItem,
             { type: "separator" },
             { label: "Remove", click: this.handleRemove },
             { label: "Delete", click: this.handleDelete }
@@ -126,11 +135,12 @@ class Music extends React.Component {
 
     handleNewPlayist (e) {
         const { highlight } = this.state
-        const { dispatch } = this.props
+        const { dispatch, view } = this.props
+        const playist = e.label === "Remove from Playist" ? view : e.label
         if (e.label === "Add new playist") {
             return dispatch(addItemToNewPlayist(highlight))
         }
-        dispatch(updatePlayist(e.label, highlight))
+        dispatch(updatePlayist(playist, highlight))
     }
 
     handleNewFavourite () {
@@ -142,8 +152,8 @@ class Music extends React.Component {
 
     render () {
         const { highlight, height } = this.state
-        var { songs, favourite, media, visibleColumn } = this.props
-        songs = songs || favourite
+        var { playist, songs, favourite, media, visibleColumn } = this.props
+        songs = songs || playist || favourite
         return (
             <div className="tab-view" id="Music" style={{ height: height }}>
                 <AutoSizer disableHeight>
@@ -202,7 +212,8 @@ const mapStateToProps = (state) => ({
     favourite: state.media.library.filter(song => state.media.favourite.includes(song.file)),
     playists: state.media.playists,
     media: state.media.current,
-    visibleColumn: state.settings.visibleColumn
+    visibleColumn: state.settings.visibleColumn,
+    view: state.view.category
 })
 
 export default connect(mapStateToProps, null)(Music)
