@@ -46,6 +46,18 @@ function buildMenu (win) {
         })
     })
 
+    const devTools = isDev ? [{
+        label: "Open devtools",
+        click: function () {
+            window.webContents.openDevTools()
+        }
+    }, {
+        label: "Reload",
+        click: function () {
+            window.webContents.reload()
+        }
+    }] : []
+
     const template = [
         {
             label: "Media",
@@ -74,17 +86,7 @@ function buildMenu (win) {
         },
         {
             label: "View",
-            submenu: [{
-                label: "Open devtools",
-                click: function () {
-                    window.webContents.openDevTools()
-                }
-            }, {
-                label: "Reload",
-                click: function () {
-                    window.webContents.reload()
-                }
-            }, ...visibleItems]
+            submenu: [...devTools, ...visibleItems]
         },
         {
             label: "Playback",
