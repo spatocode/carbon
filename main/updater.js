@@ -1,10 +1,16 @@
 const { dialog, shell } = require("electron")
 const { autoUpdater } = require("electron-updater")
+const isDev = require("electron-is-dev")
+const { url } = require("../package.json")
 
-const URL = "https://carbonplayer.github.io"
+const URL = url
 
 function checkForUpdates (menuItem, focusedWindow, event) {
+    autoUpdater.setFeedURL("https://github.com/carbonplayer/carbon/releases")
     autoUpdater.on("error", error => {
+        if (error.toString() === "Error: net::ERR_INTERNET_DISCONNECTED") {
+            return
+        }
         dialog.showMessageBox({
             type: "error",
             buttons: ["Download Update", "Later"],
@@ -13,13 +19,14 @@ function checkForUpdates (menuItem, focusedWindow, event) {
             detail: `
             An error occured while updating the application. Please try 
             downloading an update manually.
-            <${(error.stack || error).toString()}>
+                
+                <${isDev ? (error.stack || error).toString() : null}>
             `
         }).then((ret) => {
             if (ret.response === 0) {
                 shell.openExternal(URL)
             }
-        })
+        }).catch()
     })
 
     autoUpdater.on("update-downloaded", (event, releaseNotes, releaseNames) => {
@@ -32,11 +39,12 @@ function checkForUpdates (menuItem, focusedWindow, event) {
         })
     })
 
+    // check if function is not called from menu
     if (!menuItem) {
-        setInterval(() => {
+        var interval = setInterval(() => {
             autoUpdater.checkForUpdates()
         }, 60000)
-        return
+        return interval
     }
 
     autoUpdater.autoDownload = false
@@ -49,8 +57,8 @@ function checkForUpdates (menuItem, focusedWindow, event) {
             title: "Found Updates",
             message: "Found updates, do you want update now?",
             buttons: ["Sure", "No"]
-        }, (buttonIndex) => {
-            if (buttonIndex === 0) {
+        }).then(ret => {
+            if (ret.response === 0) {
                 autoUpdater.downloadUpdate()
             }
             else {
