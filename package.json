@@ -1,6 +1,6 @@
 {
   "name": "carbon",
-  "productName": "carbon",
+  "productName": "Carbon Player",
   "version": "0.0.0",
   "description": "Beautiful and elegant media player",
   "main": "main/index.js",
@@ -15,19 +15,15 @@
     "test": "node scripts/test.js --env=jsdom"
   },
   "keywords": [],
-  "author": "Ekene Izukanne <ekeneizukanne@gmail.com>",
-  "developer": "Munatek Inc.",
+  "author": "Ekene Izukanne",
   "license": "",
-  "url": {
-    "home": "",
-    "about": ""
-  },
+  "url": "carbonplayer.github.io",
   "config": {
     "forge": {
       "packagerConfig": {
-        "appCopyright": "Copyright (C) 2020 Munatek Inc.",
+        "appCopyright": "Copyright (C) 2020 Ekene Izukanne",
         "executableName": "carbon",
-        "icon": "icons/icon.ico"
+        "icon": "icons/1024x1024.png"
       },
       "makers": [
         {
@@ -35,10 +31,9 @@
           "config": {
             "name": "carbon",
             "authors": "Ekene Izukanne",
-            "owners": "Munatek Inc.",
-            "copyright": "Copyright (C) 2020 Munatek Inc.",
+            "copyright": "Copyright (C) 2020 Ekene Izukanne",
             "exe": "carbon",
-            "iconUrl": "icons/icon.ico",
+            "iconUrl": "icons/1024x1024.png",
             "loadingGif": "",
             "certificateFile": "",
             "certificatePassword": ""
@@ -47,7 +42,7 @@
         {
           "name": "@electron-forge/maker-appx",
           "config": {
-            "publisher": "Munatek Inc.",
+            "publisher": "Ekene Izukanne",
             "devCert": "C:\\devcert.pfx",
             "certPass": "abcd"
           }
@@ -63,35 +58,41 @@
           "config": {
             "options": {
               "name": "carbon",
-              "productName": "Carbon",
+              "productName": "Carbon Player",
               "categories": [
                 "Audio"
               ],
-              "maintainer": "Munatek Inc.",
-              "description": "Beautiful and elegant media player",
-              "productDescription": "Carbon Media Player is a beautiful and elegant media player crafted with user experience in mind. It contains lots of features which gives you an unforgettable experience while playing your songs. Carbon is also cross-platform which means that it works on essentially all popular platforms.\nFeatures:\nPlay songs from your local file.\nStream songs from youtube and all popular streaming platforms.\nDisplays lyrics while playing songs.\nDownloads songs without the use of browsers.",
-              "homepage": "",
-              "version": "0.0.0",
+              "maintainer": "Ekene Izukanne",
+              "description": "Beautiful and elegant desktop media player",
+              "productDescription": "Carbon is a beautiful and elegant desktop media player crafted with user experience in mind. It provides features and great user interface which gives you an unforgettable experience while playing your media. Carbon is also cross-platform which means that it works on essentially all popular platforms.",
+              "homepage": "carbonsoftwares.com",
+              "version": "1.0.0",
               "genericName": "Media Player",
-              "icon": "icons/icon.ico",
-              "mimeType": [
-                "audio/mpeg"
-              ],
-              "size": ""
+              "icon": {
+                "96x96": "icons/96x96.png",
+                "128x128": "icons/128x128.png",
+                "256x256": "icons/256x256.png",
+                "512x512": "icons/512x512.png",
+                "1024x1024": "icons/1024x1024.png"
+              },
+              "size": 70000,
+              "lintianOverrides": [
+                "changelog-file-missing-in-native-package"
+              ]
             }
           }
         },
         {
           "name": "@electron-forge/maker-snap",
           "config": {
-            "name": "carbon",
+            "name": "Carbon Player",
             "executableName": "carbon",
             "features": {
               "audio": true,
               "webgl": true
             },
-            "description": "Beautiful and elegant media player",
-            "summary": "Beautiful and elegant media player.",
+            "description": "Beautiful and elegant desktop media player",
+            "summary": "Beautiful and elegant desktop media player.",
             "version": "0.0.0"
           }
         },
@@ -100,19 +101,19 @@
           "config": {
             "options": {
               "name": "carbon",
-              "productName": "Carbon",
+              "productName": "Carbon Player",
               "version": "0.0.0",
               "homepage": "",
               "categories": [
                 "Audio"
               ],
-              "description": "Beautiful and elegant media player",
-              "productDescription": "Carbon Media Player is a beautiful and elegant media player crafted with user experience in mind. It contains lots of features which gives you an unforgettable experience while playing your songs. Carbon is also cross-platform which means that it works on essentially all popular platforms.\nFeatures:\nPlay songs from your local file.\nStream songs from youtube and all popular streaming platforms.\nDisplays lyrics while playing songs.\nDownloads songs without the use of browsers.",
+              "description": "Beautiful and elegant desktop media player",
+              "productDescription": "Carbon is a beautiful and elegant desktop media player crafted with user experience in mind. It provides features and great user interface which gives you an unforgettable experience while playing your media. Carbon is also cross-platform which means that it works on essentially all popular platforms.",
               "mimeType": [
                 "audio/mpeg"
               ],
               "license": "",
-              "icon": "icons/icon.ico",
+              "icon": "icons/1024x1024.png",
               "genericName": "Media Player"
             }
           }
