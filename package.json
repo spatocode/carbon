@@ -123,13 +123,16 @@
   },
   "dependencies": {
     "download": "^7.1.0",
+    "electron-is-dev": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^5.1.1",
+    "electron-updater": "^4.2.5",
     "klaw-sync": "^6.0.0",
     "music-metadata": "^6.3.7",
     "react": "^16.10.0",
     "react-dom": "^16.10.0",
     "react-redux": "^7.1.1",
+    "react-virtualized": "^9.21.2",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0"
   },
