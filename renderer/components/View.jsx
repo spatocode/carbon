@@ -25,6 +25,7 @@ const View = ({ view="Now Playing", songs=[], playists=[] }) => {
             return <Music playist={playist}/>
         }
     }
+    return <NowPlaying />
 }
 
 View.propTypes = {

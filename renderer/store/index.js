@@ -37,7 +37,7 @@ function save (state) {
                 db.set("state.view.category", state.view.category)
                 console.log("Saved view to local store!!!")
             }
-            if (state.media.playists && state.media.playists.length > 0) {
+            if (state.media.playists && state.media.playists.length >= 0) {
                 db.set("state.media.playists", state.media.playists)
                 console.log("Saved playists to local store!!!")
             }

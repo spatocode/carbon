@@ -138,12 +138,26 @@ export function mode (state={ night: false }, action) {
 }
 
 function updatePlayists (action, state) {
+    // This happens only when registering a new playist
     if (!action.playist && !action.item) {
         return Object.assign({}, state, {
             playists: state.playists,
             itemToNewPlayist: action.itemToNewPlayist
         })
     }
+    // Delete playist
+    else if (!action.itemToNewPlayist && !action.item) {
+        for (let i=0; i < state.playists.length; i++) {
+            if (state.playists[i][0] === action.playist) {
+                state.playists.splice(i, 1)
+                return Object.assign({}, state, {
+                    playists: state.playists,
+                    itemToNewPlayist: action.itemToNewPlayist
+                })
+            }
+        }
+    }
+
     for (var i=0; i < state.playists.length; i++) {
         if (state.playists[i].includes(action.playist)) {
             // Delete item from playist if item exists in playist

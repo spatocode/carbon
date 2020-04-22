@@ -6,7 +6,7 @@ import "react-virtualized/styles.css"
 import { getPlayer } from "../utils"
 import {
     updateFavourite, playMedia, addItemToNewPlayist,
-    updatePlayist, removeMedia
+    updatePlayist, removeMedia, selectView
 } from "../actions"
 import "./stylesheets/Music.scss"
 const fs = window.require("fs")
@@ -55,6 +55,7 @@ class Music extends React.Component {
 
     handleContextMenu (param) {
         var removePlayistItem = []
+        var deletePlayist = []
         var playist = []
         var favMenuLabel = "Add to Favourite"
         var { favourite, playists, view } = this.props
@@ -71,6 +72,10 @@ class Music extends React.Component {
                     label: "Remove from Playist",
                     click: this.handleNewPlayist
                 })
+                deletePlayist.push({
+                    label: "Delete Playist",
+                    click: this.handleDelete
+                })
                 return
             }
             playist.push({
@@ -86,12 +91,13 @@ class Music extends React.Component {
             {
                 label: "Add to Playist",
                 submenu: [{
-                    label: "Add new playist",
+                    label: "Add new Playist",
                     click: this.handleNewPlayist
                 }].concat(playist)
             },
             { label: favMenuLabel, click: this.handleNewFavourite },
             ...removePlayistItem,
+            ...deletePlayist,
             { type: "separator" },
             { label: "Remove", click: this.handleRemove },
             { label: "Delete", click: this.handleDelete }
@@ -116,9 +122,16 @@ class Music extends React.Component {
         dispatch(removeMedia(highlight))
     }
 
-    handleDelete () {
+    handleDelete (e) {
         var { highlight } = this.state
-        var { dispatch } = this.props
+        var { dispatch, view } = this.props
+        if (e.label === "Delete Playist") {
+            dispatch(updatePlayist(view))
+            // Change view after deleting playist so we don't render null
+            dispatch(selectView("Now Playing"))
+            return
+        }
+
         var filename = path.basename(highlight)
         fs.unlink(highlight, (err) => {
             if (err) {
@@ -137,7 +150,7 @@ class Music extends React.Component {
         const { highlight } = this.state
         const { dispatch, view } = this.props
         const playist = e.label === "Remove from Playist" ? view : e.label
-        if (e.label === "Add new playist") {
+        if (e.label === "Add new Playist") {
             return dispatch(addItemToNewPlayist(highlight))
         }
         dispatch(updatePlayist(playist, highlight))
