@@ -14,6 +14,7 @@ if (require("electron-squirrel-startup")) { // eslint-disable-line global-requir
 }
 
 let window
+let updateInterval
 
 const createWindow = () => {
     window = new BrowserWindow({
@@ -32,8 +33,7 @@ const createWindow = () => {
         }
     })
 
-    window.loadURL("http://localhost:3000")
-    // window.loadFile(path.join(__dirname, "../renderer/build/index.html"))
+    window.loadFile(path.join(__dirname, "../renderer/build/index.html"))
 
     initStore()
     buildMenu(window)
@@ -49,7 +49,7 @@ const createWindow = () => {
     fetchMedia()
 
     if (!isDev) {
-        checkForUpdates()
+        updateInterval = checkForUpdates()
     }
 }
 
@@ -189,6 +189,7 @@ async function extractMediaInfo (dirs) {
 app.on("ready", createWindow)
 
 app.on("window-all-closed", () => {
+    clearInterval(updateInterval)
     if (process.platform !== "darwin") {
         app.quit()
     }
