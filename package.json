@@ -65,8 +65,7 @@
               "maintainer": "Ekene Izukanne",
               "description": "Beautiful and elegant desktop media player",
               "productDescription": "Carbon is a beautiful and elegant desktop media player crafted with user experience in mind. It provides features and great user interface which gives you an unforgettable experience while playing your media. Carbon is also cross-platform which means that it works on essentially all popular platforms.",
-              "homepage": "carbonsoftwares.com",
-              "version": "1.0.0",
+              "homepage": "carbonplayer.github.io",
               "genericName": "Media Player",
               "icon": {
                 "96x96": "icons/96x96.png",
@@ -92,8 +91,7 @@
               "webgl": true
             },
             "description": "Beautiful and elegant desktop media player",
-            "summary": "Beautiful and elegant desktop media player.",
-            "version": "0.0.0"
+            "summary": "Beautiful and elegant desktop media player."
           }
         },
         {
@@ -102,7 +100,6 @@
             "options": {
               "name": "carbon",
               "productName": "Carbon Player",
-              "version": "0.0.0",
               "homepage": "",
               "categories": [
                 "Audio"
