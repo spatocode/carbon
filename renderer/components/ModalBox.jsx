@@ -107,8 +107,10 @@ class ModalBox extends React.Component {
         const { data, isPlayist, isOpenURL, inputError } = this.state
         const { itemToNewPlayist, downloadWhileStreaming } = this.props
         const title = isPlayist || itemToNewPlayist ? "Create Playist" : "Enter URL"
+        const isItemToNewPlayist = itemToNewPlayist
+            ? Object.keys(itemToNewPlayist).length > 0 : false
         return (
-            <div className="modalbox" style={itemToNewPlayist ||
+            <div className="modalbox" style={isItemToNewPlayist ||
                 isPlayist || isOpenURL
                 ? { display: "block" } : { display: "none" } }>
                 <div className="modal-content">
@@ -125,7 +127,7 @@ class ModalBox extends React.Component {
                                     onChange={this.handleTextChange} value={data} />
                             </div>
                             <div className="download" style={
-                                isPlayist || itemToNewPlayist
+                                isPlayist || isItemToNewPlayist
                                     ? { display: "none" }
                                     : { display: "block" }
                             }>
