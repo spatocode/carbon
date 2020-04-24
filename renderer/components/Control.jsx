@@ -176,7 +176,6 @@ class Control extends React.Component {
         if (mode === "Paused") {
             dispatch(playMedia(media, mediaPlayer))
             mediaPlayer.playbackRate = this.nameToPlaybackRate(playbackrate)
-            console.log(this.nameToPlaybackRate(playbackrate))
         } else {
             mediaPlayer.pause()
             dispatch(setCurrentMediaMode("Paused"))
@@ -415,12 +414,21 @@ class Control extends React.Component {
      */
     handlePrevious () {
         var prev
-        const { shuffle, clickTime } = this.state
-        const { songs, media, dispatch } = this.props
         var mediaPlayer = getPlayer()
+        const { shuffle, clickTime } = this.state
+        let { source, favourite, playists, songs, media, dispatch } = this.props
         if (!media) {
             return
         }
+
+        // Check the source of the currently playing media so we
+        // know where to play previous song from
+        if (source === "Favourite") {
+            songs = favourite
+        } else if (source === "Playists") {
+            songs = playists
+        }
+
         // return if we are rewinding
         if (typeof clickTime === "number" &&
             clickTime < Math.floor(Date.now()/1000))
@@ -446,7 +454,11 @@ class Control extends React.Component {
                 } else {
                     prev = songs[--i].file
                 }
-                dispatch(playMedia(prev, mediaPlayer))
+                const media = {
+                    file: prev,
+                    source: source
+                }
+                dispatch(playMedia(media, mediaPlayer))
                 break
             }
         }
@@ -458,10 +470,19 @@ class Control extends React.Component {
     handleNext () {
         var next
         const { shuffle, clickTime } = this.state
-        const { songs, media, dispatch } = this.props
+        let { favourite, playists, source, songs, media, dispatch } = this.props
         if (!media) {
             return
         }
+
+        // Check the source of the currently playing media so we
+        // know where to play next song from
+        if (source === "Favourite") {
+            songs = favourite
+        } else if (source === "Playists") {
+            songs = playists
+        }
+
         // return if we are fast forwarding
         if (typeof clickTime === "number" &&
             clickTime < Math.floor(Date.now()/1000))
@@ -478,13 +499,16 @@ class Control extends React.Component {
                 if (i === songs.length - 1) {
                     next = songs[0].file
                 } else if (shuffle) {
-                    console.log("shufffle", shuffle)
                     var rand = this.generateRandomNumber(i, songs.length)
                     next = songs[++rand].file
                 } else {
                     next = songs[++i].file
                 }
-                dispatch(playMedia(next, getPlayer()))
+                const media = {
+                    file: next,
+                    source: source
+                }
+                dispatch(playMedia(media, getPlayer()))
                 break
             }
         }
@@ -498,10 +522,8 @@ class Control extends React.Component {
         // Make sure we don't select an out of bound index
         // Just a cautious check anyway
         while (rand === length) {
-            console.log("BAD RAND", rand)
             rand = Math.floor(Math.random() * length-1) + 1
         }
-        console.log("GOOD RAND", rand)
         return rand
     }
 
@@ -572,20 +594,28 @@ class Control extends React.Component {
 Control.propTypes = {
     songs: PropTypes.array,
     media: PropTypes.string,
-    mode: PropTypes.string
+    mode: PropTypes.string,
+    source: PropTypes.string,
+    playists: PropTypes.array,
+    favourite: PropTypes.array
 }
 
 Control.defaultProps = {
     songs: [],
+    playists: [],
+    favourite: [],
     media: "",
     mode: "",
-    loadMedia: f=>f
+    source: ""
 }
 
 const mapStateToProps = (state) => ({
     songs: state.media.library,
+    playists: state.media.playists,
+    favourite: state.media.favourite,
     media: state.media.current,
-    mode: state.media.mode
+    mode: state.media.mode,
+    source: state.media.source
 })
 
 export default connect(mapStateToProps)(Control)
