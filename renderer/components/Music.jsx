@@ -110,9 +110,15 @@ class Music extends React.Component {
 
     handlePlay () {
         var { highlight } = this.state
-        const { dispatch } = this.props
+        const { dispatch, playist, songs } = this.props
         const player = getPlayer()
-        dispatch(playMedia(highlight.file, player))
+        // detect the view where this media is played from
+        const source = songs ? "Music" : playist ? "Playists" : "Favourite"
+        const media = {
+            file: highlight.file,
+            source: source
+        }
+        dispatch(playMedia(media, player))
     }
 
     handleRemove () {

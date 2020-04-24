@@ -74,7 +74,8 @@ const setCurrentMedia = (media, mediaPlayer) => {
     setPlayer(mediaPlayer)
     return {
         type: C.PLAY_MEDIA,
-        media: media
+        media: media.file,
+        source: media.source
     }
 }
 
@@ -86,7 +87,7 @@ export const setCurrentMediaMode = (mode) => ({
 export function playMedia (media, mediaPlayer) {
     return (dispatch, getState) => {
         const currentMedia = getState().media.current
-        if (media === "") {
+        if (media.file === "") {
             // This happens when Control element initially mounts
             return dispatch(setCurrentMedia(media, mediaPlayer))
         }
@@ -142,7 +143,8 @@ function parseBufferMetaData (buffer) {
         .catch(err => console.log(err))
 }
 
-function setupMediaSrc (url, mediaPlayer) {
+function setupMediaSrc (media, mediaPlayer) {
+    const url = media.file
     return (dispatch, getState) => {
         const downloadAndStream = getState().settings.downloadAndStream
         var mediaSrc = new MediaSource()
@@ -173,7 +175,7 @@ function setupMediaSrc (url, mediaPlayer) {
                         })
                 })
                 sourceBuffer.appendBuffer(arrayBuffer)
-                return dispatch(setCurrentMedia(url, mediaPlayer))
+                return dispatch(setCurrentMedia(media, mediaPlayer))
             })
         })
 

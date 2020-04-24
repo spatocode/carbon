@@ -79,6 +79,7 @@ export function media (state=mediaState, action) {
     case C.PLAY_MEDIA:
         return Object.assign({}, state, {
             current: action.media,
+            source: action.source,
             recent: updateRecents(state.recent, action.media)
         })
     case C.MEDIA_MODE:
