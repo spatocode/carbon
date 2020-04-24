@@ -86,12 +86,10 @@ class Menu extends React.Component {
 }
 
 Menu.propTypes = {
-    itemToNewPlayist: PropTypes.string,
     playists: PropTypes.array
 }
 
 const mapStateToProps = (state) => ({
-    itemToNewPlayist: state.media.itemToNewPlayist,
     playists: state.media.playists
 })
 
