@@ -13,7 +13,10 @@ const NowPlaying = ({ media="", mode="Paused" }) => {
         if (cache.data && cache.data.file === media) {
             url = cache.data.url
             initImage(url, function () {
-                albumArt.current.style.backgroundImage = `linear-gradient(rgba(13, 13, 17, 0.7), rgba(13, 13, 17, 0.7)), url("${url}")`
+                try {
+                    albumArt.current.style.backgroundImage = `linear-gradient(rgba(13, 13, 17, 0.7), rgba(13, 13, 17, 0.7)), url("${url}")`
+                }
+                catch (e) {}
             })
         }
         else {
@@ -26,13 +29,19 @@ const NowPlaying = ({ media="", mode="Paused" }) => {
                         url = `data:${picture.format};base64,${picture.data.toString("base64")}`
                         cache.data = { file: media, url: url }
                         initImage(url, function () {
-                            albumArt.current.style.backgroundImage = `linear-gradient(rgba(13, 13, 17, 0.7), rgba(13, 13, 17, 0.7)), url("${url}")`
+                            try {
+                                albumArt.current.style.backgroundImage = `linear-gradient(rgba(13, 13, 17, 0.7), rgba(13, 13, 17, 0.7)), url("${url}")`
+                            }
+                            catch (e) {}
                         })
                     } else {
                         url = `data:image/png;base64,${appIcon}`
                         cache.data = { file: media, url: url }
                         initImage(url, function () {
-                            albumArt.current.style.backgroundImage = `linear-gradient(rgba(13, 13, 17, 0.7), rgba(13, 13, 17, 0.7)), url("${url}")`
+                            try {
+                                albumArt.current.style.backgroundImage = `linear-gradient(rgba(13, 13, 17, 0.7), rgba(13, 13, 17, 0.7)), url("${url}")`
+                            }
+                            catch (e) {}
                         })
                     }
                 })
