@@ -5,16 +5,27 @@ import { selectView } from "../actions"
 import { version } from "../../package.json"
 import * as icon from "../assets/staticbase64"
 import "./stylesheets/Menu.scss"
+const { ipcRenderer } = window.require("electron")
 
 class Menu extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
             show: false,
-            height: window.innerHeight - 142
+            height: window.innerHeight - 145
         }
         this.showDropdown = this.showDropdown.bind(this)
         this.handleView = this.handleView.bind(this)
+    }
+
+    componentDidMount () {
+        ipcRenderer.on("maximize", (event, maximize) => {
+            if (maximize) {
+                this.setState({ height: window.innerHeight * 1.09 })
+            } else {
+                this.setState({ height: window.innerHeight - 145 })
+            }
+        })
     }
 
     handleView (e) {
@@ -28,11 +39,11 @@ class Menu extends React.Component {
     }
 
     render () {
-        const { show } = this.state
+        const { show, height } = this.state
         const { playists } = this.props
         // TODO: Provide a separate component for menu list
         return (
-            <div className="Menu" style={{ height: window.innerHeight*2 }}>
+            <div className="Menu" style={{ height: height }}>
                 <div className="title">
                     <h1>carbon</h1>
                     <div>{version}</div>

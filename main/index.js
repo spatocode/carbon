@@ -44,6 +44,14 @@ const createWindow = () => {
         window = null
     })
 
+    window.on("maximize", () => {
+        window.webContents.send("maximize", true)
+    })
+
+    window.on("unmaximize", () => {
+        window.webContents.send("maximize", false)
+    })
+
     window.webContents.on("dom-ready", () => {
         window.show()
     })
