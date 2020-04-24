@@ -227,7 +227,7 @@ Music.defaultProps = {
 }
 
 const mapStateToProps = (state) => ({
-    favourite: state.media.library.filter(song => state.media.favourite.includes(song.file)),
+    favourite: state.media.favourite,
     playists: state.media.playists,
     media: state.media.current,
     visibleColumn: state.settings.visibleColumn,

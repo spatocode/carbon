@@ -21,7 +21,9 @@ const View = ({ view="Now Playing", songs=[], playists=[] }) => {
     // Check if we opened playist view
     for (var i=0; i < playists.length; i++) {
         if (view.includes(playists[i][0])) {
-            var playist = songs.filter(song => playists[i].includes(song.file))
+            // separate playist name from playist items
+            var playist = playists[i].concat()
+            playist.shift()
             return <Music playist={playist}/>
         }
     }

@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import C from "../actions/constant"
 
 const mediaState = {
@@ -89,9 +90,15 @@ export function media (state=mediaState, action) {
     case C.UPDATE_PLAYIST:
         return updatePlayists(action, state)
     case C.UPDATE_FAVOURITE:
-        return (state.favourite.includes(action.favourite))
+        let isIncluded
+        state.favourite.forEach((val) => {
+            if (val.file === action.favourite.file) {
+                isIncluded = true
+            }
+        })
+        return isIncluded
             ? Object.assign({}, state, {
-                favourite: state.favourite.filter(fav => fav !== action.favourite)
+                favourite: state.favourite.filter(fav => fav.file !== action.favourite.file)
             })
             : Object.assign({}, state, {
                 favourite: [...state.favourite, action.favourite]
@@ -160,7 +167,8 @@ function updatePlayists (action, state) {
     }
 
     for (var i=0; i < state.playists.length; i++) {
-        if (state.playists[i].includes(action.playist)) {
+        // Check if this is the playist to update
+        if (state.playists[i][0] === action.playist) {
             // Delete item from playist if item exists in playist
             if (state.playists[i].includes(action.item)) {
                 const playist = state.playists[i].filter(pl => pl !== action.item)
