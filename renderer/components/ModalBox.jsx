@@ -40,9 +40,7 @@ class ModalBox extends React.Component {
     closeModal () {
         const { isPlayist, isOpenURL, inputError } = this.state
         const { itemToNewPlayist, dispatch } = this.props
-        if (itemToNewPlayist) {
-            return dispatch(addItemToNewPlayist(""))
-        }
+        this.setState({ data: "" })
         if (isPlayist) {
             this.setState({ isPlayist: false })
         }
@@ -52,7 +50,9 @@ class ModalBox extends React.Component {
         if (inputError) {
             this.setState({ inputError: "" })
         }
-        this.setState({ data: "" })
+        if (itemToNewPlayist) {
+            return dispatch(addItemToNewPlayist({}))
+        }
     }
 
     createNewPlayist (data) {
@@ -148,7 +148,7 @@ class ModalBox extends React.Component {
 }
 
 ModalBox.propTypes = {
-    itemToNewPlayist: PropTypes.string
+    itemToNewPlayist: PropTypes.object
 }
 
 const mapStateToProps = (state) => ({
