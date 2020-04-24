@@ -33,7 +33,8 @@ const createWindow = () => {
         }
     })
 
-    window.loadFile(path.join(__dirname, "../renderer/build/index.html"))
+    window.loadURL("http://localhost:3000")
+    // window.loadFile(path.join(__dirname, "../renderer/build/index.html"))
 
     initStore()
     buildMenu(window)
@@ -85,7 +86,8 @@ function initStore () {
                 favourite: [],
                 playists: [],
                 recent: [],
-                current: ""
+                current: "",
+                source: ""
             }
         }
     }
