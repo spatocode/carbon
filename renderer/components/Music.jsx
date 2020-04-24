@@ -84,7 +84,7 @@ class Music extends React.Component {
             })
         })
 
-        this.setState({ highlight: param.rowData.file })
+        this.setState({ highlight: param.rowData })
         Menu.buildFromTemplate([
             { label: "Play", click: this.handlePlay },
             { type: "separator" },
@@ -105,21 +105,20 @@ class Music extends React.Component {
     }
 
     handleClick (param) {
-        this.setState({ highlight: param.rowData.file })
-        this.setState({ index: param.index })
+        this.setState({ highlight: param.rowData })
     }
 
     handlePlay () {
         var { highlight } = this.state
         const { dispatch } = this.props
         const player = getPlayer()
-        dispatch(playMedia(highlight, player))
+        dispatch(playMedia(highlight.file, player))
     }
 
     handleRemove () {
         var { highlight } = this.state
         var { dispatch } = this.props
-        dispatch(removeMedia(highlight))
+        dispatch(removeMedia(highlight.file))
     }
 
     handleDelete (e) {
@@ -132,8 +131,8 @@ class Music extends React.Component {
             return
         }
 
-        var filename = path.basename(highlight)
-        fs.unlink(highlight, (err) => {
+        var filename = path.basename(highlight.file)
+        fs.unlink(highlight.file, (err) => {
             if (err) {
                 const title = "Cannot delete file"
                 const content = `
@@ -142,7 +141,7 @@ class Music extends React.Component {
                 `
                 dialog.showErrorBox(title, content)
             }
-            dispatch(removeMedia(highlight))
+            dispatch(removeMedia(highlight.file))
         })
     }
 
