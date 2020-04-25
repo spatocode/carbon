@@ -434,6 +434,12 @@ class Control extends React.Component {
                     songs = playist
                     break
                 }
+                // We've searched the whole playists but couldn't
+                // find this name which shows it has been deleted or
+                // something.
+                if (i === playists.length - 1) {
+                    return
+                }
             }
         }
 
@@ -495,6 +501,12 @@ class Control extends React.Component {
                     playist.shift()
                     songs = playist
                     break
+                }
+                // We've searched the whole playists but couldn't
+                // find this name which shows it has been deleted or
+                // something.
+                if (i === playists.length - 1) {
+                    return
                 }
             }
         }
