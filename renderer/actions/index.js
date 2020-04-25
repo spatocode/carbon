@@ -92,7 +92,7 @@ export function playMedia (media, mediaPlayer) {
             return dispatch(setCurrentMedia(media, mediaPlayer))
         }
         // resume play if the same media is already in progress and paused
-        if (mediaPlayer.currentTime > 0 && mediaPlayer.paused && !mediaPlayer.ended && media === currentMedia) {
+        if (mediaPlayer.currentTime > 0 && mediaPlayer.paused && !mediaPlayer.ended && media.file === currentMedia) {
             mediaPlayer.play()
                 .then(() => dispatch(setCurrentMediaMode("Playing")))
                 .catch(() => dispatch(setCurrentMediaMode("Paused")))

@@ -191,7 +191,7 @@ class Music extends React.Component {
                             onRowRightClick={(param) => (this.handleContextMenu(param))}
                             rowStyle={({ index }) => (
                                 typeof songs[index] === "undefined"
-                                    ? null : highlight === songs[index].file
+                                    ? null : highlight === songs[index]
                                         ? { backgroundColor: "teal", color: "whitesmoke" }
                                         : media === songs[index].file
                                             ? { color: "rgb(255, 93, 75)" } : null)}>

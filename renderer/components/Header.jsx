@@ -63,7 +63,11 @@ class Header extends React.Component {
 
     handleClick (e) {
         const { dispatch } = this.props
-        dispatch(playMedia(e.currentTarget.className.split(" result-item")[0], getPlayer()))
+        const media = {
+            file: e.currentTarget.className.split(" result-item")[0],
+            source: "Music"
+        }
+        dispatch(playMedia(media, getPlayer()))
         this.setState({ searchResult: [] })
         this.setState({ value: "" })
     }
