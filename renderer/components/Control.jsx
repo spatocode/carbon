@@ -47,6 +47,8 @@ class Control extends React.Component {
         this.persistData = this.persistData.bind(this)
         this.handlePlaybackRate = this.handlePlaybackRate.bind(this)
         this.nameToPlaybackRate = this.nameToPlaybackRate.bind(this)
+        this.checkViewSource = this.checkViewSource.bind(this)
+        this.checkFowardRewind = this.checkFowardRewind.bind(this)
     }
 
     componentDidMount () {
@@ -174,6 +176,7 @@ class Control extends React.Component {
             this.handleClearInterval()
         }
         if (mode === "Paused") {
+            console.log("PLAY")
             const med = {
                 file: media,
                 source: source
@@ -181,6 +184,7 @@ class Control extends React.Component {
             dispatch(playMedia(med, mediaPlayer))
             mediaPlayer.playbackRate = this.nameToPlaybackRate(playbackrate)
         } else {
+            console.log("PAUSE")
             mediaPlayer.pause()
             dispatch(setCurrentMediaMode("Paused"))
         }
@@ -414,29 +418,20 @@ class Control extends React.Component {
     }
 
     /**
-     * Play the previous song in library
+     * Check the source of the currently playing media so we
+     * know where to play next/previous song from
      */
-    handlePrevious () {
-        var prev
-        var mediaPlayer = getPlayer()
-        const { shuffle, clickTime } = this.state
-        let { source, favourite, playists, songs, media, dispatch } = this.props
-        if (!media) {
-            return
-        }
-
-        // Check the source of the currently playing media so we
-        // know where to play previous song from
+    checkViewSource () {
+        const { favourite, playists, source } = this.props
         if (source === "Favourite") {
-            songs = favourite
+            return favourite
         } else if (source.includes("Playists")) {
             const playistName = source.split("Playists-")[1]
             for (let i=0; i < playists.length; i++) {
                 if (playists[i][0] === playistName) {
                     const playist = [...playists[i]]
                     playist.shift()
-                    songs = playist
-                    break
+                    return playist
                 }
                 // We've searched the whole playists but couldn't
                 // find this name which shows it has been deleted or
@@ -446,13 +441,42 @@ class Control extends React.Component {
                 }
             }
         }
+    }
 
-        // return if we are rewinding
+    /**
+     * Check if we're fast forwading/rewinding
+     */
+    checkFowardRewind () {
+        const { clickTime } = this.state
+        // return if we are fast forwarding
         if (typeof clickTime === "number" &&
             clickTime < Math.floor(Date.now()/1000))
         {
-            // allow us to handlePrevious next time
+            // allow us to handleNext next time
             this.setState({ clickTime: null })
+            return true
+        }
+    }
+
+    /**
+     * Play the previous song in library
+     */
+    handlePrevious () {
+        var prev
+        var mediaPlayer = getPlayer()
+        const { shuffle } = this.state
+        let { source, songs, media, dispatch } = this.props
+        if (!media) {
+            return
+        }
+
+        const isFastFowarding = this.checkFowardRewind()
+        if (isFastFowarding) {
+            return
+        }
+
+        songs = this.checkViewSource()
+        if (!songs) {
             return
         }
 
@@ -487,40 +511,19 @@ class Control extends React.Component {
      */
     handleNext () {
         var next
-        const { shuffle, clickTime } = this.state
-        let { favourite, playists, source, songs, media, dispatch } = this.props
+        const { shuffle } = this.state
+        let { source, songs, media, dispatch } = this.props
         if (!media) {
             return
         }
 
-        // Check the source of the currently playing media so we
-        // know where to play next song from
-        if (source === "Favourite") {
-            songs = favourite
-        } else if (source.includes("Playists")) {
-            const playistName = source.split("Playists-")[1]
-            for (let i=0; i < playists.length; i++) {
-                if (playists[i][0] === playistName) {
-                    const playist = [...playists[i]]
-                    playist.shift()
-                    songs = playist
-                    break
-                }
-                // We've searched the whole playists but couldn't
-                // find this name which shows it has been deleted or
-                // something.
-                if (i === playists.length - 1) {
-                    return
-                }
-            }
+        const isFastFowarding = this.checkFowardRewind()
+        if (isFastFowarding) {
+            return
         }
 
-        // return if we are fast forwarding
-        if (typeof clickTime === "number" &&
-            clickTime < Math.floor(Date.now()/1000))
-        {
-            // allow us to handleNext next time
-            this.setState({ clickTime: null })
+        songs = this.checkViewSource()
+        if (!songs) {
             return
         }
 
