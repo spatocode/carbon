@@ -458,7 +458,7 @@ class Control extends React.Component {
                     prev = songs[songs.length - 1].file
                 } else if (shuffle) {
                     var rand = this.generateRandomNumber(i, songs.length)
-                    prev = songs[--rand].file
+                    prev = songs[rand].file
                 } else {
                     prev = songs[--i].file
                 }
@@ -516,7 +516,7 @@ class Control extends React.Component {
                     next = songs[0].file
                 } else if (shuffle) {
                     var rand = this.generateRandomNumber(i, songs.length)
-                    next = songs[++rand].file
+                    next = songs[rand].file
                 } else {
                     next = songs[++i].file
                 }
@@ -535,9 +535,10 @@ class Control extends React.Component {
      */
     generateRandomNumber (i, length) {
         let rand = Math.floor(Math.random() * length-1) + 1
-        // Make sure we don't select an out of bound index
+        // Make sure we don't select the same song
+        // or an unknown song(out of bound index)
         // Just a cautious check anyway
-        while (rand === length) {
+        while (rand >= length || rand === i) {
             rand = Math.floor(Math.random() * length-1) + 1
         }
         return rand
