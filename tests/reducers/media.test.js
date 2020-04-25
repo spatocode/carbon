@@ -87,17 +87,17 @@ describe("media", () => {
         const action = {
             type: C.PLAY_MEDIA,
             media: "Eminem - Farwell",
-            player: new Audio()
+            source: "Music"
         }
         const results = media(state, action)
         expect(results).toEqual({
             current: "Eminem - Farwell",
-            player: new Audio(),
+            source: "Music",
             recent: ["Eminem - Farwell"]
         })
     })
 
-    it("update playist", () => {
+    it("create new playist", () => {
         const state = { playists: [] }
         var action = {
             type: C.UPDATE_PLAYIST,
@@ -118,6 +118,39 @@ describe("media", () => {
         results = media(state, action)
         expect(results).toEqual({
             playists: [["HipHop", "Eminem - Farewell"]],
+            itemToNewPlayist: null
+        })
+    })
+
+    it("delete playist", () => {
+        const state = {
+            playists: [["HipHop", "Eminem - Farewell"]]
+        }
+        var action = {
+            type: C.UPDATE_PLAYIST,
+            playist: "HipHop",
+            itemToNewPlayist: null
+        }
+        var results = media(state, action)
+        expect(results).toEqual({
+            playists: [],
+            itemToNewPlayist: null
+        })
+    })
+
+    it("delete playist item", () => {
+        const state = {
+            playists: [["HipHop", "Eminem - Farewell"]]
+        }
+        var action = {
+            type: C.UPDATE_PLAYIST,
+            playist: "HipHop",
+            item: "Eminem - Farewell",
+            itemToNewPlayist: null
+        }
+        var results = media(state, action)
+        expect(results).toEqual({
+            playists: [["HipHop"]],
             itemToNewPlayist: null
         })
     })
