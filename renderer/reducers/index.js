@@ -37,10 +37,6 @@ export function view (state=viewState, action) {
         return Object.assign({}, state, {
             category: action.category
         })
-    case C.SELECT_SETTINGS_TAB:
-        return Object.assign({}, state, {
-            settingsTab: action.tabItem
-        })
     default:
         return state
     }

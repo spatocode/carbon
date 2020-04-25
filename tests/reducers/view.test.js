@@ -14,16 +14,4 @@ describe("view", () => {
             category: "Music"
         })
     })
-
-    it("select settings tab", () => {
-        const state = { settingsTab: "General" }
-        const action = {
-            type: C.SELECT_SETTINGS_TAB,
-            tabItem: "Playback"
-        }
-        const results = view(state, action)
-        expect(results).toEqual({
-            settingsTab: "Playback"
-        })
-    })
 })
