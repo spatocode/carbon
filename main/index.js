@@ -18,7 +18,7 @@ let updateInterval
 
 const createWindow = () => {
     window = new BrowserWindow({
-        title: "Carbon Media Player",
+        title: "Carbon Player",
         show: false,
         width: 860,
         height: 500,
