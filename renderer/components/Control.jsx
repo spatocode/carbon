@@ -166,7 +166,7 @@ class Control extends React.Component {
     handlePlay () {
         var mediaPlayer = getPlayer()
         const { playbackrate } = this.state
-        const { mode, media, dispatch } = this.props
+        const { mode, media, dispatch, source } = this.props
         if (!media) {
             return
         }
@@ -174,7 +174,11 @@ class Control extends React.Component {
             this.handleClearInterval()
         }
         if (mode === "Paused") {
-            dispatch(playMedia(media, mediaPlayer))
+            const med = {
+                file: media,
+                source: source
+            }
+            dispatch(playMedia(med, mediaPlayer))
             mediaPlayer.playbackRate = this.nameToPlaybackRate(playbackrate)
         } else {
             mediaPlayer.pause()
