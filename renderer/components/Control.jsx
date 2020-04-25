@@ -425,8 +425,16 @@ class Control extends React.Component {
         // know where to play previous song from
         if (source === "Favourite") {
             songs = favourite
-        } else if (source === "Playists") {
-            songs = playists
+        } else if (source.includes("Playists")) {
+            const playistName = source.split("Playists-")[1]
+            for (let i=0; i < playists.length; i++) {
+                if (playists[i][0] === playistName) {
+                    const playist = [...playists[i]]
+                    playist.shift()
+                    songs = playist
+                    break
+                }
+            }
         }
 
         // return if we are rewinding
@@ -479,8 +487,16 @@ class Control extends React.Component {
         // know where to play next song from
         if (source === "Favourite") {
             songs = favourite
-        } else if (source === "Playists") {
-            songs = playists
+        } else if (source.includes("Playists")) {
+            const playistName = source.split("Playists-")[1]
+            for (let i=0; i < playists.length; i++) {
+                if (playists[i][0] === playistName) {
+                    const playist = [...playists[i]]
+                    playist.shift()
+                    songs = playist
+                    break
+                }
+            }
         }
 
         // return if we are fast forwarding

@@ -110,10 +110,10 @@ class Music extends React.Component {
 
     handlePlay () {
         var { highlight } = this.state
-        const { dispatch, playist, songs } = this.props
+        const { dispatch, playist, songs, view } = this.props
         const player = getPlayer()
         // detect the view where this media is played from
-        const source = songs ? "Music" : playist ? "Playists" : "Favourite"
+        const source = songs ? "Music" : playist ? `Playists-${view}` : "Favourite"
         const media = {
             file: highlight.file,
             source: source
@@ -216,14 +216,16 @@ Music.propTypes = {
     favourite: PropTypes.array,
     playists: PropTypes.array,
     media: PropTypes.string,
-    visibleColumn: PropTypes.object
+    visibleColumn: PropTypes.object,
+    view: PropTypes.string
 }
 
 Music.defaultProps = {
     favourite: [],
     playists: [],
     media: "",
-    visibleColumn: {}
+    visibleColumn: {},
+    view: ""
 }
 
 const mapStateToProps = (state) => ({
