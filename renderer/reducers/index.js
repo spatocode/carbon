@@ -146,7 +146,9 @@ export function mode (state={ night: false }, action) {
 }
 
 function updatePlayists (action, state) {
-    // This happens only when registering a new playist
+    // This happens only when registering a new playist.
+    // It captures the initial item before eventually adding
+    // it to playist
     if (!action.playist && !action.item) {
         return Object.assign({}, state, {
             playists: state.playists,
@@ -189,7 +191,12 @@ function updatePlayists (action, state) {
     }
 
     // Create new playist with initial item
-    const newPlayist = [action.playist, action.item]
+    const newPlayist = [action.playist]
+    // We need to check if this playist should be created with item
+    // This may happen if we create a playist from native menu
+    if (action.item !== "") {
+        newPlayist.push(action.item)
+    }
     return Object.assign({}, state, {
         playists: [...state.playists, newPlayist],
         itemToNewPlayist: action.itemToNewPlayist
