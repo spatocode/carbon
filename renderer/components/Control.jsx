@@ -475,10 +475,11 @@ class Control extends React.Component {
             return
         }
 
-        songs = this.checkViewSource()
-        if (!songs) {
+        source = this.checkViewSource()
+        if (!source) {
             return
         }
+        songs = source
 
         for (var i=0; i < songs.length; i++) {
             if (songs[i].file === media) {
@@ -522,10 +523,11 @@ class Control extends React.Component {
             return
         }
 
-        songs = this.checkViewSource()
-        if (!songs) {
+        source = this.checkViewSource()
+        if (!source) {
             return
         }
+        songs = source
 
         for (var i=0; i < songs.length; i++) {
             if (songs[i].file === media) {
