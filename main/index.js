@@ -25,7 +25,7 @@ const createWindow = () => {
         useContentSize: true,
         minHeight: 500,
         minWidth: 860,
-        backgroundColor: "#eee8e8",
+        backgroundColor: "#bebdbd",
         icon: path.join(__dirname, "../icons/64x64.png"),
         webPreferences: {
             nodeIntegration: true,
@@ -33,8 +33,7 @@ const createWindow = () => {
         }
     })
 
-    window.loadURL("http://localhost:3000")
-    // window.loadFile(path.join(__dirname, "../renderer/build/index.html"))
+    window.loadFile(path.join(__dirname, "../renderer/build/index.html"))
 
     initStore()
     buildMenu(window)
