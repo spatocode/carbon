@@ -587,12 +587,16 @@ class Control extends React.Component {
                 <audio ref={this.mediaPlayer} onEnded={this.handleNext}
                     onTimeUpdate={this.handleTimeUpdate}></audio>
                 <div className="sound-option">
-                    <img className="shuffle" onClick={this.handleShuffle}
-                        src={shuffle ? this.getImageUrl(icon.shuffleActive)
-                            : this.getImageUrl(icon.shuffle)} />
-                    <img className="repeat" onClick={this.handleRepeat}
-                        src={repeat ? this.getImageUrl(icon.repeatActive)
-                            : this.getImageUrl(icon.repeat)} />
+                    <span className="icon" onClick={this.handleShuffle}>
+                        <img className="shuffle"
+                            src={shuffle ? this.getImageUrl(icon.shuffleActive)
+                                : this.getImageUrl(icon.shuffle)} />
+                    </span>
+                    <span className="icon" onClick={this.handleRepeat}>
+                        <img className="repeat"
+                            src={repeat ? this.getImageUrl(icon.repeatActive)
+                                : this.getImageUrl(icon.repeat)} />
+                    </span>
                 </div>
                 <div className="media-indicator">
                     <div className="media-title">
@@ -606,17 +610,20 @@ class Control extends React.Component {
                         <div className="timer-count" ref={this.duration}>00:00</div>
                     </div>
                     <div className="rwd-play-stop-fwd">
-                        <img src={this.getImageUrl(icon.backward)} className="rwd"
-                            onClick={this.handlePrevious}
+                        <span className="icon" onClick={this.handlePrevious}
                             onMouseUp={this.handleClearInterval}
-                            onMouseDown={this.handleRewind} />
-                        <img src={mode === "Playing" ? this.getImageUrl(icon.pause)
-                            : this.getImageUrl(icon.play) } className="playpause"
-                        onClick={this.handlePlay} />
-                        <img src={this.getImageUrl(icon.forward)} className="fwd"
-                            onClick={this.handleNext}
+                            onMouseDown={this.handleRewind}>
+                            <img src={this.getImageUrl(icon.backward)} className="rwd" />
+                        </span>
+                        <span className="icon" onClick={this.handlePlay}>
+                            <img src={mode === "Playing" ? this.getImageUrl(icon.pause)
+                                : this.getImageUrl(icon.play) } className="playpause"/>
+                        </span>
+                        <span className="icon" onClick={this.handleNext}
                             onMouseUp={this.handleClearInterval}
-                            onMouseDown={this.handleFastFoward} />
+                            onMouseDown={this.handleFastFoward}>
+                            <img src={this.getImageUrl(icon.forward)} className="fwd"/>
+                        </span>
                     </div>
                 </div>
                 <div className="volume">
