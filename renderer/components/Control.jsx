@@ -176,7 +176,6 @@ class Control extends React.Component {
             this.handleClearInterval()
         }
         if (mode === "Paused") {
-            console.log("PLAY")
             const med = {
                 file: media,
                 source: source
@@ -184,7 +183,6 @@ class Control extends React.Component {
             dispatch(playMedia(med, mediaPlayer))
             mediaPlayer.playbackRate = this.nameToPlaybackRate(playbackrate)
         } else {
-            console.log("PAUSE")
             mediaPlayer.pause()
             dispatch(setCurrentMediaMode("Paused"))
         }
@@ -422,7 +420,7 @@ class Control extends React.Component {
      * know where to play next/previous song from
      */
     checkViewSource () {
-        const { favourite, playists, source } = this.props
+        const { songs, favourite, playists, source } = this.props
         if (source === "Favourite") {
             return favourite
         } else if (source.includes("Playists")) {
@@ -440,6 +438,8 @@ class Control extends React.Component {
                     return
                 }
             }
+        } else {
+            return songs
         }
     }
 
@@ -475,11 +475,11 @@ class Control extends React.Component {
             return
         }
 
-        source = this.checkViewSource()
+        const sourceSongs = this.checkViewSource()
         if (!source) {
             return
         }
-        songs = source
+        songs = sourceSongs
 
         for (var i=0; i < songs.length; i++) {
             if (songs[i].file === media) {
@@ -523,11 +523,11 @@ class Control extends React.Component {
             return
         }
 
-        source = this.checkViewSource()
+        const sourceSongs = this.checkViewSource()
         if (!source) {
             return
         }
-        songs = source
+        songs = sourceSongs
 
         for (var i=0; i < songs.length; i++) {
             if (songs[i].file === media) {
