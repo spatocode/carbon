@@ -18,7 +18,7 @@ class Music extends React.Component {
         super(props)
         this.state = {
             highlight: null,
-            height: window.innerHeight-143
+            height: window.innerHeight-120
         }
         this.handleContextMenu = this.handleContextMenu.bind(this)
         this.handleClick = this.handleClick.bind(this)
@@ -50,7 +50,7 @@ class Music extends React.Component {
     }
 
     handleResize () {
-        this.setState({ height: window.innerHeight-143 })
+        this.setState({ height: window.innerHeight-120 })
     }
 
     handleContextMenu (param) {

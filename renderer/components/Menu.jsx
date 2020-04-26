@@ -12,7 +12,7 @@ class Menu extends React.Component {
         super(props)
         this.state = {
             show: false,
-            height: window.innerHeight - 145
+            height: window.innerHeight - 120
         }
         this.showDropdown = this.showDropdown.bind(this)
         this.handleView = this.handleView.bind(this)
@@ -21,9 +21,9 @@ class Menu extends React.Component {
     componentDidMount () {
         ipcRenderer.on("maximize", (event, maximize) => {
             if (maximize) {
-                this.setState({ height: window.innerHeight * 1.09 })
+                this.setState({ height: window.innerHeight * 1.15 })
             } else {
-                this.setState({ height: window.innerHeight - 145 })
+                this.setState({ height: window.innerHeight - 120 })
             }
         })
     }
