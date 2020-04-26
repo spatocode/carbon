@@ -1,8 +1,11 @@
+@import "global";
+
 .Control{
     width: 100%;
-    background-color: rgb(59, 59, 59);
+    background-color: $control-background;
+    color: $control-color;
     display: flex;
-    padding: 10px;
+    padding: 5px;
     position: absolute;
     bottom: 0px;
 }
@@ -12,9 +15,8 @@
     .media-title{
         text-align: center;
         margin: 0 auto;
-        color: white;
         margin-bottom: 6px;
-        font-size: 14px;
+        font-size: 13px;
         padding-left: 40px;
         white-space: nowrap;
         overflow: hidden;
@@ -28,7 +30,6 @@
         text-align: center;
 
         .timer-count{
-            color: white;
             font-size: 13px;
             margin-top: -6px;
             margin-right: 6px;
@@ -47,7 +48,7 @@
 
         .timer-length::-webkit-slider-runnable-track {
             width: 70%;
-            height: 8px;
+            height: 6px;
             background: rgb(102, 102, 102);
             border: none;
             border-radius: 10px;
@@ -57,7 +58,7 @@
             -webkit-appearance: none;
             border: none;
             height: 12px;
-            width: 5px;
+            width: 6px;
             border-radius: 50%;
             background: #ffffff;
             margin-top: -2px;
@@ -66,53 +67,57 @@
     }
 }
 
+.icon {
+    padding: 5px;
+}
+
 .rwd-play-stop-fwd{
     text-align: center;
-    margin-top: 10px;
-    margin-left: 40px;
+    margin-top: $icon-margin - 10;
+    margin-left: $icon-margin + 20;
 }
 
 .sound-option{
     width: 100px;
-    margin-top: 53px;
-    margin-left: 20px;
+    margin-top: $icon-margin + 33;
+    margin-left: $icon-margin;
 }
 
 .fwd, .rwd {
-    width: 20px;
-    height: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
+    width: $icon-size;
+    height: $icon-size;
+    margin-left: $icon-margin;
+    margin-right: $icon-margin;
 }
 
 .playpause {
-    width: 18px;
-    height: 18px;
-    margin-left: 30px;
-    margin-right: 30px;
+    width: $icon-size - 3;
+    height: $icon-size - 3;
+    margin-left: $icon-margin + 10;
+    margin-right: $icon-margin + 10;
 }
 
 .repeat, .shuffle {
-    width: 21px;
-    height: 21px;
+    width: $icon-size + 1;
+    height: $icon-size + 1;
 }
 
 .repeat {
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: $icon-margin;
+    margin-right: $icon-margin;
 }
 
 .mute {
     margin-right: 5px;
-    height: 20px;
-    width: 20px;
+    height: $icon-size;
+    width: $icon-size;
 }
 
 .volume {
     display: flex;
-    margin-top: 55px !important;
+    margin-top: $icon-margin + 35px !important;
     width: 150px;
-    margin-right: 20px;
+    margin-right: $icon-margin;
 }
 
 .volume-range {

@@ -1,12 +1,15 @@
+@import "global";
+
 .Header{
     text-align: center;
-    background-color: rgb(200, 200, 200);
-    padding: 10px;
+    background-color: $header-background;
+    padding: 7px;
     form input {
         border-top-right-radius: 30px;
         border-bottom-right-radius: 30px;
         width: 30%;
-        font-size: 17px;
+        height: 23px;
+        font-size: 15px;
         border: none;
         color: grey;
     }
@@ -20,7 +23,7 @@
 
     form span {
         border: none;
-        padding: 5px;
+        padding: 3px;
         background-color: white;
         border-top-left-radius: 30px;
         border-bottom-left-radius: 30px;

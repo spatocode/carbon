@@ -1,4 +1,6 @@
+@import "global";
+
 .View{
-    background-color: rgb(245, 245, 245);
+    background-color: $view-background;
     flex: 1;
 }

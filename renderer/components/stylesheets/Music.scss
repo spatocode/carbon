@@ -1,8 +1,10 @@
+@import "global";
+
 #Music{
     display: block;
     width: 100%;
     margin: 0 auto;
-    background-color: rgb(240, 240, 240);
+    background-color: $view-background;
 }
 
 .table:focus, .column-data:focus {

@@ -1,3 +1,5 @@
+@import "global";
+
 .Menu{
     font-size: 16px;
     font-weight: bold;
@@ -6,7 +8,7 @@
     overflow-y: auto;
     padding-top: 20px;
     padding-bottom: 20px;
-    background-color: rgb(221, 221, 221);
+    background-color: $menu-background;
     border-right: 1px solid rgb(232, 232, 232);
     .title {
         text-align: center;
@@ -44,10 +46,10 @@
         padding-left: 12px;
     }
     .menu-list:hover{
-        background-color: rgb(200, 200, 200);
+        background-color: $menulist-hover-backround;
     }
     .menu-sublist:hover{
-        background-color: rgb(200, 200, 200);
+        background-color: $menulist-hover-backround;
     }
     .no-hover:hover{
         background-color: transparent !important;
