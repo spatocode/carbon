@@ -45,7 +45,8 @@ function save (state) {
                 db.set("state.media.favourite", state.media.favourite)
                 console.log("Saved favourite to local store!!!")
             }
-            if (state.media.recent && state.media.recent.length > 0) {
+            if (state.media.recent[state.media.recent.length - 1] !==
+                localState.media.recent[localState.media.recent.length -1]) {
                 db.set("state.media.recent", state.media.recent)
                 console.log("Saved recent to local store!!!")
             }
