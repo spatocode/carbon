@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { searchSong, playMedia, requestUpdateLibrary } from "../actions"
+import { searchSong, playMedia, requestUpdateLibrary, showFullMenu } from "../actions"
 import { getPlayer } from "../utils"
 import { refresh } from "../assets/staticbase64"
 import "./stylesheets/Header.scss"
@@ -21,6 +21,7 @@ class Header extends React.Component {
         this.handleClick = this.handleClick.bind(this)
         this.handleClose = this.handleClose.bind(this)
         this.updateLibrary = this.updateLibrary.bind(this)
+        this.toggleMenu = this.toggleMenu.bind(this)
     }
 
     componentDidMount () {
@@ -86,11 +87,17 @@ class Header extends React.Component {
         this.setState({ isSearchingMedia: false })
     }
 
+    toggleMenu () {
+        const { dispatch, fullMenu } = this.props
+        dispatch(showFullMenu(!fullMenu))
+    }
+
     render () {
         const { isUpdating } = this.props
         const { isSearchingMedia, searchResult, value } = this.state
         return (
             <div className="Header">
+                <div className="menu-toggle" onClick={this.toggleMenu}>|||</div>
                 <div className="update-library">
                     {isUpdating
                         ? <div className="is-updating">
@@ -131,17 +138,20 @@ class Header extends React.Component {
 
 Header.propTypes = {
     isUpdating: PropTypes.bool,
-    library: PropTypes.array
+    library: PropTypes.array,
+    fullMenu: PropTypes.bool
 }
 
 Header.defaultProps = {
     isUpdating: false,
-    library: []
+    library: [],
+    fullMenu: true
 }
 
 const mapStateToProps = state => ({
     isUpdating: state.media.isUpdating,
-    library: state.media.library
+    library: state.media.library,
+    fullMenu: state.view.fullMenu
 })
 
 export default connect(mapStateToProps, null)(Header)

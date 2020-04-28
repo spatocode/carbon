@@ -37,6 +37,10 @@ function save (state) {
                 db.set("state.view.category", state.view.category)
                 console.log("Saved view to local store!!!")
             }
+            if (!localState.view || localState.view.fullMenu !== state.view.fullMenu) {
+                db.set("state.view.fullMenu", state.view.fullMenu)
+                console.log("Saved fullMenu to local store!!!")
+            }
             if (state.media.playists && state.media.playists.length >= 0) {
                 db.set("state.media.playists", state.media.playists)
                 console.log("Saved playists to local store!!!")

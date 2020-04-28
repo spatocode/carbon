@@ -4,6 +4,11 @@
     text-align: center;
     background-color: $header-background;
     padding: 7px;
+    .menu-toggle{
+        float: left;
+        cursor: pointer;
+        margin-left: 12px;
+    }
     form input {
         border-top-right-radius: 30px;
         border-bottom-right-radius: 30px;
@@ -24,6 +29,7 @@
     form span {
         border: none;
         padding: 3px;
+        padding-left: 8px;
         background-color: white;
         border-top-left-radius: 30px;
         border-bottom-left-radius: 30px;

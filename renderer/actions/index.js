@@ -48,6 +48,11 @@ export const removeMedia = (media) => ({
     media
 })
 
+export const showFullMenu = (fullMenu) => ({
+    type: C.FULL_MENU,
+    fullMenu
+})
+
 /* export const updateMediaInfo = (media) => ({
     type: C.UPDATE_MEDIA_INFO,
     media

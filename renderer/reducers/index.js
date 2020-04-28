@@ -11,7 +11,8 @@ const mediaState = {
 }
 
 const viewState = {
-    category: "Now Playing"
+    category: "Now Playing",
+    fullMenu: true
 }
 
 const settingsState = {
@@ -36,6 +37,10 @@ export function view (state=viewState, action) {
     case C.SELECT_VIEW:
         return Object.assign({}, state, {
             category: action.category
+        })
+    case C.FULL_MENU:
+        return Object.assign({}, state, {
+            fullMenu: action.fullMenu
         })
     default:
         return state
