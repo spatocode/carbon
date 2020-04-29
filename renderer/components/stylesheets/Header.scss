@@ -7,7 +7,13 @@
     .menu-toggle{
         float: left;
         cursor: pointer;
-        margin-left: 12px;
+        margin-left: 10px;
+    }
+    .menu-icon{
+        width: 20px;
+        height: 2px;
+        background-color: #333;
+        margin: 4px 0;
     }
     form input {
         border-top-right-radius: 30px;

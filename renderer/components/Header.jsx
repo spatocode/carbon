@@ -97,7 +97,11 @@ class Header extends React.Component {
         const { isSearchingMedia, searchResult, value } = this.state
         return (
             <div className="Header">
-                <div className="menu-toggle" onClick={this.toggleMenu}>|||</div>
+                <div className="menu-toggle" onClick={this.toggleMenu}>
+                    <div className="menu-icon"></div>
+                    <div className="menu-icon"></div>
+                    <div className="menu-icon"></div>
+                </div>
                 <div className="update-library">
                     {isUpdating
                         ? <div className="is-updating">
