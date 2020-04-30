@@ -6,7 +6,7 @@ import "react-virtualized/styles.css"
 import { getPlayer } from "../utils"
 import {
     updateFavourite, playMedia, addItemToNewPlayist,
-    updatePlayist, removeMedia, selectView
+    updatePlayist, removeMedia, selectView, deletePlayist
 } from "../actions"
 import "./stylesheets/Music.scss"
 const fs = window.require("fs")
@@ -131,7 +131,7 @@ class Music extends React.Component {
         var { highlight } = this.state
         var { dispatch, view } = this.props
         if (e.label === "Delete Playist") {
-            dispatch(updatePlayist(view))
+            dispatch(deletePlayist(view))
             // Change view after deleting playist so we don't render null
             dispatch(selectView("Now Playing"))
             return

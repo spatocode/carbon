@@ -90,6 +90,23 @@ export function media (state=mediaState, action) {
         })
     case C.UPDATE_PLAYIST:
         return updatePlayists(action, state)
+    case C.INITIAL_ITEM_TO_PLAYIST:
+        // Capture initial item before eventually adding
+        // it to playist
+        return Object.assign({}, state, {
+            itemToNewPlayist: action.itemToNewPlayist
+        })
+    case C.DELETE_PLAYIST:
+        for (let i=0; i < state.playists.length; i++) {
+            if (state.playists[i][0] === action.playist) {
+                state.playists.splice(i, 1)
+                return Object.assign({}, state, {
+                    playists: state.playists,
+                    itemToNewPlayist: action.itemToNewPlayist
+                })
+            }
+        }
+        break
     case C.UPDATE_FAVOURITE:
         let isIncluded
         state.favourite.forEach((val) => {
@@ -147,28 +164,6 @@ export function mode (state={ night: false }, action) {
 }
 
 function updatePlayists (action, state) {
-    // This happens only when registering a new playist.
-    // It captures the initial item before eventually adding
-    // it to playist
-    if (!action.playist && !action.item) {
-        return Object.assign({}, state, {
-            playists: state.playists,
-            itemToNewPlayist: action.itemToNewPlayist
-        })
-    }
-    // Delete playist
-    else if (!action.itemToNewPlayist && !action.item) {
-        for (let i=0; i < state.playists.length; i++) {
-            if (state.playists[i][0] === action.playist) {
-                state.playists.splice(i, 1)
-                return Object.assign({}, state, {
-                    playists: state.playists,
-                    itemToNewPlayist: action.itemToNewPlayist
-                })
-            }
-        }
-    }
-
     for (var i=0; i < state.playists.length; i++) {
         // Check if this is the playist to update
         if (state.playists[i][0] === action.playist) {

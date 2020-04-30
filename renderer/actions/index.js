@@ -33,8 +33,13 @@ export const updatePlayist = (playist, item) => ({
     itemToNewPlayist: null
 })
 
+export const deletePlayist = playist => ({
+    type: C.DELETE_PLAYIST,
+    playist
+})
+
 export const addItemToNewPlayist = (item) => ({
-    type: C.UPDATE_PLAYIST,
+    type: C.INITIAL_ITEM_TO_PLAYIST,
     itemToNewPlayist: item
 })
 
