@@ -253,7 +253,10 @@ function handleAbout () {
         height: 300,
         autoHideMenuBar: true,
         resizable: false,
-        backgroundColor: "#bebdbd"
+        backgroundColor: "#bebdbd",
+        webPreferences: {
+            nodeIntegration: true
+        }
     })
 
     window.webContents.on("dom-ready", () => {
