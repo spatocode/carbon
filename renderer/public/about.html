@@ -34,7 +34,8 @@
             color: currentColor;
         }
         .copyright{
-            margin-top: 20px;
+            margin-top: 30px;
+            text-align: center;
         }
     </style>
     <div id="root">
@@ -55,6 +56,17 @@
             Copyright (c) 2020 Ekene Izukanne
         </div>
     </div>
-    <script src="./about.js"></script>
+    <script>
+        const os = require("os")
+        const { shell } = require("electron")
+        const div = document.querySelector(".version")
+        const repo = document.querySelector(".contribute")
+        const { version } = require("../../package.json")
+
+        div.innerHTML = `${version} (${os.arch().slice(1)}-bit)`
+        repo.onclick = function () {
+            shell.openExternal("http://github.com/carbonplayer/carbon")
+        }
+    </script>
   </body>
 </html>
