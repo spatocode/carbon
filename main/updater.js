@@ -1,12 +1,10 @@
 const { dialog, shell } = require("electron")
 const { autoUpdater } = require("electron-updater")
-const isDev = require("electron-is-dev")
 const { url } = require("../package.json")
 
 const URL = url
 
 function checkForUpdates (menuItem, focusedWindow, event) {
-    autoUpdater.setFeedURL("https://github.com/carbonplayer/carbon/releases")
     autoUpdater.on("error", error => {
         if (error.toString() === "Error: net::ERR_INTERNET_DISCONNECTED") {
             return
@@ -20,7 +18,7 @@ function checkForUpdates (menuItem, focusedWindow, event) {
             An error occured while updating the application. Please try 
             downloading an update manually.
                 
-                <${isDev ? (error.stack || error).toString() : null}>
+                <Error: ${error == null ? "Unknown" : (error.stack || error).toString()}>
             `
         }).then((ret) => {
             if (ret.response === 0) {
