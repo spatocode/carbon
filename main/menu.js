@@ -1,6 +1,6 @@
 const os = require("os")
 const path = require("path")
-const { app, dialog, Menu, nativeImage } = require("electron")
+const { app, dialog, Menu, BrowserWindow } = require("electron")
 const Store = require("electron-store")
 const isDev = require("electron-is-dev")
 const checkForUpdates = require("./updater")
@@ -247,24 +247,23 @@ function handleRepeat () {
 }
 
 function handleAbout () {
-    const icon = nativeImage.createFromPath(path.join(__dirname, "../", "icons", "1024x1024.png"))
-    dialog.showMessageBox(window, {
-        type: "info",
-        buttons: ["Ok"],
-        defaultId: 0,
-        icon: icon,
-        title: "About",
-        message: "Carbon Media Player",
-        detail: `
-        Carbon is a beautiful and elegant desktop media player crafted
-        with user experience in mind. It provides features and great
-        user interface which gives you an unforgettable experience while
-        playing your media. Carbon is also cross-platform which means
-        that it works on essentially all popular platforms.
-
-        Copyright (c) 2020 Ekene Izukanne
-        `
+    const window = new BrowserWindow({
+        show: false,
+        width: 620,
+        height: 300,
+        autoHideMenuBar: true,
+        resizable: false,
+        backgroundColor: "#bebdbd",
+        webPreferences: {
+            nodeIntegration: true
+        }
     })
+
+    window.webContents.on("dom-ready", () => {
+        window.show()
+    })
+
+    window.loadFile(path.join(__dirname, "../renderer/public/about.html"))
 }
 
 function handleUpdates () {
