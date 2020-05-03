@@ -16,7 +16,7 @@
   },
   "keywords": [],
   "author": "Ekene Izukanne",
-  "license": "",
+  "license": "GPL-2.0",
   "url": "carbonplayer.github.io",
   "config": {
     "forge": {
@@ -85,13 +85,17 @@
           "name": "@electron-forge/maker-snap",
           "config": {
             "name": "Carbon Player",
+            "appConfig": {
+              "base": "core18"
+            },
             "executableName": "carbon",
             "features": {
               "audio": true,
               "webgl": true
             },
             "description": "Beautiful and elegant desktop media player",
-            "summary": "Beautiful and elegant desktop media player."
+            "summary": "Beautiful and elegant desktop media player.",
+            "grade": "beta"
           }
         },
         {
