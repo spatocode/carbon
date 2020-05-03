@@ -42,8 +42,11 @@ Then to start the electron process. Run
 
 ## Contributing
 Looking to contribute?
+
 Feel free to join the development of this project with code or ideas.
 Contributions, issues and feature requests are welcome!
+
+Please check out our [contributing guide](https://github.com/carbonplayer/carbon/blob/master/CONTRIBUTING.md) to get an overview of how to contribute to Carbon Player.
 
 ## LICENSE
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation.
