@@ -6,7 +6,46 @@ Beautiful and elegant desktop media player
 
 <img src="https://github.com/carbonplayer/carbon/blob/master/icons/carbon_preview_1.png" />
 
+## Features
+* Listening from local library
+* Opening and playing single audio file
+* Display media metadata
+* Shuffle songs
+* Repeat songs
+* Playing selected favourite songs
+* Playing selected playists
+* Search song by name
+* Media keys shortcut (play, previous, next)
+* Open and stream songs over the network via a URL
+
 <img src="https://github.com/carbonplayer/carbon/blob/master/icons/carbon_preview_2.png" />
 
+## Build and Development process
+Clone the repository and install dependencies
+
+```bash
+$ git clone https://github.com/carbonplayer/carbon.git
+$ cd carbon
+$ yarn install
+```
+
+This project uses react for it's UI, redux  for state management and electron for managing window and native OS capabilities. To build the react code, run
+
+```$ npm run build```
+
+This will compile a production version of the javascript react code used for electron renderer process. Similarly, you can also run react development version by running
+
+```$ npm run renderer```
+
+Then to start the electron process. Run
+```$ npm start```
+
+## Contributing
+Looking to contribute?
+Feel free to join the development of this project with code or ideas.
+Contributions, issues and feature requests are welcome!
+
 ## LICENSE
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation.
+
 [GPL License](https://github.com/carbonplayer/carbon/blob/master/LICENSE)
