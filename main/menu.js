@@ -247,7 +247,9 @@ function handleRepeat () {
 }
 
 function handleAbout () {
-    const window = new BrowserWindow({
+    const childWindow = new BrowserWindow({
+        parent: window,
+        modal: true,
         show: false,
         width: 620,
         height: 300,
@@ -259,11 +261,11 @@ function handleAbout () {
         }
     })
 
-    window.webContents.on("dom-ready", () => {
-        window.show()
+    childWindow.webContents.on("dom-ready", () => {
+        childWindow.show()
     })
 
-    window.loadFile(path.join(__dirname, "../renderer/public/about.html"))
+    childWindow.loadFile(path.join(__dirname, "../renderer/public/about.html"))
 }
 
 function handleUpdates (menuItem) {
