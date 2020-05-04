@@ -6,124 +6,49 @@
   "main": "main/index.js",
   "scripts": {
     "start": "electron .",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "publish-snap": "snapcraft push --release=stable dist/*.snap",
+    "publish": "electron-builder --mac --win -p always",
     "lint": "node_modules/.bin/eslint .",
     "renderer": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
-  "keywords": [],
-  "author": "Ekene Izukanne",
+  "author": {
+    "name": "Ekene Izukanne",
+    "email": "ekeneizukanne@gmail.com",
+    "url": "http://spatocode.com"
+  },
   "license": "GPL-2.0",
-  "url": "carbonplayer.github.io",
-  "config": {
-    "forge": {
-      "packagerConfig": {
-        "appCopyright": "Copyright (C) 2020 Ekene Izukanne",
-        "executableName": "carbon",
-        "icon": "icons/1024x1024.png"
-      },
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "carbon",
-            "authors": "Ekene Izukanne",
-            "copyright": "Copyright (C) 2020 Ekene Izukanne",
-            "exe": "carbon",
-            "iconUrl": "icons/1024x1024.png",
-            "loadingGif": "",
-            "certificateFile": "",
-            "certificatePassword": ""
-          }
-        },
-        {
-          "name": "@electron-forge/maker-appx",
-          "config": {
-            "publisher": "Ekene Izukanne",
-            "devCert": "C:\\devcert.pfx",
-            "certPass": "abcd"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {
-            "options": {
-              "name": "carbon",
-              "productName": "Carbon Player",
-              "categories": [
-                "Audio"
-              ],
-              "maintainer": "Ekene Izukanne",
-              "description": "Beautiful and elegant desktop media player",
-              "productDescription": "Carbon is a beautiful and elegant desktop media player crafted with user experience in mind. It provides features and great user interface which gives you an unforgettable experience while playing your media. Carbon is also cross-platform which means that it works on essentially all popular platforms.",
-              "homepage": "carbonplayer.github.io",
-              "genericName": "Media Player",
-              "icon": {
-                "96x96": "icons/96x96.png",
-                "128x128": "icons/128x128.png",
-                "256x256": "icons/256x256.png",
-                "512x512": "icons/512x512.png",
-                "1024x1024": "icons/1024x1024.png"
-              },
-              "size": 70000,
-              "lintianOverrides": [
-                "changelog-file-missing-in-native-package"
-              ]
-            }
-          }
-        },
-        {
-          "name": "@electron-forge/maker-snap",
-          "config": {
-            "name": "Carbon Player",
-            "appConfig": {
-              "base": "core18"
-            },
-            "executableName": "carbon",
-            "features": {
-              "audio": true,
-              "webgl": true
-            },
-            "description": "Beautiful and elegant desktop media player",
-            "summary": "Beautiful and elegant desktop media player.",
-            "grade": "beta"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {
-            "options": {
-              "name": "carbon",
-              "productName": "Carbon Player",
-              "homepage": "",
-              "categories": [
-                "Audio"
-              ],
-              "description": "Beautiful and elegant desktop media player",
-              "productDescription": "Carbon is a beautiful and elegant desktop media player crafted with user experience in mind. It provides features and great user interface which gives you an unforgettable experience while playing your media. Carbon is also cross-platform which means that it works on essentially all popular platforms.",
-              "mimeType": [
-                "audio/mpeg"
-              ],
-              "license": "",
-              "icon": "icons/1024x1024.png",
-              "genericName": "Media Player"
-            }
-          }
-        }
-      ]
-    }
+  "url": "http://spatocode.com/apps/carbonplayer",
+  "build": {
+    "appId": "com.spatocode.carbon",
+    "copyright": "Copyright (C) 2020 Ekene Izukanne",
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "snap"
+      ],
+      "synopsis": "Beautiful and elegant desktop media player",
+      "description": "Carbon is a beautiful and elegant desktop media player crafted with user experience in mind. It provides useful features and great user interface which gives you an unforgettable experience while playing your media.",
+      "category": "Audio",
+      "icon": "icons"
+    },
+    "snap": {
+      "publish": "github"
+    },
+    "win": {
+      "verifyUpdateCodeSignature": false
+    },
+    "publish": [{
+      "provider": "github",
+      "owner": "carbonplayer",
+      "repo": "carbon"
+    }]
   },
   "dependencies": {
-    "download": "^7.1.0",
     "electron-is-dev": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^5.1.1",
@@ -140,13 +65,6 @@
   "devDependencies": {
     "@babel/core": "7.6.0",
     "@babel/plugin-syntax-jsx": "^7.8.3",
-    "@electron-forge/cli": "^6.0.0-beta.45",
-    "@electron-forge/maker-appx": "^6.0.0-beta.50",
-    "@electron-forge/maker-deb": "^6.0.0-beta.45",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.45",
-    "@electron-forge/maker-snap": "^6.0.0-beta.50",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.45",
-    "@electron-forge/maker-zip": "^6.0.0-beta.45",
     "@svgr/webpack": "4.3.2",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
     "@typescript-eslint/parser": "^2.2.0",
@@ -163,8 +81,7 @@
     "dotenv": "6.2.0",
     "dotenv-expand": "5.1.0",
     "electron": "^8.0.1",
-    "electron-builder": "^22.4.1",
-    "electron-installer-snap": "^5.0.0",
+    "electron-builder": "^22.6.0",
     "eslint": "^6.1.0",
     "eslint-config-react-app": "^5.0.2",
     "eslint-config-standard": "^14.1.0",
