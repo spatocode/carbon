@@ -4,66 +4,76 @@ const { url } = require("../package.json")
 
 const URL = url
 
-function checkForUpdates (menuItem, focusedWindow, event) {
-    autoUpdater.on("error", error => {
-        if (error.toString() === "Error: net::ERR_INTERNET_DISCONNECTED") {
+function checkForUpdates (menuItem) {
+    let availableUpdate
+    autoUpdater.once("error", error => {
+        if (error.code === "ENOENT" || error.toString() === "Error: net::ERR_INTERNET_DISCONNECTED") {
             return
         }
-        dialog.showMessageBox({
-            type: "error",
-            buttons: ["Download Update", "Later"],
-            title: "Error",
-            message: "Application Update Error",
-            detail: `
-            An error occured while updating the application. Please try 
-            downloading an update manually.
-                
-                <Error: ${error == null ? "Unknown" : (error.stack || error).toString()}>
-            `
-        }).then((ret) => {
-            if (ret.response === 0) {
-                shell.openExternal(URL)
-            }
-        }).catch()
+        // Make sure there's an update before showing error message
+        if (availableUpdate) {
+            dialog.showMessageBox({
+                type: "error",
+                buttons: ["Download Update", "Later"],
+                title: "Error",
+                message: "Application Update Error",
+                detail: `
+                An error occured while updating Carbon Player. Please try 
+                downloading an update manually.
+                `
+            }).then((ret) => {
+                if (ret.response === 0) {
+                    shell.openExternal(URL)
+                }
+            }).catch(error => error)
+        }
     })
 
     autoUpdater.on("update-downloaded", (event, releaseNotes, releaseNames) => {
         dialog.showMessageBox({
             type: "info",
             title: "Install Updates",
-            messge: "Updates downloaded, application will be quit for update..."
+            message: "Updates downloaded, application will be quit for update..."
         }).then((ret) => {
             setImmediate(() => autoUpdater.quitAndInstall())
-        })
+        }).catch(error => error)
+    })
+
+    autoUpdater.on("update-available", () => {
+        if (!menuItem) {
+            availableUpdate = true
+        } else { // Only show message if we're calling from a menu item
+            dialog.showMessageBox({
+                type: "info",
+                title: "New Update",
+                message: "Found updates, do you want update now?",
+                buttons: ["Sure", "No"]
+            }).then(ret => {
+                if (ret.response === 0) {
+                    autoUpdater.downloadUpdate()
+                }
+                else {
+                    menuItem.enabled = true
+                    menuItem.label = "Download Available Update"
+                    menuItem.click = function () {
+                        autoUpdater.downloadUpdate()
+                    }
+                }
+            }).catch(error => error)
+        }
     })
 
     // check if function is not called from menu
     if (!menuItem) {
         var interval = setInterval(() => {
             autoUpdater.checkForUpdates()
-        }, 60000)
+        }, 100000)
         return interval
     }
 
     autoUpdater.autoDownload = false
     menuItem.enabled = false
     autoUpdater.checkForUpdates()
-
-    autoUpdater.on("update-available", () => {
-        dialog.showMessageBox({
-            type: "info",
-            title: "Found Updates",
-            message: "Found updates, do you want update now?",
-            buttons: ["Sure", "No"]
-        }).then(ret => {
-            if (ret.response === 0) {
-                autoUpdater.downloadUpdate()
-            }
-            else {
-                menuItem.enabled = true
-            }
-        })
-    })
 
     autoUpdater.on("update-not-available", () => {
         dialog.showMessageBox({

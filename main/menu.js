@@ -266,9 +266,9 @@ function handleAbout () {
     window.loadFile(path.join(__dirname, "../renderer/public/about.html"))
 }
 
-function handleUpdates () {
+function handleUpdates (menuItem) {
     if (!isDev) {
-        checkForUpdates()
+        checkForUpdates(menuItem)
     }
 }
 
