@@ -52,10 +52,11 @@ class Control extends React.Component {
     }
 
     componentDidMount () {
-        const { volume } = this.state
+        const { volume, repeat } = this.state
         const { media, mode, dispatch } = this.props
         const mediaPlayer = this.mediaPlayer.current
         mediaPlayer.volume = volume / 100
+        mediaPlayer.loop = repeat
         // Stores the audio player in memory to be used from all modules
         setPlayer(mediaPlayer)
 
