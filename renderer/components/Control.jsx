@@ -1,4 +1,3 @@
-import path from "path"
 import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
@@ -6,6 +5,7 @@ import { playMedia, setCurrentMediaMode, updateVisibleColumn } from "../actions"
 import { setPlayer, getPlayer } from "../utils"
 import "./stylesheets/Control.scss"
 import * as icon from "../assets/staticbase64"
+const path = window.require("path")
 const { ipcRenderer } = window.require("electron")
 const Store = window.require("electron-store")
 

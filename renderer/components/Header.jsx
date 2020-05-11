@@ -5,7 +5,7 @@ import { searchSong, playMedia, requestUpdateLibrary, showFullMenu } from "../ac
 import { getPlayer } from "../utils"
 import { refresh } from "../assets/staticbase64"
 import "./stylesheets/Header.scss"
-const path = require("path")
+const path = window.require("path")
 const { ipcRenderer } = window.require("electron")
 
 class Header extends React.Component {
