@@ -4,7 +4,7 @@
 
 Beautiful and elegant desktop media player
 
-<img src="https://github.com/carbonplayer/carbon/blob/master/icons/carbon_preview_1.png" />
+[![Carbon Player Screenshot](https://github.com/carbonplayer/carbon/blob/master/icons/carbon_preview_1.png)]()
 
 ## Features
 * Listening from local library
@@ -18,7 +18,26 @@ Beautiful and elegant desktop media player
 * Media keys shortcut (play, previous, next)
 * Open and stream songs over the network via a URL
 
-<img src="https://github.com/carbonplayer/carbon/blob/master/icons/carbon_preview_2.png" />
+## Install
+
+### Linux
+
+```sh
+sudo snap install carbon-player
+```
+[![Get it from the Snap Store](https://github.com/carbonplayer/carbon/blob/master/icons/snap.png)](https://snapcraft.io/carbon-player)
+
+### Windows
+
+[Windows installer x64](https://github.com/carbonplayer/carbon/releases/download/v1.0.0/Carbon.Player.Setup.1.0.0_x64.exe)
+
+[Windows installer x86](https://github.com/carbonplayer/carbon/releases/download/v1.0.0/Carbon.Player.Setup.1.0.0_x86.exe)
+
+
+[![Carbon Player Screenshot](https://github.com/carbonplayer/carbon/blob/master/icons/carbon_preview_2.png)]()
+
+[![Carbon Player Screenshot](https://github.com/carbonplayer/carbon/blob/master/icons/carbon_preview_3.png)]()
+
 
 ## Build and Development process
 Clone the repository and install dependencies
