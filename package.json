@@ -34,7 +34,8 @@
       "synopsis": "Beautiful and elegant desktop media player",
       "description": "Carbon is a beautiful and elegant desktop media player crafted with user experience in mind. It provides useful features and great user interface which gives you an unforgettable experience while playing your media.",
       "category": "Audio",
-      "icon": "icons"
+      "icon": "icons",
+      "executableName": "carbon-player"
     },
     "snap": {
       "publish": "github"
