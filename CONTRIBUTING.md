@@ -4,7 +4,7 @@ If you're thinking of contributing to Carbon Player - thanks!
 
 Contributions are welcome, and they are greatly appreciated! Every little bit helps. We"d love to accept your patches and contributions to this project. You can contribute in many ways:
 
-To ensure consistent code and workflow, please follow the following contributiong guides while making a contribution.
+To ensure consistent code and workflow, please follow the following contributing guides while making a contribution.
 
 ## Pull Requests
 
@@ -32,4 +32,3 @@ If you are proposing a feature:
 * Explain in detail how it would work.
 * Keep the scope as narrow as possible, to make it easier to implement.
 * Remember that contributions are welcome :)
-
