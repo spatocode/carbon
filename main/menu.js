@@ -73,9 +73,9 @@ function buildMenu (win) {
                 label: "Open recent",
                 submenu: [...recentItem]
             }, {
-                label: "Create playist",
+                label: "Create playlist",
                 accelerator: "Ctrl+N",
-                click: handleCreatePlayist
+                click: handleCreatePlaylist
             }, {
                 type: "separator"
             }, {
@@ -186,8 +186,8 @@ function handleOpenURL () {
     window.webContents.send("open-url", "open-url")
 }
 
-function handleCreatePlayist () {
-    window.webContents.send("register-playist", "register-playist")
+function handleCreatePlaylist () {
+    window.webContents.send("register-playlist", "register-playlist")
 }
 
 function handleVisibleColumn (e) {

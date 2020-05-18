@@ -2,7 +2,7 @@ import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import {
-    updatePlayist, addItemToNewPlayist, playMedia,
+    updatePlaylist, addItemToNewPlaylist, playMedia,
     downloadAndStream
 } from "../actions"
 import { getPlayer } from "../utils"
@@ -14,12 +14,12 @@ class ModalBox extends React.Component {
         super(props)
         this.state = {
             data: "",
-            isPlayist: false,
+            isPlaylist: false,
             isOpenURL: false,
             inputError: ""
         }
         this.closeModal = this.closeModal.bind(this)
-        this.createNewPlayist = this.createNewPlayist.bind(this)
+        this.createNewPlaylist = this.createNewPlaylist.bind(this)
         this.handleTextChange = this.handleTextChange.bind(this)
         this.handleCheckChange = this.handleCheckChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -27,9 +27,9 @@ class ModalBox extends React.Component {
     }
 
     componentDidMount () {
-        // create new playist from application native menu in main process
-        ipcRenderer.on("register-playist", (event, arg) => {
-            this.setState({ isPlayist: true })
+        // create new playlist from application native menu in main process
+        ipcRenderer.on("register-playlist", (event, arg) => {
+            this.setState({ isPlaylist: true })
         })
 
         ipcRenderer.on("open-url", (event, arg) => {
@@ -38,11 +38,11 @@ class ModalBox extends React.Component {
     }
 
     closeModal () {
-        const { isPlayist, isOpenURL, inputError } = this.state
-        const { itemToNewPlayist, dispatch } = this.props
+        const { isPlaylist, isOpenURL, inputError } = this.state
+        const { itemToNewPlaylist, dispatch } = this.props
         this.setState({ data: "" })
-        if (isPlayist) {
-            this.setState({ isPlayist: false })
+        if (isPlaylist) {
+            this.setState({ isPlaylist: false })
         }
         if (isOpenURL) {
             this.setState({ isOpenURL: false })
@@ -50,21 +50,21 @@ class ModalBox extends React.Component {
         if (inputError) {
             this.setState({ inputError: "" })
         }
-        if (itemToNewPlayist) {
-            return dispatch(addItemToNewPlayist({}))
+        if (itemToNewPlaylist) {
+            return dispatch(addItemToNewPlaylist({}))
         }
     }
 
-    createNewPlayist (data) {
+    createNewPlaylist (data) {
         if (!data) {
             this.setState({ inputError: "Please enter a valid name!" })
             return
         }
-        const { isPlayist } = this.state
-        let { dispatch, itemToNewPlayist } = this.props
+        const { isPlaylist } = this.state
+        let { dispatch, itemToNewPlaylist } = this.props
         // check if we're calling from native menu or context menu
-        itemToNewPlayist = isPlayist ? "" : itemToNewPlayist
-        dispatch(updatePlayist(data, itemToNewPlayist))
+        itemToNewPlaylist = isPlaylist ? "" : itemToNewPlaylist
+        dispatch(updatePlaylist(data, itemToNewPlaylist))
         this.closeModal()
     }
 
@@ -87,7 +87,7 @@ class ModalBox extends React.Component {
             if (isOpenURL) {
                 this.isOpenURL(data)
             } else {
-                this.createNewPlayist(data)
+                this.createNewPlaylist(data)
             }
         }
     }
@@ -104,14 +104,14 @@ class ModalBox extends React.Component {
     }
 
     render () {
-        const { data, isPlayist, isOpenURL, inputError } = this.state
-        const { itemToNewPlayist, downloadWhileStreaming } = this.props
-        const title = isPlayist || itemToNewPlayist ? "Create Playist" : "Enter URL"
-        const isItemToNewPlayist = itemToNewPlayist
-            ? Object.keys(itemToNewPlayist).length > 0 : false
+        const { data, isPlaylist, isOpenURL, inputError } = this.state
+        const { itemToNewPlaylist, downloadWhileStreaming } = this.props
+        const title = isPlaylist || itemToNewPlaylist ? "Create Playlist" : "Enter URL"
+        const isItemToNewPlaylist = itemToNewPlaylist
+            ? Object.keys(itemToNewPlaylist).length > 0 : false
         return (
-            <div className="modalbox" style={isItemToNewPlayist ||
-                isPlayist || isOpenURL
+            <div className="modalbox" style={isItemToNewPlaylist ||
+                isPlaylist || isOpenURL
                 ? { display: "block" } : { display: "none" } }>
                 <div className="modal-content">
                     <div className="header">
@@ -127,7 +127,7 @@ class ModalBox extends React.Component {
                                     onChange={this.handleTextChange} value={data} />
                             </div>
                             <div className="download" style={
-                                isPlayist || isItemToNewPlayist
+                                isPlaylist || isItemToNewPlaylist
                                     ? { display: "none" }
                                     : { display: "block" }
                             }>
@@ -150,11 +150,11 @@ class ModalBox extends React.Component {
 }
 
 ModalBox.propTypes = {
-    itemToNewPlayist: PropTypes.object
+    itemToNewPlaylist: PropTypes.object
 }
 
 const mapStateToProps = (state) => ({
-    itemToNewPlayist: state.media.itemToNewPlayist,
+    itemToNewPlaylist: state.media.itemToNewPlaylist,
     downloadWhileStreaming: state.settings.downloadAndStream
 })
 

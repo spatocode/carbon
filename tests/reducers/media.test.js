@@ -97,61 +97,61 @@ describe("media", () => {
         })
     })
 
-    it("create new playist", () => {
-        const state = { playists: [] }
+    it("create new playlist", () => {
+        const state = { playlists: [] }
         var action = {
-            type: C.UPDATE_PLAYIST,
-            itemToNewPlayist: "Eminem - Farewell"
+            type: C.UPDATE_PLAYLIST,
+            itemToNewPlaylist: "Eminem - Farewell"
         }
         var results = media(state, action)
         expect(results).toEqual({
-            playists: [],
-            itemToNewPlayist: "Eminem - Farewell"
+            playlists: [],
+            itemToNewPlaylist: "Eminem - Farewell"
         })
 
         action = {
-            type: C.UPDATE_PLAYIST,
-            playist: "HipHop",
-            item: results.itemToNewPlayist,
-            itemToNewPlayist: null
+            type: C.UPDATE_PLAYLIST,
+            playlist: "HipHop",
+            item: results.itemToNewPlaylist,
+            itemToNewPlaylist: null
         }
         results = media(state, action)
         expect(results).toEqual({
-            playists: [["HipHop", "Eminem - Farewell"]],
-            itemToNewPlayist: null
+            playlists: [["HipHop", "Eminem - Farewell"]],
+            itemToNewPlaylist: null
         })
     })
 
-    it("delete playist", () => {
+    it("delete playlist", () => {
         const state = {
-            playists: [["HipHop", "Eminem - Farewell"]]
+            playlists: [["HipHop", "Eminem - Farewell"]]
         }
         var action = {
-            type: C.UPDATE_PLAYIST,
-            playist: "HipHop",
-            itemToNewPlayist: null
+            type: C.UPDATE_PLAYLIST,
+            playlist: "HipHop",
+            itemToNewPlaylist: null
         }
         var results = media(state, action)
         expect(results).toEqual({
-            playists: [],
-            itemToNewPlayist: null
+            playlists: [],
+            itemToNewPlaylist: null
         })
     })
 
-    it("delete playist item", () => {
+    it("delete playlist item", () => {
         const state = {
-            playists: [["HipHop", "Eminem - Farewell"]]
+            playlists: [["HipHop", "Eminem - Farewell"]]
         }
         var action = {
-            type: C.UPDATE_PLAYIST,
-            playist: "HipHop",
+            type: C.UPDATE_PLAYLIST,
+            playlist: "HipHop",
             item: "Eminem - Farewell",
-            itemToNewPlayist: null
+            itemToNewPlaylist: null
         }
         var results = media(state, action)
         expect(results).toEqual({
-            playists: [["HipHop"]],
-            itemToNewPlayist: null
+            playlists: [["HipHop"]],
+            itemToNewPlaylist: null
         })
     })
 

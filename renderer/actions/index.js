@@ -26,21 +26,21 @@ export const downloadAndStream = (checked) => ({
     checked
 })
 
-export const updatePlayist = (playist, item) => ({
-    type: C.UPDATE_PLAYIST,
-    playist: playist,
+export const updatePlaylist = (playlist, item) => ({
+    type: C.UPDATE_PLAYLIST,
+    playlist: playlist,
     item: item,
-    itemToNewPlayist: null
+    itemToNewPlaylist: null
 })
 
-export const deletePlayist = playist => ({
-    type: C.DELETE_PLAYIST,
-    playist
+export const deletePlaylist = playlist => ({
+    type: C.DELETE_PLAYLIST,
+    playlist
 })
 
-export const addItemToNewPlayist = (item) => ({
-    type: C.INITIAL_ITEM_TO_PLAYIST,
-    itemToNewPlayist: item
+export const addItemToNewPlaylist = (item) => ({
+    type: C.INITIAL_ITEM_TO_PLAYLIST,
+    itemToNewPlaylist: item
 })
 
 export const updateFavourite = (favourite) => ({

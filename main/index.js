@@ -90,7 +90,7 @@ function initStore () {
             media: {
                 library: [],
                 favourite: [],
-                playists: [],
+                playlists: [],
                 recent: [],
                 current: "",
                 source: ""

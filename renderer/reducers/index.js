@@ -3,7 +3,7 @@ import C from "../actions/constant"
 
 const mediaState = {
     recent: [],
-    playists: [],
+    playlists: [],
     favourite: [],
     library: [],
     mode: "Paused",
@@ -88,21 +88,21 @@ export function media (state=mediaState, action) {
         return Object.assign({}, state, {
             mode: action.mode
         })
-    case C.UPDATE_PLAYIST:
-        return updatePlayists(action, state)
-    case C.INITIAL_ITEM_TO_PLAYIST:
+    case C.UPDATE_PLAYLIST:
+        return updatePlaylists(action, state)
+    case C.INITIAL_ITEM_TO_PLAYLIST:
         // Capture initial item before eventually adding
-        // it to playist
+        // it to playlist
         return Object.assign({}, state, {
-            itemToNewPlayist: action.itemToNewPlayist
+            itemToNewPlaylist: action.itemToNewPlaylist
         })
-    case C.DELETE_PLAYIST:
-        for (let i=0; i < state.playists.length; i++) {
-            if (state.playists[i][0] === action.playist) {
-                state.playists.splice(i, 1)
+    case C.DELETE_PLAYLIST:
+        for (let i=0; i < state.playlists.length; i++) {
+            if (state.playlists[i][0] === action.playlist) {
+                state.playlists.splice(i, 1)
                 return Object.assign({}, state, {
-                    playists: state.playists,
-                    itemToNewPlayist: action.itemToNewPlayist
+                    playlists: state.playlists,
+                    itemToNewPlaylist: action.itemToNewPlaylist
                 })
             }
         }
@@ -163,38 +163,38 @@ export function mode (state={ night: false }, action) {
     }
 }
 
-function updatePlayists (action, state) {
-    for (var i=0; i < state.playists.length; i++) {
-        // Check if this is the playist to update
-        if (state.playists[i][0] === action.playist) {
-            // Delete item from playist if item exists in playist
-            if (state.playists[i].includes(action.item)) {
-                const playist = state.playists[i].filter(pl => pl !== action.item)
-                state.playists[i] = playist
+function updatePlaylists (action, state) {
+    for (var i=0; i < state.playlists.length; i++) {
+        // Check if this is the playlist to update
+        if (state.playlists[i][0] === action.playlist) {
+            // Delete item from playlist if item exists in playlist
+            if (state.playlists[i].includes(action.item)) {
+                const playlist = state.playlists[i].filter(pl => pl !== action.item)
+                state.playlists[i] = playlist
                 return Object.assign({}, state, {
-                    playists: [...state.playists],
-                    itemToNewPlayist: action.itemToNewPlayist
+                    playlists: [...state.playlists],
+                    itemToNewPlaylist: action.itemToNewPlaylist
                 })
             }
-            // Add item to playist if the playist name exists in state
-            const playist = [...state.playists[i], action.item]
-            state.playists[i] = playist
+            // Add item to playlist if the playlist name exists in state
+            const playlist = [...state.playlists[i], action.item]
+            state.playlists[i] = playlist
             return Object.assign({}, state, {
-                playists: [...state.playists],
-                itemToNewPlayist: action.itemToNewPlayist
+                playlists: [...state.playlists],
+                itemToNewPlaylist: action.itemToNewPlaylist
             })
         }
     }
 
-    // Create new playist with initial item
-    const newPlayist = [action.playist]
-    // We need to check if this playist should be created with item
-    // This may happen if we create a playist from native menu
+    // Create new playlist with initial item
+    const newPlaylist = [action.playlist]
+    // We need to check if this playlist should be created with item
+    // This may happen if we create a playlist from native menu
     if (action.item !== "") {
-        newPlayist.push(action.item)
+        newPlaylist.push(action.item)
     }
     return Object.assign({}, state, {
-        playists: [...state.playists, newPlayist],
-        itemToNewPlayist: action.itemToNewPlayist
+        playlists: [...state.playlists, newPlaylist],
+        itemToNewPlaylist: action.itemToNewPlaylist
     })
 }

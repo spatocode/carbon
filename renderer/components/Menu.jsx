@@ -53,7 +53,7 @@ class Menu extends React.Component {
 
     render () {
         const { show, height } = this.state
-        const { playists, fullMenu } = this.props
+        const { playlists, fullMenu } = this.props
         // TODO: Provide a separate component for menu list
         return (
             <div className="Menu" style={ fullMenu
@@ -79,19 +79,19 @@ class Menu extends React.Component {
                     </span>
                     <span>{fullMenu ? "Music" : null}</span>
                 </div>
-                <div className={(show && playists.length > 0)
+                <div className={(show && playlists.length > 0)
                     ? "menu-list no-hover" : "menu-list"}
                 onClick={this.showDropdown}>
                     <span className="menu-icon">
-                        <img src={`data:image/png;base64,${icon.playist}`}
+                        <img src={`data:image/png;base64,${icon.playlist}`}
                             width="16" height="16" />
                     </span>
-                    <span>{fullMenu ? "Playists" : null}</span>
+                    <span>{fullMenu ? "Playlists" : null}</span>
                     <div className="menu-dropdown"
                         style={show ? { display: "block" } : { display: "none" }}>
-                        {playists.map((playist, i) =>
+                        {playlists.map((playlist, i) =>
                             <div key={i} className="menu-sublist" onClick={this.handleView}>
-                                {playist[0]}
+                                {playlist[0]}
                             </div>
                         )}
                     </div>
@@ -116,17 +116,17 @@ class Menu extends React.Component {
 }
 
 Menu.propTypes = {
-    playists: PropTypes.array,
+    playlists: PropTypes.array,
     fullMenu: PropTypes.bool
 }
 
 Menu.defaultProps = {
-    playists: [],
+    playlists: [],
     fullMenu: true
 }
 
 const mapStateToProps = (state) => ({
-    playists: state.media.playists,
+    playlists: state.media.playlists,
     fullMenu: state.view.fullMenu
 })
 
