@@ -1,4 +1,3 @@
-const os = require("os")
 const path = require("path")
 const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron")
 const Store = require("electron-store")
@@ -99,8 +98,8 @@ function initStore () {
         }
     }
     const store = new Store({ defaults: defaults })
-    const homeDir = os.homedir()
-    const musicDir = path.join(homeDir, "Music")
+    const musicDir = app.getPath("music")
+    const downloadsDir = app.getPath("downloads")
     const visibleColumn = {
         track: true,
         title: true,
@@ -118,7 +117,7 @@ function initStore () {
     }
 
     if (!store.has("libLocation")) {
-        store.set("libLocation", [musicDir])
+        store.set("libLocation", [musicDir, downloadsDir])
     }
 
     if (!store.has("state.settings.visibleColumn")) {
