@@ -96,7 +96,10 @@ class Control extends React.Component {
                     this.handleShuffle()
                     break
                 default:
-                    dispatch(playMedia(action, player))
+                    dispatch(playMedia({
+                        file: action,
+                        source: null
+                    }, player))
                 }
             })
 
