@@ -21,7 +21,7 @@
     "url": "http://spatocode.com"
   },
   "license": "GPL-2.0",
-  "url": "http://spatocode.com/apps/carbonplayer",
+  "url": "http://carbon.spatocode.com",
   "build": {
     "appId": "com.spatocode.carbon",
     "copyright": "Copyright (C) 2020 Ekene Izukanne",
