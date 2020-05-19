@@ -514,8 +514,14 @@ class Control extends React.Component {
     handleNext () {
         var next
         const { shuffle } = this.state
+        const mediaPlayer = this.mediaPlayer.current
         let { source, songs, media, dispatch } = this.props
-        if (!media) {
+
+        if (mediaPlayer.ended) {
+            dispatch(setCurrentMediaMode("Paused"))
+        }
+
+        if (!media || !source) {
             return
         }
 
@@ -525,9 +531,6 @@ class Control extends React.Component {
         }
 
         const sourceSongs = this.checkViewSource()
-        if (!source) {
-            return
-        }
         songs = sourceSongs
 
         for (var i=0; i < songs.length; i++) {
