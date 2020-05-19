@@ -184,14 +184,13 @@ async function extractMediaInfo (dirs) {
                     quality: format.bitrate ? `${Math.floor(format.bitrate/1000)}kbps` : "Unknown",
                     location: filepath.split(path.basename(filepath, path.extname(filepath)))[0]
                 })
-                console.log(filepath)
             })
             .catch(err => console.error("Error: ", err.message))
     }
 
     window.webContents.send("update-library", metadata)
     store.set("state.media.library", metadata)
-    console.log("DONE", metadata.length, files.length)
+    console.log("Added ", metadata.length, " files to Carbon Player Library")
 }
 
 app.on("ready", createWindow)
