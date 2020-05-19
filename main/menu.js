@@ -165,7 +165,7 @@ function buildMenu (win) {
 }
 
 function handleOpenFile () {
-    const home = os.homedir()
+    const home = app.getPath("home")
     dialog.showOpenDialog(window, {
         title: "Select a media file to open",
         properties: ["openFile"],
