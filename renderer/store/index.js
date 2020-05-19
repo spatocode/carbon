@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from "redux"
 import thunkMiddleware from "redux-thunk"
 import * as reducers from "../reducers"
 const Store = window.require("electron-store")
+const isDev = window.require("electron-is-dev")
 
 let persistTimeout
 
@@ -9,7 +10,7 @@ let persistTimeout
  * Logs state and action to the console
  */
 const logger = store => next => action => {
-    if (process.env.NODE_ENV !== "production") {
+    if (isDev) {
         console.groupCollapsed("dispatching", action.type)
         console.log("prev state", store.getState())
         console.log("action", action)

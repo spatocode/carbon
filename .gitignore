@@ -3,3 +3,5 @@ out
 dist
 main/src
 renderer/build
+yarn.lock
+package-lock.json
