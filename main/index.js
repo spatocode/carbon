@@ -1,7 +1,6 @@
 const path = require("path")
 const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron")
 const Store = require("electron-store")
-const isDev = require("electron-is-dev")
 const mm = require("music-metadata")
 const klawSync = require("klaw-sync")
 const buildMenu = require("./menu")
@@ -55,9 +54,7 @@ const createWindow = () => {
     })
     fetchMedia()
 
-    if (!isDev) {
-        updateInterval = checkForUpdates()
-    }
+    updateInterval = checkForUpdates()
 }
 
 function registerShortcuts () {

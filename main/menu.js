@@ -268,9 +268,7 @@ function handleAbout () {
 }
 
 function handleUpdates (menuItem) {
-    if (!isDev) {
-        checkForUpdates(menuItem)
-    }
+    checkForUpdates(menuItem)
 }
 
 module.exports = buildMenu
