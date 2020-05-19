@@ -119,7 +119,7 @@ function fetchMediaBuffer (url, loadMedia) {
         const message = `
         Cannot stream or download media without an internet connection.
         Please make sure you're connected to the internet and try again
-        later
+        later.
         `
         return dialog.showErrorBox(title, message)
     }
@@ -128,13 +128,7 @@ function fetchMediaBuffer (url, loadMedia) {
         .then(arrayBuffer => loadMedia(arrayBuffer))
         .catch((err) => {
             console.log(err)
-            const title = "Media error"
-            const message = `
-            An error was encountered while attempting to play media.
-            Error: ${err.message} ${err.code}
-            `
             loadMedia(null)
-            dialog.showErrorBox(title, message)
         })
 }
 
