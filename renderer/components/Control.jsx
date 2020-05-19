@@ -580,7 +580,11 @@ class Control extends React.Component {
         const { mode, media, dispatch } = this.props
         const mediaName = path.basename(media, path.extname(media))
         ipcRenderer.on("open-file", (event, file) => {
-            dispatch(playMedia(file[0], getPlayer()))
+            const media = {
+                file: file[0],
+                source: null
+            }
+            dispatch(playMedia(media, getPlayer()))
         })
 
         return (
