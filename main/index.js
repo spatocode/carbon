@@ -1,8 +1,6 @@
-const os = require("os")
 const path = require("path")
 const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron")
 const Store = require("electron-store")
-const isDev = require("electron-is-dev")
 const mm = require("music-metadata")
 const klawSync = require("klaw-sync")
 const buildMenu = require("./menu")
@@ -56,9 +54,7 @@ const createWindow = () => {
     })
     fetchMedia()
 
-    if (!isDev) {
-        updateInterval = checkForUpdates()
-    }
+    updateInterval = checkForUpdates()
 }
 
 function registerShortcuts () {
@@ -91,7 +87,7 @@ function initStore () {
             media: {
                 library: [],
                 favourite: [],
-                playists: [],
+                playlists: [],
                 recent: [],
                 current: "",
                 source: ""
@@ -99,8 +95,8 @@ function initStore () {
         }
     }
     const store = new Store({ defaults: defaults })
-    const homeDir = os.homedir()
-    const musicDir = path.join(homeDir, "Music")
+    const musicDir = app.getPath("music")
+    const downloadsDir = app.getPath("downloads")
     const visibleColumn = {
         track: true,
         title: true,
@@ -118,7 +114,7 @@ function initStore () {
     }
 
     if (!store.has("libLocation")) {
-        store.set("libLocation", [musicDir])
+        store.set("libLocation", [musicDir, downloadsDir])
     }
 
     if (!store.has("state.settings.visibleColumn")) {
@@ -185,14 +181,13 @@ async function extractMediaInfo (dirs) {
                     quality: format.bitrate ? `${Math.floor(format.bitrate/1000)}kbps` : "Unknown",
                     location: filepath.split(path.basename(filepath, path.extname(filepath)))[0]
                 })
-                console.log(filepath)
             })
             .catch(err => console.error("Error: ", err.message))
     }
 
     window.webContents.send("update-library", metadata)
     store.set("state.media.library", metadata)
-    console.log("DONE", metadata.length, files.length)
+    console.log("Added ", metadata.length, " files to Carbon Player Library")
 }
 
 app.on("ready", createWindow)

@@ -6,7 +6,7 @@ import NowPlaying from "./NowPlaying"
 import Setting from "./Setting"
 import "./stylesheets/View.scss"
 
-const View = ({ view="Now Playing", songs=[], playists=[] }) => {
+const View = ({ view="Now Playing", songs=[], playlists=[] }) => {
     switch (view) {
     case "Music":
         return <Music songs={songs}/>
@@ -18,13 +18,13 @@ const View = ({ view="Now Playing", songs=[], playists=[] }) => {
         return <Setting />
     }
 
-    // Check if we opened playist view
-    for (var i=0; i < playists.length; i++) {
-        if (view.includes(playists[i][0])) {
-            // separate playist name from playist items
-            var playist = playists[i].concat()
-            playist.shift()
-            return <Music playist={playist}/>
+    // Check if we opened playlist view
+    for (var i=0; i < playlists.length; i++) {
+        if (view.includes(playlists[i][0])) {
+            // separate playlist name from playlist items
+            var playlist = playlists[i].concat()
+            playlist.shift()
+            return <Music playlist={playlist}/>
         }
     }
     return <NowPlaying />
@@ -33,13 +33,13 @@ const View = ({ view="Now Playing", songs=[], playists=[] }) => {
 View.propTypes = {
     view: PropTypes.string,
     songs: PropTypes.array,
-    playists: PropTypes.array
+    playlists: PropTypes.array
 }
 
 const mapStateToProps = (state) => ({
     view: state.view.category,
     songs: state.media.library,
-    playists: state.media.playists
+    playlists: state.media.playlists
 })
 
 export default connect(mapStateToProps, null)(View)

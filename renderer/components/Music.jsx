@@ -5,8 +5,8 @@ import { AutoSizer, Column, Table } from "react-virtualized"
 import "react-virtualized/styles.css"
 import { getPlayer } from "../utils"
 import {
-    updateFavourite, playMedia, addItemToNewPlayist,
-    updatePlayist, removeMedia, selectView, deletePlayist
+    updateFavourite, playMedia, addItemToNewPlaylist,
+    updatePlaylist, removeMedia, selectView, deletePlaylist
 } from "../actions"
 import "./stylesheets/Music.scss"
 const fs = window.require("fs")
@@ -25,7 +25,7 @@ class Music extends React.Component {
         this.handlePlay = this.handlePlay.bind(this)
         this.handleRemove = this.handleRemove.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
-        this.handleNewPlayist = this.handleNewPlayist.bind(this)
+        this.handleNewPlaylist = this.handleNewPlaylist.bind(this)
         this.handleNewFavourite = this.handleNewFavourite.bind(this)
         this.handleResize = this.handleResize.bind(this)
     }
@@ -39,8 +39,8 @@ class Music extends React.Component {
     }
 
     shouldComponentUpdate (nextProps, nextState) {
-        let { playist, favourite, media, songs, visibleColumn } = this.props
-        songs = songs || playist || favourite
+        let { playlist, favourite, media, songs, visibleColumn } = this.props
+        songs = songs || playlist || favourite
         if (songs !== nextProps.songs || media !== nextProps.media ||
             visibleColumn !== nextProps.visibleColumn ||
             this.state !== nextState) {
@@ -54,11 +54,11 @@ class Music extends React.Component {
     }
 
     handleContextMenu (param) {
-        var removePlayistItem = []
-        var deletePlayist = []
-        var playist = []
+        var removePlaylistItem = []
+        var deletePlaylist = []
+        var playlist = []
         var favMenuLabel = "Add to Favourite"
-        var { favourite, playists, view } = this.props
+        var { favourite, playlists, view } = this.props
 
         favourite.forEach((fav) => {
             if (fav.file === param.rowData.file) {
@@ -66,21 +66,21 @@ class Music extends React.Component {
             }
         })
 
-        playists.forEach((pl) => {
+        playlists.forEach((pl) => {
             if (pl[0] === view) {
-                removePlayistItem.push({
-                    label: "Remove from Playist",
-                    click: this.handleNewPlayist
+                removePlaylistItem.push({
+                    label: "Remove from Playlist",
+                    click: this.handleNewPlaylist
                 })
-                deletePlayist.push({
-                    label: "Delete Playist",
+                deletePlaylist.push({
+                    label: "Delete Playlist",
                     click: this.handleDelete
                 })
                 return
             }
-            playist.push({
+            playlist.push({
                 label: pl[0],
-                click: this.handleNewPlayist
+                click: this.handleNewPlaylist
             })
         })
 
@@ -89,15 +89,15 @@ class Music extends React.Component {
             { label: "Play", click: this.handlePlay },
             { type: "separator" },
             {
-                label: "Add to Playist",
+                label: "Add to Playlist",
                 submenu: [{
-                    label: "Add new Playist",
-                    click: this.handleNewPlayist
-                }].concat(playist)
+                    label: "Add new Playlist",
+                    click: this.handleNewPlaylist
+                }].concat(playlist)
             },
             { label: favMenuLabel, click: this.handleNewFavourite },
-            ...removePlayistItem,
-            ...deletePlayist,
+            ...removePlaylistItem,
+            ...deletePlaylist,
             { type: "separator" },
             { label: "Remove", click: this.handleRemove },
             { label: "Delete", click: this.handleDelete }
@@ -110,10 +110,10 @@ class Music extends React.Component {
 
     handlePlay () {
         var { highlight } = this.state
-        const { dispatch, playist, songs, view } = this.props
+        const { dispatch, playlist, songs, view } = this.props
         const player = getPlayer()
         // detect the view where this media is played from
-        const source = songs ? "Music" : playist ? `Playists-${view}` : "Favourite"
+        const source = songs ? "Music" : playlist ? `Playlists-${view}` : "Favourite"
         const media = {
             file: highlight.file,
             source: source
@@ -130,9 +130,9 @@ class Music extends React.Component {
     handleDelete (e) {
         var { highlight } = this.state
         var { dispatch, view } = this.props
-        if (e.label === "Delete Playist") {
-            dispatch(deletePlayist(view))
-            // Change view after deleting playist so we don't render null
+        if (e.label === "Delete Playlist") {
+            dispatch(deletePlaylist(view))
+            // Change view after deleting playlist so we don't render null
             dispatch(selectView("Now Playing"))
             return
         }
@@ -151,14 +151,14 @@ class Music extends React.Component {
         })
     }
 
-    handleNewPlayist (e) {
+    handleNewPlaylist (e) {
         const { highlight } = this.state
         const { dispatch, view } = this.props
-        const playist = e.label === "Remove from Playist" ? view : e.label
-        if (e.label === "Add new Playist") {
-            return dispatch(addItemToNewPlayist(highlight))
+        const playlist = e.label === "Remove from Playlist" ? view : e.label
+        if (e.label === "Add new Playlist") {
+            return dispatch(addItemToNewPlaylist(highlight))
         }
-        dispatch(updatePlayist(playist, highlight))
+        dispatch(updatePlaylist(playlist, highlight))
     }
 
     handleNewFavourite () {
@@ -170,8 +170,8 @@ class Music extends React.Component {
 
     render () {
         const { highlight, height } = this.state
-        var { playist, songs, favourite, media, visibleColumn } = this.props
-        songs = songs || playist || favourite
+        var { playlist, songs, favourite, media, visibleColumn } = this.props
+        songs = songs || playlist || favourite
         return (
             <div className="tab-view" id="Music" style={{ height: height }}>
                 <AutoSizer disableHeight>
@@ -214,7 +214,7 @@ class Music extends React.Component {
 
 Music.propTypes = {
     favourite: PropTypes.array,
-    playists: PropTypes.array,
+    playlists: PropTypes.array,
     media: PropTypes.string,
     visibleColumn: PropTypes.object,
     view: PropTypes.string
@@ -222,7 +222,7 @@ Music.propTypes = {
 
 Music.defaultProps = {
     favourite: [],
-    playists: [],
+    playlists: [],
     media: "",
     visibleColumn: {},
     view: ""
@@ -230,7 +230,7 @@ Music.defaultProps = {
 
 const mapStateToProps = (state) => ({
     favourite: state.media.favourite,
-    playists: state.media.playists,
+    playlists: state.media.playlists,
     media: state.media.current,
     visibleColumn: state.settings.visibleColumn,
     view: state.view.category

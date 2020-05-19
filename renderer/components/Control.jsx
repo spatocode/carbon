@@ -96,7 +96,10 @@ class Control extends React.Component {
                     this.handleShuffle()
                     break
                 default:
-                    dispatch(playMedia(action, player))
+                    dispatch(playMedia({
+                        file: action,
+                        source: null
+                    }, player))
                 }
             })
 
@@ -421,21 +424,21 @@ class Control extends React.Component {
      * know where to play next/previous song from
      */
     checkViewSource () {
-        const { songs, favourite, playists, source } = this.props
+        const { songs, favourite, playlists, source } = this.props
         if (source === "Favourite") {
             return favourite
-        } else if (source.includes("Playists")) {
-            const playistName = source.split("Playists-")[1]
-            for (let i=0; i < playists.length; i++) {
-                if (playists[i][0] === playistName) {
-                    const playist = [...playists[i]]
-                    playist.shift()
-                    return playist
+        } else if (source.includes("Playlists")) {
+            const playlistName = source.split("Playlists-")[1]
+            for (let i=0; i < playlists.length; i++) {
+                if (playlists[i][0] === playlistName) {
+                    const playlist = [...playlists[i]]
+                    playlist.shift()
+                    return playlist
                 }
-                // We've searched the whole playists but couldn't
+                // We've searched the whole playlists but couldn't
                 // find this name which shows it has been deleted or
                 // something.
-                if (i === playists.length - 1) {
+                if (i === playlists.length - 1) {
                     return
                 }
             }
@@ -514,8 +517,14 @@ class Control extends React.Component {
     handleNext () {
         var next
         const { shuffle } = this.state
+        const mediaPlayer = this.mediaPlayer.current
         let { source, songs, media, dispatch } = this.props
-        if (!media) {
+
+        if (mediaPlayer.ended) {
+            dispatch(setCurrentMediaMode("Paused"))
+        }
+
+        if (!media || !source) {
             return
         }
 
@@ -525,9 +534,6 @@ class Control extends React.Component {
         }
 
         const sourceSongs = this.checkViewSource()
-        if (!source) {
-            return
-        }
         songs = sourceSongs
 
         for (var i=0; i < songs.length; i++) {
@@ -580,7 +586,11 @@ class Control extends React.Component {
         const { mode, media, dispatch } = this.props
         const mediaName = path.basename(media, path.extname(media))
         ipcRenderer.on("open-file", (event, file) => {
-            dispatch(playMedia(file[0], getPlayer()))
+            const media = {
+                file: file[0],
+                source: null
+            }
+            dispatch(playMedia(media, getPlayer()))
         })
 
         return (
@@ -642,13 +652,13 @@ Control.propTypes = {
     media: PropTypes.string,
     mode: PropTypes.string,
     source: PropTypes.string,
-    playists: PropTypes.array,
+    playlists: PropTypes.array,
     favourite: PropTypes.array
 }
 
 Control.defaultProps = {
     songs: [],
-    playists: [],
+    playlists: [],
     favourite: [],
     media: "",
     mode: "",
@@ -657,7 +667,7 @@ Control.defaultProps = {
 
 const mapStateToProps = (state) => ({
     songs: state.media.library,
-    playists: state.media.playists,
+    playlists: state.media.playlists,
     favourite: state.media.favourite,
     media: state.media.current,
     mode: state.media.mode,

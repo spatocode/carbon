@@ -1,10 +1,14 @@
 const { dialog, shell } = require("electron")
 const { autoUpdater } = require("electron-updater")
+const isDev = require("electron-is-dev")
 const { url } = require("../package.json")
 
 const URL = url
 
 function checkForUpdates (menuItem) {
+    if (!isDev || process.platform === "linux") {
+        return
+    }
     let availableUpdate
     autoUpdater.once("error", error => {
         if (error.code === "ENOENT" || error.toString() === "Error: net::ERR_INTERNET_DISCONNECTED") {

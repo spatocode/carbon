@@ -26,21 +26,21 @@ export const downloadAndStream = (checked) => ({
     checked
 })
 
-export const updatePlayist = (playist, item) => ({
-    type: C.UPDATE_PLAYIST,
-    playist: playist,
+export const updatePlaylist = (playlist, item) => ({
+    type: C.UPDATE_PLAYLIST,
+    playlist: playlist,
     item: item,
-    itemToNewPlayist: null
+    itemToNewPlaylist: null
 })
 
-export const deletePlayist = playist => ({
-    type: C.DELETE_PLAYIST,
-    playist
+export const deletePlaylist = playlist => ({
+    type: C.DELETE_PLAYLIST,
+    playlist
 })
 
-export const addItemToNewPlayist = (item) => ({
-    type: C.INITIAL_ITEM_TO_PLAYIST,
-    itemToNewPlayist: item
+export const addItemToNewPlaylist = (item) => ({
+    type: C.INITIAL_ITEM_TO_PLAYLIST,
+    itemToNewPlaylist: item
 })
 
 export const updateFavourite = (favourite) => ({
@@ -119,7 +119,7 @@ function fetchMediaBuffer (url, loadMedia) {
         const message = `
         Cannot stream or download media without an internet connection.
         Please make sure you're connected to the internet and try again
-        later
+        later.
         `
         return dialog.showErrorBox(title, message)
     }
@@ -128,13 +128,7 @@ function fetchMediaBuffer (url, loadMedia) {
         .then(arrayBuffer => loadMedia(arrayBuffer))
         .catch((err) => {
             console.log(err)
-            const title = "Media error"
-            const message = `
-            An error was encountered while attempting to play media.
-            Error: ${err.message} ${err.code}
-            `
             loadMedia(null)
-            dialog.showErrorBox(title, message)
         })
 }
 

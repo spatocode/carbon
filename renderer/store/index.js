@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from "redux"
 import thunkMiddleware from "redux-thunk"
 import * as reducers from "../reducers"
 const Store = window.require("electron-store")
+const isDev = window.require("electron-is-dev")
 
 let persistTimeout
 
@@ -9,7 +10,7 @@ let persistTimeout
  * Logs state and action to the console
  */
 const logger = store => next => action => {
-    if (process.env.NODE_ENV !== "production") {
+    if (isDev) {
         console.groupCollapsed("dispatching", action.type)
         console.log("prev state", store.getState())
         console.log("action", action)
@@ -41,9 +42,9 @@ function save (state) {
                 db.set("state.view.fullMenu", state.view.fullMenu)
                 console.log("Saved fullMenu to local store!!!")
             }
-            if (state.media.playists && state.media.playists.length >= 0) {
-                db.set("state.media.playists", state.media.playists)
-                console.log("Saved playists to local store!!!")
+            if (state.media.playlists && state.media.playlists.length >= 0) {
+                db.set("state.media.playlists", state.media.playlists)
+                console.log("Saved playlists to local store!!!")
             }
             if (state.media.favourite.length === (localState.media.favourite.length + 1)) {
                 db.set("state.media.favourite", state.media.favourite)

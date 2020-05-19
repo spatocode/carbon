@@ -1,4 +1,3 @@
-const os = require("os")
 const path = require("path")
 const { app, dialog, Menu, BrowserWindow } = require("electron")
 const Store = require("electron-store")
@@ -73,9 +72,9 @@ function buildMenu (win) {
                 label: "Open recent",
                 submenu: [...recentItem]
             }, {
-                label: "Create playist",
+                label: "Create playlist",
                 accelerator: "Ctrl+N",
-                click: handleCreatePlayist
+                click: handleCreatePlaylist
             }, {
                 type: "separator"
             }, {
@@ -165,7 +164,7 @@ function buildMenu (win) {
 }
 
 function handleOpenFile () {
-    const home = os.homedir()
+    const home = app.getPath("home")
     dialog.showOpenDialog(window, {
         title: "Select a media file to open",
         properties: ["openFile"],
@@ -186,8 +185,8 @@ function handleOpenURL () {
     window.webContents.send("open-url", "open-url")
 }
 
-function handleCreatePlayist () {
-    window.webContents.send("register-playist", "register-playist")
+function handleCreatePlaylist () {
+    window.webContents.send("register-playlist", "register-playlist")
 }
 
 function handleVisibleColumn (e) {
@@ -269,9 +268,7 @@ function handleAbout () {
 }
 
 function handleUpdates (menuItem) {
-    if (!isDev) {
-        checkForUpdates(menuItem)
-    }
+    checkForUpdates(menuItem)
 }
 
 module.exports = buildMenu

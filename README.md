@@ -13,7 +13,7 @@ Beautiful and elegant desktop media player
 * Shuffle songs
 * Repeat songs
 * Playing selected favourite songs
-* Playing selected playists
+* Playing selected playlists
 * Search song by name
 * Media keys shortcut (play, previous, next)
 * Open and stream songs over the network via a URL
