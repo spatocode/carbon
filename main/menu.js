@@ -1,4 +1,3 @@
-const os = require("os")
 const path = require("path")
 const { app, dialog, Menu, BrowserWindow } = require("electron")
 const Store = require("electron-store")
