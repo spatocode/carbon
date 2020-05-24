@@ -1,9 +1,8 @@
 import { setPlayer } from "../utils"
 import C from "./constant"
 const fs = window.require("fs")
-const os = window.require("os")
 const path = window.require("path")
-const { dialog } = window.require("electron").remote
+const { app, dialog } = window.require("electron").remote
 const mm = window.require("music-metadata")
 
 export const requestUpdateLibrary = () => ({
@@ -160,7 +159,7 @@ function setupMediaSrc (media, mediaPlayer) {
                     return dispatch(setCurrentMediaMode("Paused"))
                 }
                 if (downloadAndStream) {
-                    const downloadDir = path.join(os.homedir(), "Downloads")
+                    const downloadDir = app.getPath("downloads")
                     const filename = path.join(downloadDir, url+".mp3")
                     const buffer = arrayBufferToBuffer(arrayBuffer)
                     parseBufferMetaData(buffer)
