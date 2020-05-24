@@ -17,7 +17,7 @@ This file lists the main changeswith each version of Carbom Player. More detaile
 * Remove support for displaying dialog message when media error occurs.
 
 
-## 1.0.1 - 12 May 2020
+## 1.0.0 - 12 May 2020
 
 The first major release of Carbon Player delivers a stable release of the main functionalities required for a music player across all platforms.
 
