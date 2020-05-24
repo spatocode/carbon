@@ -1,3 +1,4 @@
+const fs = require("fs")
 const path = require("path")
 const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron")
 const Store = require("electron-store")
@@ -138,14 +139,27 @@ async function extractMediaInfo (dirs) {
     const metadata = []
     let files = []
 
-    // ignore hidden folders and non-mp3 files
+    // ignore files without user permission,
+    // hidden folders and non-mp3 files
     const filterFunc = item => {
+        try {
+            fs.accessSync(item.path, fs.constants.W_OK)
+        }
+        catch (err) {
+            return false
+        }
         const basename = path.basename(item.path)
         return path.extname(basename) === ".mp3" || path.extname(basename) === ".MP3" || (item.stats.isDirectory() && basename[0] !== ".")
     }
 
     for (var i=0; i < dirs.length; i++) {
-        const dirFiles = klawSync(dirs[i], { nodir: true, filter: filterFunc })
+        let dirFiles
+        try {
+            dirFiles = klawSync(dirs[i], { nodir: true, filter: filterFunc })
+        }
+        catch (err) {
+            console.error(err)
+        }
         files = files.concat(dirFiles)
     }
 
