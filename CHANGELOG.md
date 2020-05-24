@@ -5,8 +5,6 @@ This file lists the main changeswith each version of Carbom Player. More detaile
 
 ## 1.0.1 - 19 May 2020
 
-The first major release of Carbon Player delivers a stable release of the main functionalities required for a music player across all platforms.
-
 ### Fixed
 
 * Issue of getting incorrect homedir
