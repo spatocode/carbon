@@ -124,12 +124,10 @@ function initStore () {
 }
 
 function fetchMedia () {
-    const store = new Store()
-    const dirs = store.get("libLocation")
-
     ipcMain.on("should-update", (event, arg) => {
-        if (arg) {
-            extractMediaInfo(dirs)
+        if (arg.length > 0) {
+            console.log(arg)
+            extractMediaInfo(arg)
         }
     })
 }
