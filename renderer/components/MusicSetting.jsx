@@ -1,8 +1,11 @@
 import React from "react"
 import { connect } from "react-redux"
-import { updateVisibleColumn } from "../actions"
-const os = window.require("os")
-const { dialog } = window.require("electron").remote
+import {
+    updateVisibleColumn, requestUpdateLibrary,
+    updateLibrary
+} from "../actions"
+const { ipcRenderer, remote } = window.require("electron")
+const { app, dialog } = remote
 const Store = window.require("electron-store")
 
 class MusicSetting extends React.Component {
@@ -16,10 +19,11 @@ class MusicSetting extends React.Component {
         this.addLibLocation = this.addLibLocation.bind(this)
         this.removeLibLocation = this.removeLibLocation.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.updateLibrary = this.updateLibrary.bind(this)
     }
 
     addLibLocation () {
-        const home = os.homedir()
+        const home = app.getPath("home")
         const store = new Store()
         dialog.showOpenDialog(null, {
             title: "Select library location",
@@ -31,8 +35,10 @@ class MusicSetting extends React.Component {
             if (location.includes(dir) || typeof dir === "undefined") {
                 return
             }
-            store.set("libLocation", [...location, result.filePaths[0]])
-            this.setState({ locations: [...location, result.filePaths[0]] })
+            const dirs = [...location, result.filePaths[0]]
+            store.set("libLocation", dirs)
+            this.setState({ locations: dirs })
+            this.updateLibrary(dirs)
         }).catch(err => {
             console.log(err)
         })
@@ -41,11 +47,29 @@ class MusicSetting extends React.Component {
     removeLibLocation (e) {
         const store = new Store()
         const { locations } = this.state
+        if (locations.length < 2) {
+            return
+        }
         const location = locations.filter((loc) => {
             return loc !== e.currentTarget.innerText.slice(0, -1)
         })
         this.setState({ locations: location })
         store.set("libLocation", location)
+        this.updateLibrary(location)
+    }
+
+    updateLibrary (location) {
+        const { dispatch } = this.props
+        let shouldUpdate = false
+        ipcRenderer.send("should-update", location)
+        shouldUpdate = true
+        dispatch(requestUpdateLibrary())
+        ipcRenderer.on("update-library", (event, files) => {
+            // Check if this event is as a result of this function call
+            if (shouldUpdate) {
+                dispatch(updateLibrary(files))
+            }
+        })
     }
 
     handleChange (e) {
