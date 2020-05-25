@@ -541,15 +541,30 @@ class Control extends React.Component {
                 // If we're at the last song, start afresh
                 // else play next song
                 if (i === songs.length - 1) {
-                    next = songs[0].file
+                    next = {
+                        file: songs[0].file,
+                        title: songs[0].title,
+                        artist: songs[0].artist
+                    }
                 } else if (shuffle) {
                     var rand = this.generateRandomNumber(i, songs.length)
-                    next = songs[rand].file
+                    next = {
+                        file: songs[rand].file,
+                        title: songs[rand].title,
+                        artist: songs[rand].artist
+                    }
                 } else {
-                    next = songs[++i].file
+                    const j = ++i
+                    next = {
+                        file: songs[j].file,
+                        title: songs[j].title,
+                        artist: songs[j].artist
+                    }
                 }
                 const media = {
-                    file: next,
+                    file: next.file,
+                    title: next.title,
+                    artist: next.artist,
                     source: source
                 }
                 dispatch(playMedia(media, getPlayer()))
