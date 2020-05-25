@@ -1,8 +1,9 @@
 import { setPlayer } from "../utils"
 import C from "./constant"
+import { appIcon } from "../assets/staticbase64"
 const fs = window.require("fs")
 const path = window.require("path")
-const { app, dialog } = window.require("electron").remote
+const { app, dialog, Notification, nativeImage } = window.require("electron").remote
 const mm = window.require("music-metadata")
 
 export const requestUpdateLibrary = () => ({
@@ -103,12 +104,27 @@ export function playMedia (media, mediaPlayer) {
         // resume play if the same media is already in progress and paused
         if (mediaPlayer.currentTime > 0 && mediaPlayer.paused && !mediaPlayer.ended && media.file === currentMedia) {
             mediaPlayer.play()
-                .then(() => dispatch(setCurrentMediaMode("Playing")))
+                .then(() => {
+                    NotifyOnMediaChange(media.artist, media.title)
+                    return dispatch(setCurrentMediaMode("Playing"))
+                })
                 .catch(() => dispatch(setCurrentMediaMode("Paused")))
         } else {
             // start a fresh play
             dispatch(setupMediaSrc(media, mediaPlayer))
         }
+    }
+}
+
+function NotifyOnMediaChange (artist, title) {
+    if (artist && title && Notification.isSupported()) {
+        const image = nativeImage.createFromDataURL(`data:image/png;base64,${appIcon}`)
+        const notification = new Notification({
+            title: title,
+            body: `by ${artist}`,
+            icon: image
+        })
+        notification.show()
     }
 }
 
@@ -169,6 +185,7 @@ function setupMediaSrc (media, mediaPlayer) {
                     mediaSrc.endOfStream()
                     mediaPlayer.play()
                         .then(() => {
+                            NotifyOnMediaChange(media.artist, media.title)
                             // dispatch(updateMediaInfo(url))
                             dispatch(setCurrentMediaMode("Playing"))
                         })
