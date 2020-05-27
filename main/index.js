@@ -16,14 +16,18 @@ let window
 let updateInterval
 
 const createWindow = () => {
+    const store = new Store({ name: "app" })
+    const width = store.has("width") ? store.get("width") : 860
+    const height = store.has("height") ? store.get("height") : 500
     window = new BrowserWindow({
         title: "Carbon Player",
         show: false,
-        width: 860,
-        height: 500,
+        width: width,
+        height: height,
         useContentSize: true,
-        minHeight: 500,
-        minWidth: 860,
+        minHeight: 400,
+        minWidth: 700,
+        darkTheme: true,
         backgroundColor: "#bebdbd",
         icon: path.join(__dirname, "../icons/64x64.png"),
         webPreferences: {
@@ -37,6 +41,14 @@ const createWindow = () => {
     initStore()
     buildMenu(window)
     registerShortcuts()
+
+    window.on("close", () => {
+        const store = new Store({ name: "app" })
+        const width = window.getSize()[0]
+        const height = window.getSize()[1]
+        store.set("width", width)
+        store.set("height", height)
+    })
 
     window.on("closed", () => {
         window = null
