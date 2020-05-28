@@ -57,10 +57,10 @@ export const showFullMenu = (fullMenu) => ({
     fullMenu
 })
 
-/* export const updateMediaInfo = (media) => ({
+export const updateMediaInfo = (media) => ({
     type: C.UPDATE_MEDIA_INFO,
     media
-}) */
+})
 
 export const updateLibrary = (data) => ({
     type: C.UPDATE_LIBRARY,
@@ -103,7 +103,9 @@ export function playMedia (media, mediaPlayer) {
         // resume play if the same media is already in progress and paused
         if (mediaPlayer.currentTime > 0 && mediaPlayer.paused && !mediaPlayer.ended && media.file === currentMedia) {
             mediaPlayer.play()
-                .then(() => dispatch(setCurrentMediaMode("Playing")))
+                .then(() => {
+                    dispatch(setCurrentMediaMode("Playing"))
+                })
                 .catch(() => dispatch(setCurrentMediaMode("Paused")))
         } else {
             // start a fresh play
@@ -169,8 +171,8 @@ function setupMediaSrc (media, mediaPlayer) {
                     mediaSrc.endOfStream()
                     mediaPlayer.play()
                         .then(() => {
-                            // dispatch(updateMediaInfo(url))
                             dispatch(setCurrentMediaMode("Playing"))
+                            dispatch(updateMediaInfo(url))
                         })
                         .catch((err) => {
                             console.log(err)
