@@ -60,7 +60,7 @@ class Menu extends React.Component {
                 ? { height: height, width: "200px" } : { height: height, width: "55px" }}>
                 { fullMenu
                     ? <div className="title">
-                        <h1>carbon</h1>
+                        <img src={`data:image/png;base64,${icon.appIcon}`} width="40" height="40"/>
                         <div>{version}</div>
                     </div>
                     : null
