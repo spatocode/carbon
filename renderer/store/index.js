@@ -65,6 +65,14 @@ function save (state) {
                 db.set("state.media.source", state.media.source)
                 console.log("Saved source to local store!!!")
             }
+
+            const index = state.media.updatedMediaIndex
+            if (typeof index === "number") {
+                const library = db.get("state.media.library")
+                library[index].played = state.media.library[index].played
+                library[index]["last played"] = state.media.library[index]["last played"]
+                db.set("state.media.library", library)
+            }
             resolve("Saved to local store!!!")
         }, 100)
     })
