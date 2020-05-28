@@ -9,7 +9,7 @@ class Setting extends React.Component {
         this.selectTab = this.selectTab.bind(this)
         this.state = {
             tabView: "General",
-            height: window.innerHeight - 142
+            height: window.innerHeight - 120
         }
         this.handleResize = this.handleResize.bind(this)
     }
@@ -23,7 +23,7 @@ class Setting extends React.Component {
     }
 
     handleResize () {
-        this.setState({ height: window.innerHeight - 142 })
+        this.setState({ height: window.innerHeight - 120 })
     }
 
     selectTab (e) {
