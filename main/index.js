@@ -117,9 +117,11 @@ function initStore () {
         length: true,
         album: true,
         genre: true,
-        // rating: false,
+        rating: false,
         composer: false,
+        played: false,
         "date added": false,
+        "last played": false,
         location: false,
         year: false,
         quality: false,
@@ -138,7 +140,6 @@ function initStore () {
 function fetchMedia () {
     ipcMain.on("should-update", (event, arg) => {
         if (arg.length > 0) {
-            console.log(arg)
             extractMediaInfo(arg)
         }
     })
@@ -197,10 +198,10 @@ async function extractMediaInfo (dirs) {
                     track: common.track.no || "",
                     // lyrics: common.lyrics ? common.lyrics.toString() : "Unknown",
                     comment: common.comment ? common.comment.toString() : "Unknown",
-                    // rating: common.rating ? common.rating.toString() : "Unknown",
+                    rating: common.rating ? common.rating[0].rating : 0,
                     composer: common.composer ? common.composer.toString() : "Unknown",
-                    // played: 0,
-                    // "last played": "Never",
+                    played: 0,
+                    "last played": "Never",
                     "date added": new Date().toString().split(" GMT")[0],
                     quality: format.bitrate ? `${Math.floor(format.bitrate/1000)}kbps` : "Unknown",
                     location: filepath.split(path.basename(filepath, path.extname(filepath)))[0]

@@ -34,7 +34,8 @@ class Setting extends React.Component {
         const { height } = this.state
         const visibility = ["Artist", "Title", "Track", "Length",
             "Location", "Album", "Year", "Genre", "Quality",
-            "Comment", "Date Added", "Composer"]
+            "Comment", "Date Added", "Composer", "Played",
+            "Rating", "Last Played"]
         return (
             <div className="Setting" style={{ height: height }}>
                 <div className="tab-view">
