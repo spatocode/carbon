@@ -99,11 +99,11 @@ describe("media", () => {
 
     it("create new playlist", () => {
         const state = { playlists: [] }
-        var action = {
-            type: C.UPDATE_PLAYLIST,
+        let action = {
+            type: C.INITIAL_ITEM_TO_PLAYLIST,
             itemToNewPlaylist: "Eminem - Farewell"
         }
-        var results = media(state, action)
+        let results = media(state, action)
         expect(results).toEqual({
             playlists: [],
             itemToNewPlaylist: "Eminem - Farewell"
@@ -126,12 +126,12 @@ describe("media", () => {
         const state = {
             playlists: [["HipHop", "Eminem - Farewell"]]
         }
-        var action = {
-            type: C.UPDATE_PLAYLIST,
+        const action = {
+            type: C.DELETE_PLAYLIST,
             playlist: "HipHop",
             itemToNewPlaylist: null
         }
-        var results = media(state, action)
+        const results = media(state, action)
         expect(results).toEqual({
             playlists: [],
             itemToNewPlaylist: null
@@ -142,13 +142,13 @@ describe("media", () => {
         const state = {
             playlists: [["HipHop", "Eminem - Farewell"]]
         }
-        var action = {
+        const action = {
             type: C.UPDATE_PLAYLIST,
             playlist: "HipHop",
             item: "Eminem - Farewell",
             itemToNewPlaylist: null
         }
-        var results = media(state, action)
+        const results = media(state, action)
         expect(results).toEqual({
             playlists: [["HipHop"]],
             itemToNewPlaylist: null
