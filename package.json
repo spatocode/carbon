@@ -1,7 +1,7 @@
 {
   "name": "carbon",
   "productName": "Carbon Player",
-  "version": "1.0.0",
+  "version": "1.1.0-beta",
   "description": "Beautiful and elegant media player",
   "main": "main/index.js",
   "scripts": {
