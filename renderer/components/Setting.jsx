@@ -9,7 +9,7 @@ class Setting extends React.Component {
         this.selectTab = this.selectTab.bind(this)
         this.state = {
             tabView: "General",
-            height: window.innerHeight - 142
+            height: window.innerHeight - 120
         }
         this.handleResize = this.handleResize.bind(this)
     }
@@ -23,7 +23,7 @@ class Setting extends React.Component {
     }
 
     handleResize () {
-        this.setState({ height: window.innerHeight - 142 })
+        this.setState({ height: window.innerHeight - 120 })
     }
 
     selectTab (e) {
@@ -34,7 +34,8 @@ class Setting extends React.Component {
         const { height } = this.state
         const visibility = ["Artist", "Title", "Track", "Length",
             "Location", "Album", "Year", "Genre", "Quality",
-            "Comment", "Date Added", "Composer"]
+            "Comment", "Date Added", "Composer", "Played",
+            "Rating", "Last Played"]
         return (
             <div className="Setting" style={{ height: height }}>
                 <div className="tab-view">

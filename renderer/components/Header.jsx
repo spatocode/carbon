@@ -7,6 +7,7 @@ import { refresh } from "../assets/staticbase64"
 import "./stylesheets/Header.scss"
 const path = window.require("path")
 const { ipcRenderer } = window.require("electron")
+const Store = window.require("electron-store")
 
 class Header extends React.Component {
     constructor (props) {
@@ -78,8 +79,10 @@ class Header extends React.Component {
     }
 
     updateLibrary () {
+        const store = new Store()
+        const dirs = store.get("libLocation")
         const { dispatch } = this.props
-        ipcRenderer.send("should-update", true)
+        ipcRenderer.send("should-update", dirs)
         dispatch(requestUpdateLibrary())
     }
 

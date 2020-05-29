@@ -1,9 +1,8 @@
 import { setPlayer } from "../utils"
 import C from "./constant"
 const fs = window.require("fs")
-const os = window.require("os")
 const path = window.require("path")
-const { dialog } = window.require("electron").remote
+const { app, dialog } = window.require("electron").remote
 const mm = window.require("music-metadata")
 
 export const requestUpdateLibrary = () => ({
@@ -58,10 +57,10 @@ export const showFullMenu = (fullMenu) => ({
     fullMenu
 })
 
-/* export const updateMediaInfo = (media) => ({
+export const updateMediaInfo = (media) => ({
     type: C.UPDATE_MEDIA_INFO,
     media
-}) */
+})
 
 export const updateLibrary = (data) => ({
     type: C.UPDATE_LIBRARY,
@@ -104,7 +103,9 @@ export function playMedia (media, mediaPlayer) {
         // resume play if the same media is already in progress and paused
         if (mediaPlayer.currentTime > 0 && mediaPlayer.paused && !mediaPlayer.ended && media.file === currentMedia) {
             mediaPlayer.play()
-                .then(() => dispatch(setCurrentMediaMode("Playing")))
+                .then(() => {
+                    dispatch(setCurrentMediaMode("Playing"))
+                })
                 .catch(() => dispatch(setCurrentMediaMode("Paused")))
         } else {
             // start a fresh play
@@ -160,7 +161,7 @@ function setupMediaSrc (media, mediaPlayer) {
                     return dispatch(setCurrentMediaMode("Paused"))
                 }
                 if (downloadAndStream) {
-                    const downloadDir = path.join(os.homedir(), "Downloads")
+                    const downloadDir = app.getPath("downloads")
                     const filename = path.join(downloadDir, url+".mp3")
                     const buffer = arrayBufferToBuffer(arrayBuffer)
                     parseBufferMetaData(buffer)
@@ -170,8 +171,8 @@ function setupMediaSrc (media, mediaPlayer) {
                     mediaSrc.endOfStream()
                     mediaPlayer.play()
                         .then(() => {
-                            // dispatch(updateMediaInfo(url))
                             dispatch(setCurrentMediaMode("Playing"))
+                            dispatch(updateMediaInfo(url))
                         })
                         .catch((err) => {
                             console.log(err)

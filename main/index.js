@@ -1,3 +1,4 @@
+const fs = require("fs")
 const path = require("path")
 const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron")
 const Store = require("electron-store")
@@ -15,14 +16,18 @@ let window
 let updateInterval
 
 const createWindow = () => {
+    const store = new Store({ name: "app" })
+    const width = store.has("width") ? store.get("width") : 860
+    const height = store.has("height") ? store.get("height") : 500
     window = new BrowserWindow({
         title: "Carbon Player",
         show: false,
-        width: 860,
-        height: 500,
+        width: width,
+        height: height,
         useContentSize: true,
-        minHeight: 500,
-        minWidth: 860,
+        minHeight: 400,
+        minWidth: 700,
+        darkTheme: true,
         backgroundColor: "#bebdbd",
         icon: path.join(__dirname, "../icons/64x64.png"),
         webPreferences: {
@@ -36,6 +41,14 @@ const createWindow = () => {
     initStore()
     buildMenu(window)
     registerShortcuts()
+
+    window.on("close", () => {
+        const store = new Store({ name: "app" })
+        const width = window.getSize()[0]
+        const height = window.getSize()[1]
+        store.set("width", width)
+        store.set("height", height)
+    })
 
     window.on("closed", () => {
         window = null
@@ -104,9 +117,11 @@ function initStore () {
         length: true,
         album: true,
         genre: true,
-        // rating: false,
+        rating: false,
         composer: false,
+        played: false,
         "date added": false,
+        "last played": false,
         location: false,
         year: false,
         quality: false,
@@ -123,12 +138,9 @@ function initStore () {
 }
 
 function fetchMedia () {
-    const store = new Store()
-    const dirs = store.get("libLocation")
-
     ipcMain.on("should-update", (event, arg) => {
-        if (arg) {
-            extractMediaInfo(dirs)
+        if (arg.length > 0) {
+            extractMediaInfo(arg)
         }
     })
 }
@@ -138,14 +150,27 @@ async function extractMediaInfo (dirs) {
     const metadata = []
     let files = []
 
-    // ignore hidden folders and non-mp3 files
+    // ignore files without user permission,
+    // hidden folders and non-mp3 files
     const filterFunc = item => {
+        try {
+            fs.accessSync(item.path, fs.constants.W_OK)
+        }
+        catch (err) {
+            return false
+        }
         const basename = path.basename(item.path)
         return path.extname(basename) === ".mp3" || path.extname(basename) === ".MP3" || (item.stats.isDirectory() && basename[0] !== ".")
     }
 
     for (var i=0; i < dirs.length; i++) {
-        const dirFiles = klawSync(dirs[i], { nodir: true, filter: filterFunc })
+        let dirFiles
+        try {
+            dirFiles = klawSync(dirs[i], { nodir: true, filter: filterFunc })
+        }
+        catch (err) {
+            console.error(err)
+        }
         files = files.concat(dirFiles)
     }
 
@@ -173,10 +198,10 @@ async function extractMediaInfo (dirs) {
                     track: common.track.no || "",
                     // lyrics: common.lyrics ? common.lyrics.toString() : "Unknown",
                     comment: common.comment ? common.comment.toString() : "Unknown",
-                    // rating: common.rating ? common.rating.toString() : "Unknown",
+                    rating: common.rating ? common.rating[0].rating : 0,
                     composer: common.composer ? common.composer.toString() : "Unknown",
-                    // played: 0,
-                    // "last played": "Never",
+                    played: 0,
+                    "last played": "Never",
                     "date added": new Date().toString().split(" GMT")[0],
                     quality: format.bitrate ? `${Math.floor(format.bitrate/1000)}kbps` : "Unknown",
                     location: filepath.split(path.basename(filepath, path.extname(filepath)))[0]

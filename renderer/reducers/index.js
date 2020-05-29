@@ -7,7 +7,8 @@ const mediaState = {
     favourite: [],
     library: [],
     mode: "Paused",
-    isUpdating: false
+    isUpdating: false,
+    updatedMediaIndex: null
 }
 
 const viewState = {
@@ -134,15 +135,23 @@ export function media (state=mediaState, action) {
             library: action.data,
             isUpdating: action.isUpdating
         })
-    /* case C.UPDATE_MEDIA_INFO:
-        return Object.assign({}, state, {
-            library: state.library.map((v, i) => {
-                return (v.file !== action.media) ? v : Object.assign({}, v, {
-                    play_count: ++v.play_count,
-                    last_played: new Date().toString().split(" GMT")[0]
+    case C.UPDATE_MEDIA_INFO:
+        let updatedMediaIndex
+        const library = state.library.map((v, i) => {
+            if (v.file !== action.media) {
+                return v
+            } else {
+                updatedMediaIndex = i
+                return Object.assign({}, v, {
+                    played: v.played+1,
+                    "last played": new Date().toString().split(" GMT")[0]
                 })
-            })
-        }) */
+            }
+        })
+        return Object.assign({}, state, {
+            library: library,
+            updatedMediaIndex: updatedMediaIndex
+        })
     case C.SHOULD_UPDATE:
         return Object.assign({}, state, {
             shouldUpdate: action.shouldUpdate

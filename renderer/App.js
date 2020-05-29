@@ -10,6 +10,7 @@ const Store = window.require("electron-store")
 class App extends Component {
     componentWillMount () {
         const store = new Store()
+        const dirs = store.get("libLocation")
         const { dispatch } = this.props
 
         // We gat delete isUpdating if its in store
@@ -20,7 +21,7 @@ class App extends Component {
 
         if (!store.has("state") || !store.has("state.media") ||
             store.get("state.media.library").length === 0) {
-            ipcRenderer.send("should-update", true)
+            ipcRenderer.send("should-update", dirs)
             dispatch(requestUpdateLibrary())
         }
 
