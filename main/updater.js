@@ -6,7 +6,7 @@ const { url } = require("../package.json")
 const URL = url
 
 function checkForUpdates (menuItem) {
-    if (!isDev || process.platform === "linux") {
+    if (isDev || process.platform === "linux") {
         return
     }
     let availableUpdate

@@ -17,17 +17,15 @@ let updateInterval
 
 const createWindow = () => {
     const store = new Store({ name: "app" })
-    const width = store.has("width") ? store.get("width") : 860
-    const height = store.has("height") ? store.get("height") : 500
+    const width = store.has("width") ? store.get("width") : 700
+    const height = store.has("height") ? store.get("height") : 425
     window = new BrowserWindow({
         title: "Carbon Player",
         show: false,
         width: width,
         height: height,
-        useContentSize: true,
-        minHeight: 400,
+        minHeight: 425,
         minWidth: 700,
-        darkTheme: true,
         backgroundColor: "#bebdbd",
         icon: path.join(__dirname, "../icons/64x64.png"),
         webPreferences: {
