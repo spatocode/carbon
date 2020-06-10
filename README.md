@@ -29,9 +29,9 @@ sudo snap install carbon-player
 
 ### Windows
 
-[Windows installer x64](https://github.com/carbonplayer/carbon/releases/download/v1.0.0/Carbon.Player.Setup.1.0.0_x64.exe)
+[Windows installer x64](https://github.com/carbonplayer/carbon/releases/download/v1.1.0/Carbon_Player_Setup_1.1.0_x64.exe)
 
-[Windows installer x86](https://github.com/carbonplayer/carbon/releases/download/v1.0.0/Carbon.Player.Setup.1.0.0_x86.exe)
+[Windows installer x86](https://github.com/carbonplayer/carbon/releases/download/v1.1.0/Carbon_Player_Setup_1.1.0_x86.exe)
 
 
 [![Carbon Player Screenshot](https://github.com/carbonplayer/carbon/blob/master/icons/carbon_preview_2.png)]()
