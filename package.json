@@ -81,7 +81,7 @@
     "css-loader": "^2.1.1",
     "dotenv": "^6.2.0",
     "dotenv-expand": "^5.1.0",
-    "electron": "^9.0.0",
+    "electron": "^15.5.5",
     "electron-builder": "^22.6.0",
     "eslint": "^6.1.0",
     "eslint-config-react-app": "^5.0.2",
