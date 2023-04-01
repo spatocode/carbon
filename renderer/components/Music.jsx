@@ -60,9 +60,10 @@ class Music extends React.Component {
         var favMenuLabel = "Add to Favourite"
         var { favourite, playlists, view } = this.props
 
-        favourite.forEach((fav) => {
+        favourite.some((fav) => {
             if (fav.file === param.rowData.file) {
                 favMenuLabel = "Remove from Favourite"
+                return true
             }
         })
 
